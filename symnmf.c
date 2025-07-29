@@ -3,6 +3,8 @@
 #include <math.h>
 #include <string.h>
 
+int failure;
+
 typedef struct point {
     struct point *next;
     struct cord *cords;
@@ -22,6 +24,103 @@ void general_error(){
 }
 
 /**
+ * sqr_mat_to_str - returns a string describing the matrix
+ * @mat: n*n matrix to be descibed
+ * @n: the dimension of mat
+ * @ret_str: outparameter. Will hold the describing string
+ */
+int sqr_mat_to_str(double** mat, int n, char **ret_str){
+    int i, j, len = 0;
+    int bufsize = n * n * 32 + n; // Estimate: 32 chars per number + newlines
+    *ret_str = malloc(bufsize);
+    if (*ret_str == NULL) {return 1;}
+
+    (*ret_str)[0] = '\0'; // Start with empty string
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            // Append number, add comma if not last in row
+            len += snprintf(*ret_str + len, bufsize - len, "%.4f", mat[i][j]);
+            if (j < n - 1)
+                len += snprintf((*ret_str) + len, bufsize - len, ",");
+        }
+        if (i < n - 1)
+            len += snprintf((*ret_str) + len, bufsize - len, "\n");
+    }
+    return 0;
+}
+
+int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
+    double n;
+    char c;
+    int dim = 0;
+    *points_count = 0;
+
+    FILE *file = fopen(path, "r");  // Open for reading
+    if (file == NULL) {return 1;}
+
+    point *curr_point, *prev_point;
+    cord *head_cord, *curr_cord;
+
+    /* init head of cords*/
+    head_cord = (cord*) malloc(sizeof(struct cord));
+    if (head_cord == NULL) {return 1;}
+
+    curr_cord = head_cord;
+    curr_cord->next = NULL;
+
+    /* init head of points linked_list */
+    (*head_point) = (point*) malloc(sizeof(point));
+    if (*head_point == NULL) {return 1;}
+
+    curr_point = (*head_point);
+    curr_point->next = NULL;
+
+
+    /* scan input */
+    while (fscanf(file, "%lf%c", &n, &c) == 2){
+        if (c == ','){ // still on same point
+            dim++;
+            curr_cord->value = n;
+            curr_cord->next = (cord*) calloc(1, sizeof(cord));
+            if (curr_cord->next == NULL) {return 1;}
+            curr_cord = curr_cord->next;
+            curr_cord->next = NULL;
+        }
+
+        if (c == '\n'){  // end of this point
+            curr_cord->value = n;
+            curr_point->cords = head_cord;
+            curr_point->dim = dim + 1;
+            prev_point = curr_point;
+            curr_point->next = (point*) calloc(1, sizeof(point));
+            if (curr_point->next == NULL) {return 1;}
+
+            curr_point = curr_point->next;
+            curr_point->next = NULL;
+            curr_point->cords = NULL;
+
+            head_cord = (cord*) calloc(1, sizeof(cord));
+            if (head_cord == NULL) {return 1;}
+            curr_cord = head_cord;
+            curr_cord->next = NULL;
+            dim = 0;
+
+            (*points_count)++;
+        }
+    }
+
+    /* freeing memory for last point and its cord */
+    if (curr_point != NULL){
+        free(curr_point);
+        free(head_cord);
+        prev_point->next = NULL;
+    }
+
+    return 0;
+}
+
+/**
  * euc_distance - Calculates the eucledian distance between p1 and p2
  * @p1: First point
  * @p2: Second point
@@ -35,8 +134,11 @@ int euc_distance(point *p1, point *p2, double *dist){
     int dim1 = p1->dim;
     cord *curr1, *curr2;
 
+    curr1 = p1->cords;
+    curr2 = p2->cords;
+
     for (i = 0; i < dim1; i++){
-        *dist += pow((curr1->value - curr2->value), 2);
+        (*dist) += pow((curr1->value - curr2->value), 2);
         curr1 = curr1->next;
         curr2 = curr2->next;
     }
@@ -57,17 +159,17 @@ int calc_aij_sim(point *xi, point *xj, double *result){
     double dist;
     if(euc_distance(xi, xj, &dist) != 0) {general_error();}
     double power = ((pow(dist, 2)) / 2);
-    *result = exp(power);
+    *result = exp(-1*power);
     return 0;
 }
 
 /**
  * returns the similiarity matrix A as defined in 1.1
  * @points_lst: the dataset X
+ * @n: points_lst length
  * @sim_mat: out parameter. Will hold the similiarity matrix A.
  */
-int create_sim_mat(point* points_lst, double*** sim_mat){
-    int n = points_lst->dim;
+int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     int i,j;
     double aij_res;
 
@@ -119,14 +221,14 @@ int arr_sum(double* arr, int n, double* sum){
 /**
  * create_diag_mat: Calculates the diagnoal degeree matrix as defined in 1.2
  * @points_lst: the input dataset X
+ * @n: the length of dataset X
  * @diag_mat: out parameter. Will hold the diagonal degree matrix.
  */
-int create_diag_mat(point* points_lst, double ***diag_mat){
-    int n = points_lst->dim;
+int create_diag_mat(point* points_lst, int n, double ***diag_mat){
     int i,j;
     double** sim_mat;
     double res;
-    if (create_sim_mat(points_lst, &sim_mat) != 0) {return 1;};
+    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
 
     *diag_mat = malloc(n * sizeof(double*));
     if (*diag_mat == NULL) {return 1;}
@@ -149,12 +251,11 @@ int create_diag_mat(point* points_lst, double ***diag_mat){
  */
 int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
     int i;
-    int tmp_val;
-    *ret_mat = malloc(n * sizeof(double*));
-    if (*ret_mat == NULL) {return 1;}
+    (*ret_mat) = malloc(n * sizeof(double*));
+    if ((*ret_mat) == NULL) {return 1;}
     for (i = 0; i < n; i++){
-        (*ret_mat)[i] == calloc(n, sizeof(double));
-        if ((*ret_mat[i]) == NULL) {return 1;}
+        (*ret_mat)[i] = calloc(n, sizeof(double));
+        if ((*ret_mat)[i] == NULL) {return 1;}
         (*ret_mat)[i][i] = 1.0 / sqrt(mat[i][i]);
     }
     return 0;
@@ -169,20 +270,20 @@ int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
  * @res: out parameter. Will hold the result matrix
 */
 int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res){
-    if (direction != "left" || direction != "right") {return 1;}
+    if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {return 1;}
 
     int i,j;
-    *res = malloc(n * sizeof(double*));
+    (*res) = malloc(n * sizeof(double*));
     if (*res == NULL) {return 1;}
     
     for (i = 0; i < n; i++){
-        (*res)[i] = malloc(n * sizeof(n));
+        (*res)[i] = malloc(n * sizeof(double));
         if ((*res)[i] == NULL) {return 1;}
 
         for (j = 0; j < n; j++){
-            if (direction == "left")
+            if (strcmp(direction, "left") == 0)
                 (*res)[i][j] = D[i][i] * A[i][j];
-            if (direction == "right")
+            if (strcmp(direction, "right") == 0)
                 (*res)[i][j] = A[i][j] * D[j][j];
         }
     }
@@ -192,46 +293,19 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
 /**
  * create_normalized_sim_mat - Calcualtes the graph Laplacian matrix, W, as defined in 1.3
  * @points_lst: the input dataset X
+ * @n: the length of dataset X
  * @w_mat: outparameter. Will hold the result W matrix
  */
-int create_normalizec_sim_mat(point* points_lst, double*** w_mat){
-    int n = points_lst->dim;
+int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
     double **sim_mat, **diag_mat_minus_sqrt, **diag_mat, **DA;
 
-    if (create_sim_mat(points_lst, &sim_mat) != 0) {return 1;};
-    if (create_diag_mat(points_lst, &diag_mat) != 0) {return 1;}
+    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
+    if (create_diag_mat(points_lst, n, &diag_mat) != 0) {return 1;}
     if (one_div_sqrt_diag_mat(diag_mat, n, &diag_mat_minus_sqrt) != 0) {return 1;}
 
     if(diag_mat_mult(diag_mat_minus_sqrt, sim_mat, n, "left", &DA) != 0) {return 1;};
     if(diag_mat_mult(diag_mat_minus_sqrt, DA, n, "right", w_mat) != 0) {return 1;};
 
-    return 0;
-}
-
-/**
- * sqr_mat_to_str - returns a string describing the matrix
- * @mat: n*n matrix to be descibed
- * @n: the dimension of mat
- * @ret_str: outparameter. Will hold the describing string
- */
-int sqr_mat_to_str(double** mat, int n, char **ret_str){
-    int i, j, len = 0;
-    int bufsize = n * n * 32 + n; // Estimate: 32 chars per number + newlines
-    *ret_str = malloc(bufsize);
-    if (*ret_str == NULL) {return 1;}
-
-    (*ret_str)[0] = '\0'; // Start with empty string
-
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            // Append number, add comma if not last in row
-            len += snprintf(*ret_str + len, bufsize - len, "%.4f", mat[i][j]);
-            if (j < n - 1)
-                len += snprintf((*ret_str) + len, bufsize - len, ",");
-        }
-        if (i < n - 1)
-            len += snprintf((*ret_str) + len, bufsize - len, "\n");
-    }
     return 0;
 }
 
