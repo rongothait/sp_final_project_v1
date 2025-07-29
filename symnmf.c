@@ -326,3 +326,102 @@ int frobenius_norm(double **mat, int n, int m, double *norm_res){
     *norm_res = sqrt((*norm_res));
     return 0;
 }
+
+/**
+ * avg_mat_val - Calculates a matrice's avg value of all cells
+ * @mat: n*m matrix (cells are of type double)
+ * @n: columns dimension
+ * @m: rows dimension
+ * @avg_val: out parameter. Will hold the average value of mat's cells.
+ */
+int avg_mat_val(double **mat, int n, int m, double *avg_val){
+    *avg_val = 0;
+
+    for (int i = 0; i < m; i++){
+        for (int j = 0; j < n; j++){
+            (*avg_val) += mat[i][j];
+        }
+    }
+
+    return 0;  // OK!
+}
+
+/**
+ * calc_h_next_ij - Calculates the next "iteration" of H matrix for for cell [i][j] as defined in 1.4.2
+ * @i: the row index
+ * @j: the column index
+ * @wh: W*H matrix
+ * @hh_th: H * H^t * H matrix
+ * @res_ij: out parameter. Will hold the result of the calculation
+ */
+int calc_h_next_ij(int i, int j, double **wh, double **hh_th, double *res_ij){
+    double beta = 0.5;  // Default value
+    double mat_calc = (wh[i][j]) / (hh_th[i][j]);
+    (*res_ij) = 1 - beta + (beta * mat_calc);
+
+    return 0;
+}
+
+/**
+ * multi_mat - multiplies 2 matrices, A (a*b) and B (b*c)
+ * @a: row dimension of A
+ * @b: column dimension of A + row dimension of B
+ * @c: column dimension of B
+ * @res_mat: out parameter. Will hold the result matrix of dimension a*c
+ */
+int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
+    int i,j,k;
+    double sum;
+
+    // Allocate memory for result matrix
+    *res_mat = malloc(a * sizeof(double));
+    if (*res_mat == NULL) {return 1;}
+
+    for (i = 0; i < a; i++){
+        (*res_mat)[i] = calloc(c, sizeof(double));
+        if ((*res_mat)[i] == NULL) {return 1;}
+    }
+
+    // Perform matrix multiplication
+    for (i = 0; i < a; i++){
+        for (j = 0; j < c; j++){
+            sum = 0;
+            for (k = 0; k < b; k++){
+                sum += A[i][k] * B[k][j];
+            }
+            (*res_mat)[i][j] = sum;
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * calc_h_next - Calculates the next "iteration" of H matrix as defined in 1.4.2
+ * @wh: W*H matrix
+ * @hh_th: H * H^t * H matrix
+ * @n: number of rows in the output matrix
+ * @k: number of columns in the output matrix
+ * @next_h: out parameter. Will hold the result of the calculation
+ */
+int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
+    double res;
+    (*next_h) = malloc(n * sizeof(double*));
+    if (*next_h == NULL) {return 1;}
+
+    // Allocate memory for result matrix
+    for (int i = 0; i < n; i++){
+        (*next_h)[i] = calloc(k, sizeof(double));
+        if ((*next_h)[i] == NULL) {return 1;}
+    }
+
+    // Perform the calcuations
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < k; j++){
+            if (calc_h_next_ij(i, j, wh, hh_th, &res) != 0) {return 1;}
+            (*next_h)[i][j] = res;
+        }
+    }
+
+    return 0;
+}
