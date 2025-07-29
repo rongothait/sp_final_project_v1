@@ -6,7 +6,7 @@
 typedef struct point {
     struct point *next;
     struct cord *cords;
-    int dim
+    int dim;
 } point;
 
 typedef struct cord {
@@ -75,21 +75,21 @@ int create_sim_mat(point* points_lst, double*** sim_mat){
     point* xi = points_lst;
     point* xj = points_lst;
 
-    double** sim_mat = malloc(n * sizeof(double*));
-    if (sim_mat == NULL) {return 1;}
+    *sim_mat = malloc(n * sizeof(double*));
+    if (*sim_mat == NULL) {return 1;}
 
     for (i = 0; i < n; i++){
         xj = head; 
-        sim_mat[i] = malloc(n * sizeof(double));  /* allocate each row */
-        if (sim_mat[i] == NULL) {return 1;}
+        (*sim_mat)[i] = malloc(n * sizeof(double));  /* allocate each row */
+        if ((*sim_mat)[i] == NULL) {return 1;}
         
         for (j = 0; j < n; j++){
             if (i == j){
-                *sim_mat[i][j] = 0.0;
+                (*sim_mat)[i][j] = 0.0;
             }
             else{
                 if (calc_aij_sim(xi, xj, &aij_res) != 0) {return 1;}
-                *sim_mat[i][j] = aij_res;
+                (*sim_mat)[i][j] = aij_res;
             }
             xj = xj->next;
         }
@@ -232,5 +232,23 @@ int sqr_mat_to_str(double** mat, int n, char **ret_str){
         if (i < n - 1)
             len += snprintf((*ret_str) + len, bufsize - len, "\n");
     }
+    return 0;
+}
+
+/**
+ * frobenius_norm - Calculates the Frobenius norm as described in the Wikipedia page https://en.wikipedia.org/wiki/Matrix_norm#Frobenius_norm
+ * @mat: matrix of size n*m to calculate its Frobenius norm
+ * @n: column dimension of mat
+ * @m: row dimension of mat
+ * @norm_res: out parameter. Will hold the Frobenius norm result.
+ */ 
+int frobenius_norm(double **mat, int n, int m, double *norm_res){
+    *norm_res = 0;
+    for (int i = 0; i < m; i++){
+        for (int j = 0; j < n; j++){
+            *norm_res += pow(mat[i][j], 2);
+        }
+    }
+    *norm_res = sqrt((*norm_res));
     return 0;
 }
