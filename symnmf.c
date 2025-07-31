@@ -3,6 +3,10 @@
 #include <math.h>
 #include <string.h>
 
+#define CHECK_FAILURE(failure, label) \
+    do { if ((failure) == 1) goto label; } while (0)
+
+char *ERR_MSG_GENERAL = "An Error Has Occurred\n";
 int failure;
 
 typedef struct point {
@@ -21,6 +25,59 @@ void general_error(){
     printf("An Error Has Occured\n");
     //Add freeing the memory
     exit(1);
+}
+
+/**
+ * free_cords - free cordinates memory allocation for the linked list starting at crd
+ * @crd: the starting node to free from
+ */
+int free_cords(cord *crd){
+    cord *nxt;
+
+    while (crd){
+        nxt = crd->next;
+        free(crd);
+        crd = nxt;
+    }
+
+    return 0;
+}
+
+/**
+ * free+pnt_lst - free memory allocation for all points in the linked list (starting from pnt)
+ * @pnt: the head node to start from
+*/ 
+int free_pnt_lst(point *pnt){
+    point *nxt;
+
+    while (pnt){
+        if (free_cords(pnt->cords) != 0) {return 1;}
+        nxt = pnt->next;
+        free(pnt);
+        pnt = nxt;
+    }
+
+    return 0;
+}
+
+/**
+ * free_matrix - Frees the memory allocated for a 2d matrix mat with m rows
+ * @mat: the matrix (a 2d array)
+ * @m: number of rows
+ */
+int free_matrix(double **mat, int m){
+    int i;
+
+    if (mat == NULL) return 0;  /* nothing to free */
+
+    /* Free each row */
+    for (i = 0; i < m; i++){
+        if (mat[i] != NULL)
+            free(mat[i]);
+    }
+
+    free(mat);
+    return 0;
 }
 
 /**
@@ -50,6 +107,12 @@ int sqr_mat_to_str(double** mat, int n, char **ret_str){
     return 0;
 }
 
+/**
+ * input_txt_to_points_lst - Creates a linked list of points (and cords) for the .txt dataset given as an input
+ * @path: the relative path to the input file
+ * @head_point: out parameter. Will hold the first node (of type point) in the linked list.
+ * @points_count: the number of points in the dataset = the dataset length
+ */
 int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     double n;
     char c;
@@ -225,7 +288,7 @@ int arr_sum(double* arr, int n, double* sum){
  * @diag_mat: out parameter. Will hold the diagonal degree matrix.
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
-    int i,j;
+    int i;
     double** sim_mat;
     double res;
     if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
@@ -424,4 +487,56 @@ int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
     }
 
     return 0;
+}
+
+int main(int argc, char *argv[]){
+    int failure;
+
+    if (argc != 3){
+        printf("%s", ERR_MSG_GENERAL);
+        return 1;
+    }
+
+    char *goal = argv[1];
+    char *file_name = argv[2];
+
+    int n;
+    point *dataset;
+
+    failure = input_txt_to_points_lst(file_name, &dataset, &n);
+    CHECK_FAILURE(failure, error);
+
+    double **ret_mat;
+    if (strcmp(goal, "sym") == 0){
+        failure = create_sim_mat(dataset, n, &ret_mat);
+        CHECK_FAILURE(failure, error);
+    }
+    else if (strcmp(goal, "ddg") == 0){
+        failure = create_diag_mat(dataset, n, &ret_mat);
+        CHECK_FAILURE(failure, error);
+    }
+    else if (strcmp(goal, "norm") == 0)
+    {
+        failure = create_normalizec_sim_mat(dataset, n, &ret_mat);
+        CHECK_FAILURE(failure, error);
+    }
+    else{
+        printf("%s", ERR_MSG_GENERAL);
+        goto error;
+    }
+
+    char* mat_str;
+    failure = sqr_mat_to_str(ret_mat, n, &mat_str);
+    CHECK_FAILURE(failure, error);
+
+    printf("%s\n", mat_str);
+
+    return 0;
+
+error:
+    // TODO - free up memory
+    // TODO - print (or return) error msg
+    // TODO - return 1?
+    printf("%s", ERR_MSG_GENERAL);
+    return 1;
 }
