@@ -1,4 +1,4 @@
-# define PY_SSIZE_T_CLEAN
+ # define PY_SSIZE_T_CLEAN
 # include <Python.h>
 # include "symnmf.h"
 
@@ -94,6 +94,42 @@ error:
     return Py_BuildValue("s", "An Error Has Occured");
 }
 
+static PyObject* ddg(PyObject *self, PyObject *args){
+    point *points_list = NULL;
+    int n, failure;
+    PyObject *py_points_list;
+    double **ddg_mat;
+
+    /* This parses the python arguments into its C form */
+    if (!PyArg_ParseTuple(args, "O", &py_points_list)) {goto error;}
+
+    /* length of dataset */
+    n = PyObject_Length(py_points_list);
+
+    /* create linked list of points */
+    failure = pyListToPointList(py_points_list, n, &points_list);
+    CHECK_FAILURE(failure, error);
+
+    char *result_str = NULL;
+    failure = create_diag_mat(points_list, n, &ddg_mat);
+    CHECK_FAILURE(failure, error);
+
+    failure = sqr_mat_to_str(ddg_mat, n, &result_str);
+    CHECK_FAILURE(failure, error);
+    PyObject *py_result = Py_BuildValue("s", result_str);
+
+    /* free memory */
+    free(result_str);
+    free_pnt_lst(points_list);
+
+    return py_result;
+
+error:
+    if (result_str) {free(result_str);}
+    free_pnt_lst(points_list);
+    return Py_BuildValue("s", "An Error Has Occured");
+}
+
 static PyMethodDef symnmf_methods[] = {
     {
         "sym",  /* python method name */
@@ -102,6 +138,19 @@ static PyMethodDef symnmf_methods[] = {
         PyDoc_STR(
             "sym(dataset)\n"
             "Returns the similarity matrix of the given dataset\n"
+            "parameters:\n"
+            "   dataset (list of list of float): the N data points \n"
+            "returns: \n"
+            "   str: the resulting matrix as a formatted string"
+        )
+    },
+    {
+        "ddg",  /* python method name */
+        (PyCFunction) ddg, /* C function implementing the method */
+        METH_VARARGS,  /* Accepts a tuple of arguments */
+        PyDoc_STR(
+            "ddg(dataset)\n"
+            "Returns the Diagonal Degree matrix of the given dataset\n"
             "parameters:\n"
             "   dataset (list of list of float): the N data points \n"
             "returns: \n"
