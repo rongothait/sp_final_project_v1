@@ -8,6 +8,8 @@
 
 char *ERR_MSG_GENERAL = "An Error Has Occurred\n";
 int failure;
+double EPSILON = 0.0001;
+int MAX_ITER = 300;
 
 typedef struct point {
     struct point *next;
@@ -391,6 +393,44 @@ int frobenius_norm(double **mat, int n, int m, double *norm_res){
 }
 
 /**
+ * substract_matrix - Given matrix A and B of size m*n each calculates A-B
+ * @A: matrix A
+ * @B: matrix B 
+ * @m: number of rows
+ * @n: number of columns
+ * @res_mat: out parameter. Will hold the result matrix after the substraction
+ */
+int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
+    int i, j;
+
+    /* Allocate memory for result matrix */
+    *res_mat = malloc(m * sizeof(double*));
+    if (*res_mat == NULL) return 1;
+
+    /* Allocate memory for each row */
+    for (i = 0; i < m; i++){
+        (*res_mat)[i] = malloc(n * sizeof(double));
+        if ((*res_mat)[i] == NULL){
+            /* clean up already allocated memory */
+            for (j = 0; j < i; j++){
+                free((*res_mat)[j]);
+            }
+            free(*res_mat);
+            return 1;
+        }
+    }
+
+    // Preform matrix substraction
+    for (i = 0; i < m; i++){
+        for (j = 0; j < n; j++){
+            (*res_mat)[i][j] = A[i][j] - B[i][j];
+        }
+    }
+
+    return 0;
+}
+
+/**
  * avg_mat_val - Calculates a matrice's avg value of all cells
  * @mat: n*m matrix (cells are of type double)
  * @n: columns dimension
@@ -460,6 +500,44 @@ int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
 }
 
 /**
+ * transpose_matrix - Transposes a matrix of size m x n into a matrix of size n x m
+ * @mat: input matrix to transpose
+ * @m: number of rows in input matrix
+ * @n: number of columns in input matrix 
+ * @transposed: out parameter. Will hold the transposed matrix
+ * Return: 0 on success, 1 on failure
+ */
+int transpose_matrix(double **mat, int m, int n, double ***transposed){
+    int i, j;
+
+    /* Allocate memory for transposed matrix (n rows since dimensions are swapped) */
+    *transposed = (double**) malloc(n * sizeof(double*));
+    if (*transposed == NULL) return 1;
+
+    /* Allocate memory for each row (m columns since dimesnions are swapped) */
+    for (i = 0; i < n; i++){
+        (*transposed)[i] = malloc(m * sizeof(double));
+        if ((*transposed)[i] == NULL){
+            /* clean up already allocated memory */
+            for (j = 0; j < i; j++){
+                free((*transposed)[j]);
+            }
+            free(*transposed);
+            return 1;
+        }
+    }
+
+    /* preform the transpose operation */
+    for (i = 0; i < m; i++){
+        for (j = 0; j < n; j++){
+            (*transposed)[j][i] = mat[i][j];
+        }
+    }
+
+    return 0;
+}
+
+/**
  * calc_h_next - Calculates the next "iteration" of H matrix as defined in 1.4.2
  * @wh: W*H matrix
  * @hh_th: H * H^t * H matrix
@@ -487,6 +565,50 @@ int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
     }
 
     return 0;
+}
+
+int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***optimized_h){
+    int i, failure;
+    double for_norm;
+    double **wh_t0, **h_t0_trans, **h_t0, **h_t1, **h_h_trans_t0, **h_h_trans_h_t0, **h_t1_minus_h_t0;
+    
+    h_t0 = init_h_mat;
+
+    for (i = 0; i < MAX_ITER; i++){
+        /* calculte the needed matrices */
+        failure = multi_mat(n, n, k, w, h_t0, &wh_t0);  /* WH */
+        CHECK_FAILURE(failure, error);
+
+        failure = transpose_matrix(h_t0, n, k, &h_t0_trans);  /* H^t */
+        CHECK_FAILURE(failure, error);
+
+        failure = multi_mat(n, k, n, h_t0, h_t0_trans, &h_h_trans_t0); /* H*H^t */
+        CHECK_FAILURE(failure, error);
+
+        failure = multi_mat(n, n, k, h_h_trans_t0, h_t0, &h_h_trans_h_t0);  /* H*H^t*H */
+        CHECK_FAILURE(failure, error);
+
+        failure = calc_h_next(wh_t0, h_h_trans_h_t0, n, k, &h_t1);  /* H_(t+1) */
+        CHECK_FAILURE(failure, error);
+
+        failure = substract_matrix(h_t1, h_t0, n, k, &h_t1_minus_h_t0); /* H_(t+1) - H_t */
+        CHECK_FAILURE(failure, error);
+
+        failure = frobenius_norm(h_t1_minus_h_t0, n, k, &for_norm);
+        CHECK_FAILURE(failure, error);
+
+        if (for_norm < EPSILON){
+          optimized_h = &h_t1;
+          return 0;  
+        }
+    }
+
+    optimized_h = &h_t1;
+    return 0;
+
+error:
+    return 1;
+    //TODO - free memory
 }
 
 int main(int argc, char *argv[]){
