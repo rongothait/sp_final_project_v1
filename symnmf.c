@@ -567,6 +567,18 @@ int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
     return 0;
 }
 
+int copy_matrix_by_value(double **dest, double **src, int m, int n){
+    int row, col;
+
+    for (row = 0; row < m; row++){
+        for (col = 0; col < n; col++){
+            dest[row][col] = src[row][col];
+        }
+    }
+
+    return 0;
+}
+
 int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***optimized_h){
     int i, failure;
     double for_norm;
@@ -598,12 +610,16 @@ int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***opti
         CHECK_FAILURE(failure, error);
 
         if (for_norm < EPSILON){
-          optimized_h = &h_t1;
+          (*optimized_h) = h_t1;
           return 0;  
         }
+
+        /* set h_t values to be h_t1 */
+        failure = copy_matrix_by_value(h_t0, h_t1, n, k);
+        CHECK_FAILURE(failure, error);
     }
 
-    optimized_h = &h_t1;
+    (*optimized_h) = h_t1;
     return 0;
 
 error:

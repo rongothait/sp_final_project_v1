@@ -103,23 +103,23 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
     return 0;
 }
 
-static PyObject* matrix_to_pylist(double **matrix, int n){
+static PyObject* matrix_to_pylist(double **matrix, int row_num, int col_num){
     PyObject *py_matrix, *py_row;
     int i, j;
 
     /* create the outer list */
-    py_matrix = PyList_New(n);
+    py_matrix = PyList_New(row_num);
     if (!py_matrix) return NULL;
 
-    for (i = 0; i < n; i++){
+    for (i = 0; i < row_num; i++){
         /* create the inner list */
-        py_row = PyList_New(n);
+        py_row = PyList_New(col_num);
         if (!py_row){
             Py_DECREF(py_matrix);
             return NULL; 
         }
 
-        for (j = 0; j < n; j++){
+        for (j = 0; j < col_num; j++){
             PyObject *py_value = PyFloat_FromDouble(matrix[i][j]);
             if (!py_value){
                 Py_DECREF(py_row);
@@ -161,7 +161,7 @@ static PyObject* request_standard(PyObject *args, char* goal){
     }
     CHECK_FAILURE(failure, error);
 
-    PyObject *py_result = matrix_to_pylist(ret_mat, n);
+    PyObject *py_result = matrix_to_pylist(ret_mat, n, n);
     if (!py_result) goto error;
 
     /* free memory */
@@ -209,7 +209,7 @@ static PyObject* symnmf(PyObject *self, PyObject *args){
     CHECK_FAILURE(failure, error);
 
     /* convert and pass result to python */
-    PyObject *py_result = matrix_to_pylist(ret_mat, n);
+    PyObject *py_result = matrix_to_pylist(ret_mat, n, k);
     if (!py_result) goto error;
 
     /* free memory */

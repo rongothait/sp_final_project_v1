@@ -102,19 +102,22 @@ def symnmf_handle(dataset, k, n):
     # call the symnmf() function in module
     res_mat = symnmf.symnmf(h_mat, w_mat, k)
 
-    mat_str = matrix_to_str(res_mat)
-    print(mat_str)
+    return res_mat
 
 def main():
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
+    """
+    k, goal = 2, "symnmf"
+    dataset = txt_input_to_list("input_1_short.txt")
+    """
     n = len(dataset)
     
     if k >= n:
         general_error()
-
+    
     if goal == "symnmf":
-        symnmf_handle(dataset, k, n)
+        mat = symnmf_handle(dataset, k, n)
     elif goal == "sym":
         mat = symnmf.sym(dataset)
     elif goal == "ddg":
