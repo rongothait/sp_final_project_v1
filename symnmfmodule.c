@@ -75,6 +75,7 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
     if (*mat == NULL) return 1;
 
     for (i = 0; i < m; i++){
+
         (*mat)[i] = (double*)calloc(n, sizeof(double));
         if ((*mat)[i] == NULL){
             /* free previously allocated memory in case of error */
@@ -202,7 +203,7 @@ static PyObject* symnmf(PyObject *self, PyObject *args){
 
     failure = pyListTo2dArr(py_init_h_mat, n, k, &init_h_mat);
     CHECK_FAILURE(failure, error);
-
+        
     /* run the potimization algoritm of H */
     failure = optimize_h_mat(init_h_mat , w_mat , n, k, &ret_mat);
     CHECK_FAILURE(failure, error);

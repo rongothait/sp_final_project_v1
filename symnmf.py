@@ -84,9 +84,8 @@ def matrix_to_str(mat):
 
     return '\n'.join(rows)
 
-
 def create_random_matrix(rows, cols, upper_bound, lower_bound = 0):
-    return np.random.uniform(low=lower_bound, high=upper_bound, size=(rows, cols))
+    return [[np.random.uniform(low=lower_bound, high=upper_bound) for _ in range(cols)] for _ in range(rows)]
 
 """
 symnmf_handle - handles the code for goal = "symnmf"
@@ -105,7 +104,6 @@ def symnmf_handle(dataset, k, n):
 
     mat_str = matrix_to_str(res_mat)
     print(mat_str)
-
 
 def main():
     k, goal, path = set_data(sys.argv)
