@@ -17,7 +17,7 @@ void test_sym_goal(){
     if (failure != 0) {printf("result is %d\n", failure);}
 
     char* res;
-    failure = sqr_mat_to_str(sim_mat, n, &res);
+    failure = mat_to_str(sim_mat, n, &res);
     if (failure != 0) {printf("result is %d\n", failure);}
 
     printf("%s\n", res);
@@ -34,7 +34,7 @@ void test_ddg_goal(){
     failure = create_diag_mat(dataset, n, &ddg_mat);
     
     char* res;
-    failure = sqr_mat_to_str(ddg_mat, n, &res);
+    failure = mat_to_str(ddg_mat, n, &res);
     if (failure != 0) {printf("result is %d\n", failure);}
 
     printf("%s\n", res);
@@ -51,7 +51,7 @@ void test_normalized_similiarity_matrix(){
     failure = create_normalizec_sim_mat(dataset, n, &norm_mat);
     
     char* res;
-    failure = sqr_mat_to_str(norm_mat, n, &res);
+    failure = mat_to_str(norm_mat, n, &res);
     if (failure != 0) {printf("result is %d\n", failure);}
 
     printf("%s\n", res);

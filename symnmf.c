@@ -83,27 +83,28 @@ int free_matrix(double **mat, int m){
 }
 
 /**
- * sqr_mat_to_str - returns a string describing the matrix
+ * mat_to_str - returns a string describing the matrix
  * @mat: n*n matrix to be descibed
- * @n: the dimension of mat
+ * @m: rows dimensions of matrix
+ * @n: columns dimension of matrix
  * @ret_str: outparameter. Will hold the describing string
  */
-int sqr_mat_to_str(double** mat, int n, char **ret_str){
+int mat_to_str(double** mat, int m, int n, char **ret_str){
     int i, j, len = 0;
-    int bufsize = n * n * 32 + n; // Estimate: 32 chars per number + newlines
+    int bufsize = m * n * 32 + n; // Estimate: 32 chars per number + newlines
     *ret_str = malloc(bufsize);
     if (*ret_str == NULL) {return 1;}
 
     (*ret_str)[0] = '\0'; // Start with empty string
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < m; i++) {
         for (j = 0; j < n; j++) {
             // Append number, add comma if not last in row
             len += snprintf(*ret_str + len, bufsize - len, "%.4f", mat[i][j]);
             if (j < n - 1)
                 len += snprintf((*ret_str) + len, bufsize - len, ",");
         }
-        if (i < n - 1)
+        if (i < m - 1)
             len += snprintf((*ret_str) + len, bufsize - len, "\n");
     }
     return 0;
@@ -381,11 +382,11 @@ int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
  * @m: row dimension of mat
  * @norm_res: out parameter. Will hold the Frobenius norm result.
  */ 
-int frobenius_norm(double **mat, int n, int m, double *norm_res){
+int frobenius_norm(double **mat, int m, int n, double *norm_res){
     *norm_res = 0;
     for (int i = 0; i < m; i++){
         for (int j = 0; j < n; j++){
-            *norm_res += pow(mat[i][j], 2);
+            *norm_res += (mat[i][j] * mat[i][j]);
         }
     }
     *norm_res = sqrt((*norm_res));
@@ -457,11 +458,9 @@ int avg_mat_val(double **mat, int n, int m, double *avg_val){
  * @hh_th: H * H^t * H matrix
  * @res_ij: out parameter. Will hold the result of the calculation
  */
-int calc_h_next_ij(int i, int j, double **wh, double **hh_th, double *res_ij){
-    double beta = 0.5;  // Default value
-    double mat_calc = (wh[i][j]) / (hh_th[i][j]);
-    (*res_ij) = 1 - beta + (beta * mat_calc);
-
+int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, double *res_ij){
+    double beta = 0.5;  /* default value */
+    (*res_ij) = h[i][j] * (1- beta + beta * (w_h[i][j] / h_htr_h[i][j]));
     return 0;
 }
 
@@ -545,7 +544,7 @@ int transpose_matrix(double **mat, int m, int n, double ***transposed){
  * @k: number of columns in the output matrix
  * @next_h: out parameter. Will hold the result of the calculation
  */
-int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
+int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double ***next_h){
     double res;
     (*next_h) = malloc(n * sizeof(double*));
     if (*next_h == NULL) {return 1;}
@@ -559,7 +558,7 @@ int calc_h_next(double **wh, double **hh_th, int n, int k, double ***next_h){
     // Perform the calcuations
     for (int i = 0; i < n; i++){
         for (int j = 0; j < k; j++){
-            if (calc_h_next_ij(i, j, wh, hh_th, &res) != 0) {return 1;}
+            if (calc_h_next_ij(i, j, wh, hh_th, h, &res) != 0) {return 1;}
             (*next_h)[i][j] = res;
         }
     }
@@ -579,47 +578,71 @@ int copy_matrix_by_value(double **dest, double **src, int m, int n){
     return 0;
 }
 
-int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***optimized_h){
+int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimized_h){
     int i, failure;
     double for_norm;
-    double **wh_t0, **h_t0_trans, **h_t0, **h_t1, **h_h_trans_t0, **h_h_trans_h_t0, **h_t1_minus_h_t0;
+    double **w_h, **htr, **h, **h_next, **h_htr, **h_htr_h, **h_next_minus_h_curr;
     
-    h_t0 = init_h_mat;
+    h = h_init;
 
     for (i = 0; i < MAX_ITER; i++){
         /* calculte the needed matrices */
-        failure = multi_mat(n, n, k, w, h_t0, &wh_t0);  /* WH */
+        failure = multi_mat(n, n, k, w, h, &w_h);  /* W*H */
         CHECK_FAILURE(failure, error);
 
-        failure = transpose_matrix(h_t0, n, k, &h_t0_trans);  /* H^t */
+        failure = transpose_matrix(h, n, k, &htr);  /* H^t */
         CHECK_FAILURE(failure, error);
 
-        failure = multi_mat(n, k, n, h_t0, h_t0_trans, &h_h_trans_t0); /* H*H^t */
+        failure = multi_mat(n, k, n, h, htr, &h_htr); /* H*H^t */
         CHECK_FAILURE(failure, error);
 
-        failure = multi_mat(n, n, k, h_h_trans_t0, h_t0, &h_h_trans_h_t0);  /* H*H^t*H */
+        failure = multi_mat(n, n, k, h_htr, h, &h_htr_h);  /* H*H^t*H */
         CHECK_FAILURE(failure, error);
 
-        failure = calc_h_next(wh_t0, h_h_trans_h_t0, n, k, &h_t1);  /* H_(t+1) */
+        failure = calc_h_next(h, w_h, h_htr_h, n, k, &h_next);  /* H_(t+1) */
         CHECK_FAILURE(failure, error);
 
-        failure = substract_matrix(h_t1, h_t0, n, k, &h_t1_minus_h_t0); /* H_(t+1) - H_t */
+        failure = substract_matrix(h_next, h, n, k, &h_next_minus_h_curr); /* H_(t+1) - H_t */
         CHECK_FAILURE(failure, error);
 
-        failure = frobenius_norm(h_t1_minus_h_t0, n, k, &for_norm);
+        failure = frobenius_norm(h_next_minus_h_curr, n, k, &for_norm);
         CHECK_FAILURE(failure, error);
 
-        if (for_norm < EPSILON){
-          (*optimized_h) = h_t1;
-          return 0;  
+        /* FOR DEBUG! - NEED TO DELETE!
+        if (i <= 1){
+            char *w_str, *h_str, *w_h_str, *htr_str, *h_htr_str, *h_htr_h_str, *h_next_str, *h_next_minus_h_curr_str;
+            mat_to_str(w, n, n, &w_str);
+            mat_to_str(h, n, k, &h_str);
+            mat_to_str(w_h, n, k, &w_h_str);
+            mat_to_str(htr, k, n, &htr_str);
+            mat_to_str(h_htr, n, n, &h_htr_str);
+            mat_to_str(h_htr_h, n, k, &h_htr_h_str);
+            mat_to_str(h_next, n, k, &h_next_str);
+            mat_to_str(h_next_minus_h_curr, n, k, &h_next_minus_h_curr_str);
+
+            printf("W matrix \n%s\n\n", w_str);
+            printf("H matrix \n%s\n\n", h_str);
+            printf("W*H matrix \n%s\n\n", w_h_str);
+            printf("H^t matrix \n%s\n\n", htr_str);
+            printf("H*H^t matrix \n%s\n\n", h_htr_str);
+            printf("H*H^t*H matrix \n%s\n\n", h_htr_h_str);
+            printf("H next matrix \n%s\n\n", h_next_str);
+            printf("H next - H matrix \n%s\n\n", h_next_minus_h_curr_str);
+            printf("forbenious norm %f\n\n", for_norm);
+        }
+            */
+
+        if ((for_norm * for_norm) < EPSILON){
+            (*optimized_h) = h_next;
+            return 0;  
         }
 
-        /* set h_t values to be h_t1 */
-        failure = copy_matrix_by_value(h_t0, h_t1, n, k);
+        /* set h_t values to be h_next */
+        failure = copy_matrix_by_value(h, h_next, n, k);
         CHECK_FAILURE(failure, error);
     }
 
-    (*optimized_h) = h_t1;
+    (*optimized_h) = h_next;
     return 0;
 
 error:
@@ -664,7 +687,7 @@ int main(int argc, char *argv[]){
     }
 
     char* mat_str;
-    failure = sqr_mat_to_str(ret_mat, n, &mat_str);
+    failure = mat_to_str(ret_mat, n, n, &mat_str);
     CHECK_FAILURE(failure, error);
 
     printf("%s\n", mat_str);
