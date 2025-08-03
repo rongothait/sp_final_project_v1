@@ -98,23 +98,6 @@ def init_clusters(points_lst, k, epsilon):
 
     return cluster_lst
 
-def is_float(x):
-    try:
-        float(x)
-        return True
-    except:
-        return False
-
-def print_cluster_lst(lst):
-    for c in lst:
-        print(lst_to_str(c.centroid.cord))
-
-def lst_to_str(lst):
-    str = ""
-    for x in lst:
-        str += '%.4f'%x + ','
-    return str [:-1]
-
 """
 txt_input_to_list - converts the path given to a list of lists
 @path: the path of the file
@@ -132,24 +115,6 @@ def txt_input_to_list(path):
 def list_to_points_list(lst):
     points_lst = [Point(lst[i], i) for i in range(len(lst))]
     return points_lst
-
-def lineToStr(lst):
-    """
-    given a list of floats as strings, return a list of floats with same values 
-    """ 
-    return [float(x) for x in lst]
-
-"""
-matrix_to_str - converts a list of lists (float) to formatted str ready for printing
-@mat: the matrix to convert
-"""
-def matrix_to_str(mat):
-    rows = []
-    for row in mat:
-        row_str = ','.join([f'{x:.4f}' for x in row])
-        rows.append(row_str)
-
-    return '\n'.join(rows)
 
 """
 creates a list of size N where each cell represents the point in the dataset in this index's cluster index
