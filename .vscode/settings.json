@@ -3,5 +3,6 @@
         "math.h": "c",
         "string.h": "c",
         "stdio.h": "c"
-    }
+    },
+    "makefile.configureOnOpen": false
 }

@@ -202,4 +202,3 @@ def run_kmeans_alg(path, k):
 
     # return tuple
     return points_lst_regular, lables
-
