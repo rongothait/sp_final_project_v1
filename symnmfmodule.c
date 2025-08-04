@@ -284,13 +284,13 @@ static PyMethodDef symnmf_methods[] = {
 
 static struct PyModuleDef symnmf_capi = {
     PyModuleDef_HEAD_INIT,
-    "symnmf", /* name of the module */
+    "symnmf_mod", /* name of the module */
     NULL, /* module documentaion, may be null */
     -1, /* size of per-interpreter state of the module, -1 if the module keeps state in global variables */
     symnmf_methods /* the PyMethodDef array from before containing the methods of the extension */
 };
 
-PyMODINIT_FUNC PyInit_symnmf(void)
+PyMODINIT_FUNC PyInit_symnmf_mod(void)
 {
     PyObject *m;
     m = PyModule_Create(&symnmf_capi);

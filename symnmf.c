@@ -22,16 +22,17 @@ typedef struct cord {
     struct cord *next;
 } cord;
 
-//TODO
+/* TODO */
 void general_error(){
     printf("An Error Has Occured\n");
-    //Add freeing the memory
+    /* Add freeing the memory */
     exit(1);
 }
 
 /**
  * free_cords - free cordinates memory allocation for the linked list starting at crd
  * @crd: the starting node to free from
+ *  Return: 0 on success, 1 on failure
  */
 int free_cords(cord *crd){
     cord *nxt;
@@ -46,8 +47,9 @@ int free_cords(cord *crd){
 }
 
 /**
- * free+pnt_lst - free memory allocation for all points in the linked list (starting from pnt)
+ * free_pnt_lst - free memory allocation for all points in the linked list (starting from pnt)
  * @pnt: the head node to start from
+ *  Return: 0 on success, 1 on failure
 */ 
 int free_pnt_lst(point *pnt){
     point *nxt;
@@ -66,6 +68,7 @@ int free_pnt_lst(point *pnt){
  * free_matrix - Frees the memory allocated for a 2d matrix mat with m rows
  * @mat: the matrix (a 2d array)
  * @m: number of rows
+ *  Return: 0 on success, 1 on failure
  */
 int free_matrix(double **mat, int m){
     int i;
@@ -88,24 +91,25 @@ int free_matrix(double **mat, int m){
  * @m: rows dimensions of matrix
  * @n: columns dimension of matrix
  * @ret_str: outparameter. Will hold the describing string
+ *  Return: 0 on success, 1 on failure
  */
 int mat_to_str(double** mat, int m, int n, char **ret_str){
     int i, j, len = 0;
-    int bufsize = m * n * 32 + n; // Estimate: 32 chars per number + newlines
+    int bufsize = m * n * 32 + n; /* Estimate: 32 chars per number + newlines */
     *ret_str = malloc(bufsize);
     if (*ret_str == NULL) {return 1;}
 
-    (*ret_str)[0] = '\0'; // Start with empty string
+    (*ret_str)[0] = '\0'; /* Start with empty string */
 
     for (i = 0; i < m; i++) {
         for (j = 0; j < n; j++) {
-            // Append number, add comma if not last in row
-            len += snprintf(*ret_str + len, bufsize - len, "%.4f", mat[i][j]);
+            /* Append number, add comma if not last in row */
+            len += sprintf(*ret_str + len, "%.4f", mat[i][j]);
             if (j < n - 1)
-                len += snprintf((*ret_str) + len, bufsize - len, ",");
+                len += sprintf(*ret_str + len, ",");
         }
         if (i < m - 1)
-            len += snprintf((*ret_str) + len, bufsize - len, "\n");
+            len += sprintf(*ret_str + len, "\n");
     }
     return 0;
 }
@@ -115,18 +119,19 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
  * @path: the relative path to the input file
  * @head_point: out parameter. Will hold the first node (of type point) in the linked list.
  * @points_count: the number of points in the dataset = the dataset length
+ *  Return: 0 on success, 1 on failure
  */
 int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     double n;
     char c;
+    FILE *file;
+    point *curr_point, *prev_point;
+    cord *head_cord, *curr_cord;
     int dim = 0;
     *points_count = 0;
 
-    FILE *file = fopen(path, "r");  // Open for reading
+    file = fopen(path, "r");  /* Open for reading */
     if (file == NULL) {return 1;}
-
-    point *curr_point, *prev_point;
-    cord *head_cord, *curr_cord;
 
     /* init head of cords*/
     head_cord = (cord*) malloc(sizeof(struct cord));
@@ -145,7 +150,7 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
 
     /* scan input */
     while (fscanf(file, "%lf%c", &n, &c) == 2){
-        if (c == ','){ // still on same point
+        if (c == ','){ /* still on same point */
             dim++;
             curr_cord->value = n;
             curr_cord->next = (cord*) calloc(1, sizeof(cord));
@@ -154,7 +159,7 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
             curr_cord->next = NULL;
         }
 
-        if (c == '\n'){  // end of this point
+        if (c == '\n'){  /* end of this point */
             curr_cord->value = n;
             curr_point->cords = head_cord;
             curr_point->dim = dim + 1;
@@ -191,15 +196,15 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
  * @p1: First point
  * @p2: Second point
  * @dist: output parameter. Will hold the eucledian distance of the 2 points.
+ *  Return: 0 on success, 1 on failure
  */
 int euc_distance(point *p1, point *p2, double *dist){
-    int i;
-    *dist = 0;
-    if (p1->dim != p2->dim) {return 1;} // ERROR! two points not of same dimension
-
-    int dim1 = p1->dim;
+    int i, dim1;
     cord *curr1, *curr2;
+    *dist = 0;
+    if (p1->dim != p2->dim) {return 1;} /* ERROR! two points not of same dimension */
 
+    dim1 = p1->dim;
     curr1 = p1->cords;
     curr2 = p2->cords;
 
@@ -219,12 +224,13 @@ int euc_distance(point *p1, point *p2, double *dist){
  * @xi: the first cordinate in the dataset X
  * @xj: the second cordiante in the dataset X 
  * @result: output parameter. Will hold the result of A(ij)
+ *  Return: 0 on success, 1 on failure
  */
 int calc_aij_sim(point *xi, point *xj, double *result){
+    double dist, power;
     *result = 0;
-    double dist;
     if(euc_distance(xi, xj, &dist) != 0) {general_error();}
-    double power = ((pow(dist, 2)) / 2);
+    power = ((pow(dist, 2)) / 2);
     *result = exp(-1*power);
     return 0;
 }
@@ -234,6 +240,7 @@ int calc_aij_sim(point *xi, point *xj, double *result){
  * @points_lst: the dataset X
  * @n: points_lst length
  * @sim_mat: out parameter. Will hold the similiarity matrix A.
+ *  Return: 0 on success, 1 on failure
  */
 int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     int i,j;
@@ -264,7 +271,7 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
         xi = xi->next;
     }
 
-    return 0; // OK!
+    return 0; /* OK! */
 }
 
 /**
@@ -272,10 +279,12 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
  * @arr: the array
  * @n: the size of the array (needs to be predetermined)
  * @sum: outparameter. Will hold the sum of the array
+ *  Return: 0 on success, 1 on failure
  */
 int arr_sum(double* arr, int n, double* sum){
-    *sum = 0;
     int i;
+    *sum = 0;
+    
 
     for (i = 0; i < n; i++){
         *sum += arr[i];
@@ -289,6 +298,7 @@ int arr_sum(double* arr, int n, double* sum){
  * @points_lst: the input dataset X
  * @n: the length of dataset X
  * @diag_mat: out parameter. Will hold the diagonal degree matrix.
+ *  Return: 0 on success, 1 on failure
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
     int i;
@@ -306,7 +316,7 @@ int create_diag_mat(point* points_lst, int n, double ***diag_mat){
         if (arr_sum(sim_mat[i], n, &res) != 0) {return 1;}
         (*diag_mat)[i][i] = res;
     }
-    return 0;  // OK!
+    return 0;  /* OK! */
 }
 
 /**
@@ -314,6 +324,7 @@ int create_diag_mat(point* points_lst, int n, double ***diag_mat){
  * @mat: the matrix to calculate based on
  * @n: the dimension of the matrix
  * @ret_mat: out parameter. Will hold the result matrix
+ *  Return: 0 on success, 1 on failure
  */
 int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
     int i;
@@ -334,11 +345,12 @@ int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
  * @A: n*n matrix
  * @direction: 'left' if D*A, 'right' if A*D
  * @res: out parameter. Will hold the result matrix
+ *  Return: 0 on success, 1 on failure
 */
 int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res){
+    int i,j;
     if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {return 1;}
 
-    int i,j;
     (*res) = malloc(n * sizeof(double*));
     if (*res == NULL) {return 1;}
     
@@ -353,7 +365,7 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
                 (*res)[i][j] = A[i][j] * D[j][j];
         }
     }
-    return 0;  // OK!
+    return 0;  /* OK! */
 }
 
 /**
@@ -361,6 +373,7 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
  * @points_lst: the input dataset X
  * @n: the length of dataset X
  * @w_mat: outparameter. Will hold the result W matrix
+ *  Return: 0 on success, 1 on failure
  */
 int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
     double **sim_mat, **diag_mat_minus_sqrt, **diag_mat, **DA;
@@ -381,11 +394,13 @@ int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
  * @n: column dimension of mat
  * @m: row dimension of mat
  * @norm_res: out parameter. Will hold the Frobenius norm result.
+ *  Return: 0 on success, 1 on failure
  */ 
 int frobenius_norm(double **mat, int m, int n, double *norm_res){
+    int i, j;
     *norm_res = 0;
-    for (int i = 0; i < m; i++){
-        for (int j = 0; j < n; j++){
+    for (i = 0; i < m; i++){
+        for (j = 0; j < n; j++){
             *norm_res += (mat[i][j] * mat[i][j]);
         }
     }
@@ -400,6 +415,7 @@ int frobenius_norm(double **mat, int m, int n, double *norm_res){
  * @m: number of rows
  * @n: number of columns
  * @res_mat: out parameter. Will hold the result matrix after the substraction
+ *  Return: 0 on success, 1 on failure
  */
 int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
     int i, j;
@@ -421,7 +437,7 @@ int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
         }
     }
 
-    // Preform matrix substraction
+    /* Preform matrix substraction */
     for (i = 0; i < m; i++){
         for (j = 0; j < n; j++){
             (*res_mat)[i][j] = A[i][j] - B[i][j];
@@ -437,17 +453,19 @@ int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
  * @n: columns dimension
  * @m: rows dimension
  * @avg_val: out parameter. Will hold the average value of mat's cells.
+ *  Return: 0 on success, 1 on failure
  */
 int avg_mat_val(double **mat, int n, int m, double *avg_val){
+    int i, j;
     *avg_val = 0;
 
-    for (int i = 0; i < m; i++){
-        for (int j = 0; j < n; j++){
+    for (i = 0; i < m; i++){
+        for (j = 0; j < n; j++){
             (*avg_val) += mat[i][j];
         }
     }
 
-    return 0;  // OK!
+    return 0;  /* OK! */
 }
 
 /**
@@ -457,6 +475,7 @@ int avg_mat_val(double **mat, int n, int m, double *avg_val){
  * @wh: W*H matrix
  * @hh_th: H * H^t * H matrix
  * @res_ij: out parameter. Will hold the result of the calculation
+ *  Return: 0 on success, 1 on failure
  */
 int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, double *res_ij){
     double beta = 0.5;  /* default value */
@@ -470,12 +489,13 @@ int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, dou
  * @b: column dimension of A + row dimension of B
  * @c: column dimension of B
  * @res_mat: out parameter. Will hold the result matrix of dimension a*c
+ *  Return: 0 on success, 1 on failure
  */
 int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
     int i,j,k;
     double sum;
 
-    // Allocate memory for result matrix
+    /* Allocate memory for result matrix */
     *res_mat = malloc(a * sizeof(double));
     if (*res_mat == NULL) {return 1;}
 
@@ -484,7 +504,7 @@ int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
         if ((*res_mat)[i] == NULL) {return 1;}
     }
 
-    // Perform matrix multiplication
+    /* Perform matrix multiplication */
     for (i = 0; i < a; i++){
         for (j = 0; j < c; j++){
             sum = 0;
@@ -545,19 +565,20 @@ int transpose_matrix(double **mat, int m, int n, double ***transposed){
  * @next_h: out parameter. Will hold the result of the calculation
  */
 int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double ***next_h){
+    int i, j;
     double res;
     (*next_h) = malloc(n * sizeof(double*));
     if (*next_h == NULL) {return 1;}
 
-    // Allocate memory for result matrix
-    for (int i = 0; i < n; i++){
+    /* Allocate memory for result matrix */
+    for (i = 0; i < n; i++){
         (*next_h)[i] = calloc(k, sizeof(double));
         if ((*next_h)[i] == NULL) {return 1;}
     }
 
-    // Perform the calcuations
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < k; j++){
+    /* Perform the calcuations */
+    for (i = 0; i < n; i++){
+        for (j = 0; j < k; j++){
             if (calc_h_next_ij(i, j, wh, hh_th, h, &res) != 0) {return 1;}
             (*next_h)[i][j] = res;
         }
@@ -566,6 +587,14 @@ int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double **
     return 0;
 }
 
+/**
+ * copy a matrix's src values to allocated matrix dest
+ * @dest: destination matrix
+ * @src:  source matrix
+ * @m: row dimension
+ * @n: column dimension
+ *  Return: 0 on success, 1 on failure
+ */
 int copy_matrix_by_value(double **dest, double **src, int m, int n){
     int row, col;
 
@@ -578,6 +607,15 @@ int copy_matrix_by_value(double **dest, double **src, int m, int n){
     return 0;
 }
 
+/**
+ * run the optimization algorithm as defined in 1.4
+ * @h_init: the initial H matrix
+ * @w: W matrix
+ * @n: size of dataset (= number of rows in H matrix)
+ * @k: number of clusters (= number of columns in H matrix)
+ * @optimized_h: out parameter. Will hold the optimized H matrix
+ *  Return: 0 on success, 1 on failure
+ */
 int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimized_h){
     int i, failure;
     double for_norm;
@@ -647,27 +685,26 @@ int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimize
 
 error:
     return 1;
-    //TODO - free memory
+    /* TODO - free memory */
 }
 
 int main(int argc, char *argv[]){
-    int failure;
+    int failure, n;
+    char *goal, *file_name, *mat_str;
+    double **ret_mat;
+    point *dataset;
 
     if (argc != 3){
         printf("%s", ERR_MSG_GENERAL);
         return 1;
     }
 
-    char *goal = argv[1];
-    char *file_name = argv[2];
-
-    int n;
-    point *dataset;
+    goal = argv[1];
+    file_name = argv[2];
 
     failure = input_txt_to_points_lst(file_name, &dataset, &n);
     CHECK_FAILURE(failure, error);
 
-    double **ret_mat;
     if (strcmp(goal, "sym") == 0){
         failure = create_sim_mat(dataset, n, &ret_mat);
         CHECK_FAILURE(failure, error);
@@ -686,7 +723,6 @@ int main(int argc, char *argv[]){
         goto error;
     }
 
-    char* mat_str;
     failure = mat_to_str(ret_mat, n, n, &mat_str);
     CHECK_FAILURE(failure, error);
 
@@ -695,9 +731,9 @@ int main(int argc, char *argv[]){
     return 0;
 
 error:
-    // TODO - free up memory
-    // TODO - print (or return) error msg
-    // TODO - return 1?
+    /* TODO - free up memory
+       TODO - print (or return) error msg
+       TODO - return 1? */
     printf("%s", ERR_MSG_GENERAL);
     return 1;
 }

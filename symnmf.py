@@ -1,9 +1,8 @@
 import numpy as np
 import sys
-import symnmf
+import symnmf_mod as symnmf
 import numpy as np
 
-np.random.seed(1234)
 ERR_MSG = "An Error Has Occured"
 
 def general_error(msg = ERR_MSG):
@@ -98,25 +97,16 @@ def symnmf_handle(dataset, k, n):
     w_mat_avg_val = get_average_val_of_matrix(w_mat)
     upper_val = 2 * ((w_mat_avg_val / k)**0.5)
     h_mat = create_random_matrix(n, k, upper_val)
-    print("python init_h matrix is:")
-    print(matrix_to_str(h_mat))
-    print()
 
     # call the symnmf() function in module
     res_mat = symnmf.symnmf(h_mat, w_mat, k)
 
     return res_mat
 
-def main():
-    
-    k, goal, path = set_data(sys.argv)
+def get_goal_matrix(goal, k, path):
     dataset = txt_input_to_list(path)
-    """
-    k, goal = 2, "symnmf"
-    dataset = txt_input_to_list("input_1_short.txt")
-    """
     n = len(dataset)
-    
+
     if k >= n:
         general_error()
     
@@ -128,8 +118,25 @@ def main():
         mat = symnmf.ddg(dataset)
     elif goal == "norm":
         mat = symnmf.norm(dataset)
-    else:
+
+    return mat
+    
+def main():
+    k, goal, path = set_data(sys.argv)
+    dataset = txt_input_to_list(path)
+    """
+    k, goal = 2, "symnmf"
+    dataset = txt_input_to_list("input_1_short.txt")
+    """
+    # validate goal
+    if goal not in ['sym', 'ddg', 'symnmf', 'norm']:
         general_error()
+
+    # validate k
+    if (is_float(k)) and (float(k) % 1 != 0):
+        general_error()
+    
+    mat = get_goal_matrix(goal, int(k), path)
 
     mat_str = matrix_to_str(mat)
     print(mat_str)
