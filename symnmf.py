@@ -124,7 +124,7 @@ def get_goal_matrix(goal, k, path):
 def main():
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
-    """
+    """ # FOR DEBUG
     k, goal = 2, "symnmf"
     dataset = txt_input_to_list("input_1_short.txt")
     """
@@ -133,7 +133,7 @@ def main():
         general_error()
 
     # validate k
-    if (is_float(k)) and (float(k) % 1 != 0):
+    if (is_float(k) == False) or (float(k) % 1 != 0):
         general_error()
     
     mat = get_goal_matrix(goal, int(k), path)

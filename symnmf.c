@@ -479,6 +479,7 @@ int avg_mat_val(double **mat, int n, int m, double *avg_val){
  */
 int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, double *res_ij){
     double beta = 0.5;  /* default value */
+    if (h_htr_h[i][j] == 0) {h_htr_h[i][j]=1e-6;} // add small epsilon to denominator to avoid division in zero
     (*res_ij) = h[i][j] * (1- beta + beta * (w_h[i][j] / h_htr_h[i][j]));
     return 0;
 }
@@ -688,6 +689,9 @@ error:
     /* TODO - free memory */
 }
 
+/**
+ * the main function for the C program
+ */
 int main(int argc, char *argv[]){
     int failure, n;
     char *goal, *file_name, *mat_str;
