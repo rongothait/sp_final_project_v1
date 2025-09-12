@@ -1,0 +1,254 @@
+
+! Removing old temporary files !
+
+>>> SymNMF <<<
+[C]        ./tests//input_6.txt - sym                             [32mpassed[0m
+[Python]   ./tests//input_6.txt - sym                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 sym ./tests//input_6.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.CIaM8W
+with line numbers: /tmp/tmpfile.VNrnYs
+--- expected ---
+original: ./tests//output_6_sym.txt
+with line numbers: /tmp/tmpfile.Z299rc
+--- diff ---
+diff: /tmp/tmpfile.rYg4O1
+________________
+
+[C]        ./tests//input_6.txt - ddg                             [32mpassed[0m
+[Python]   ./tests//input_6.txt - ddg                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 ddg ./tests//input_6.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.sF4Pkm
+with line numbers: /tmp/tmpfile.7VQop4
+--- expected ---
+original: ./tests//output_6_ddg.txt
+with line numbers: /tmp/tmpfile.BbrD4P
+--- diff ---
+diff: /tmp/tmpfile.yOKVU2
+________________
+
+[C]        ./tests//input_6.txt - norm                            [32mpassed[0m
+[Python]   ./tests//input_6.txt - norm                            [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 norm ./tests//input_6.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.Vs6qSs
+with line numbers: /tmp/tmpfile.t9qKYm
+--- expected ---
+original: ./tests//output_6_norm.txt
+with line numbers: /tmp/tmpfile.S2Bagl
+--- diff ---
+diff: /tmp/tmpfile.ENLXa1
+________________
+
+[Python]   ./tests//input_6.txt - symnmf-k2                       [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 2 symnmf ./tests//input_6.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.2IpUKG
+with line numbers: /tmp/tmpfile.O51f3F
+--- expected ---
+original: ./tests//output_6_symnmf.txt
+with line numbers: /tmp/tmpfile.9IKAgT
+--- diff ---
+diff: /tmp/tmpfile.CC5tR5
+________________
+
+[Python]   ./tests//input_6.txt - analysis-k2                     [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//analysis.py 2  ./tests//input_6.txt
+
+--- captured STDERR ---
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./a_b_project/analysis.py", line 4, in <module>
+    from sklearn.metrics import silhouette_score
+ModuleNotFoundError: No module named 'sklearn'
+--- actual ---
+original: /tmp/tmpfile.YMBz50
+with line numbers: /tmp/tmpfile.LbqBpA
+--- expected ---
+original: ./tests//output_6_analysis.txt
+with line numbers: /tmp/tmpfile.SChPhw
+--- diff ---
+diff: /tmp/tmpfile.IwPi25
+________________
+
+[C]        ./tests//input_7.txt - sym                             [32mpassed[0m
+[Python]   ./tests//input_7.txt - sym                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 sym ./tests//input_7.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.1jVhsX
+with line numbers: /tmp/tmpfile.mRh0q6
+--- expected ---
+original: ./tests//output_7_sym.txt
+with line numbers: /tmp/tmpfile.4AhMWz
+--- diff ---
+diff: /tmp/tmpfile.RHIdQb
+________________
+
+[C]        ./tests//input_7.txt - ddg                             [32mpassed[0m
+[Python]   ./tests//input_7.txt - ddg                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 ddg ./tests//input_7.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.5us7OM
+with line numbers: /tmp/tmpfile.tcnMpB
+--- expected ---
+original: ./tests//output_7_ddg.txt
+with line numbers: /tmp/tmpfile.zNy4HO
+--- diff ---
+diff: /tmp/tmpfile.qeeaSP
+________________
+
+[C]        ./tests//input_7.txt - norm                            [32mpassed[0m
+[Python]   ./tests//input_7.txt - norm                            [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 norm ./tests//input_7.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.qd0dso
+with line numbers: /tmp/tmpfile.uWuX8T
+--- expected ---
+original: ./tests//output_7_norm.txt
+with line numbers: /tmp/tmpfile.l17tMj
+--- diff ---
+diff: /tmp/tmpfile.FY58AS
+________________
+
+[Python]   ./tests//input_7.txt - symnmf-k2                       [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 2 symnmf ./tests//input_7.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.4k870B
+with line numbers: /tmp/tmpfile.U5eblN
+--- expected ---
+original: ./tests//output_7_symnmf.txt
+with line numbers: /tmp/tmpfile.Of1LcV
+--- diff ---
+diff: /tmp/tmpfile.hy11cp
+________________
+
+[Python]   ./tests//input_7.txt - analysis-k2                     [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//analysis.py 2  ./tests//input_7.txt
+
+--- captured STDERR ---
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./a_b_project/analysis.py", line 4, in <module>
+    from sklearn.metrics import silhouette_score
+ModuleNotFoundError: No module named 'sklearn'
+--- actual ---
+original: /tmp/tmpfile.TOMO9m
+with line numbers: /tmp/tmpfile.ovH9ob
+--- expected ---
+original: ./tests//output_7_analysis.txt
+with line numbers: /tmp/tmpfile.wQu84n
+--- diff ---
+diff: /tmp/tmpfile.hTyQO0
+________________
+
+[C]        ./tests//input_8.txt - sym                             [32mpassed[0m
+[Python]   ./tests//input_8.txt - sym                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 sym ./tests//input_8.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.xzjNaj
+with line numbers: /tmp/tmpfile.sEz6PG
+--- expected ---
+original: ./tests//output_8_sym.txt
+with line numbers: /tmp/tmpfile.Jh2U79
+--- diff ---
+diff: /tmp/tmpfile.nrqeDq
+________________
+
+[C]        ./tests//input_8.txt - ddg                             [32mpassed[0m
+[Python]   ./tests//input_8.txt - ddg                             [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 ddg ./tests//input_8.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.UuLhEC
+with line numbers: /tmp/tmpfile.rmHcvz
+--- expected ---
+original: ./tests//output_8_ddg.txt
+with line numbers: /tmp/tmpfile.UrTrTN
+--- diff ---
+diff: /tmp/tmpfile.BTulTI
+________________
+
+[C]        ./tests//input_8.txt - norm                            [32mpassed[0m
+[Python]   ./tests//input_8.txt - norm                            [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 0 norm ./tests//input_8.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.IFF0aY
+with line numbers: /tmp/tmpfile.yD5JuG
+--- expected ---
+original: ./tests//output_8_norm.txt
+with line numbers: /tmp/tmpfile.ZTdfIw
+--- diff ---
+diff: /tmp/tmpfile.Vx0JK4
+________________
+
+[Python]   ./tests//input_8.txt - symnmf-k2                       [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//symnmf.py 2 symnmf ./tests//input_8.txt
+
+--- captured STDERR ---
+--- actual ---
+original: /tmp/tmpfile.vad5Lm
+with line numbers: /tmp/tmpfile.g7J5ij
+--- expected ---
+original: ./tests//output_8_symnmf.txt
+with line numbers: /tmp/tmpfile.8xuufN
+--- diff ---
+diff: /tmp/tmpfile.BpsiEg
+________________
+
+[Python]   ./tests//input_8.txt - analysis-k2                     [31mFAILED[0m
+
+Failed command: python3 ./*_*_project//analysis.py 2  ./tests//input_8.txt
+
+--- captured STDERR ---
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./a_b_project/analysis.py", line 4, in <module>
+    from sklearn.metrics import silhouette_score
+ModuleNotFoundError: No module named 'sklearn'
+--- actual ---
+original: /tmp/tmpfile.38fayS
+with line numbers: /tmp/tmpfile.kICSfV
+--- expected ---
+original: ./tests//output_8_analysis.txt
+with line numbers: /tmp/tmpfile.ZYLjMR
+--- diff ---
+diff: /tmp/tmpfile.SXgOo7
+________________
+
+
+
+[31m=== 15/24 tests failed ===[0m
+
