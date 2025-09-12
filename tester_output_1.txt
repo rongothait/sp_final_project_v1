@@ -1,0 +1,2838 @@
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.9ubuntu3).
+python3 is already the newest version (3.10.6-1~22.04.1).
+python3-pip is already the newest version (22.0.2+dfsg-1ubuntu0.6).
+0 upgraded, 0 newly installed, 0 to remove and 80 not upgraded.
+[0;32mValgrind is already installed.[0m
+[0;34mCompiling current symnmf.py...[0m
+running build_ext
+building 'symnmf_mod' extension
+creating build
+creating build/temp.linux-x86_64-3.10
+x86_64-linux-gnu-gcc -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC -I/usr/include/python3.10 -c symnmf.c -o build/temp.linux-x86_64-3.10/symnmf.o
+x86_64-linux-gnu-gcc -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC -I/usr/include/python3.10 -c symnmfmodule.c -o build/temp.linux-x86_64-3.10/symnmfmodule.o
+creating build/lib.linux-x86_64-3.10
+x86_64-linux-gnu-gcc -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -g -fwrapv -O2 -Wl,-Bsymbolic-functions -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 build/temp.linux-x86_64-3.10/symnmf.o build/temp.linux-x86_64-3.10/symnmfmodule.o -o build/lib.linux-x86_64-3.10/symnmf_mod.cpython-310-x86_64-linux-gnu.so
+copying build/lib.linux-x86_64-3.10/symnmf_mod.cpython-310-x86_64-linux-gnu.so -> 
+[0;34mCompiling previous symnmf.py...[0m
+running build_ext
+building 'symnmfmodule' extension
+creating build
+creating build/temp.linux-x86_64-3.10
+x86_64-linux-gnu-gcc -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC -I/usr/include/python3.10 -c symnmf.c -o build/temp.linux-x86_64-3.10/symnmf.o
+x86_64-linux-gnu-gcc -Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC -I/usr/include/python3.10 -c symnmfmodule.c -o build/temp.linux-x86_64-3.10/symnmfmodule.o
+creating build/lib.linux-x86_64-3.10
+x86_64-linux-gnu-gcc -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions -g -fwrapv -O2 -Wl,-Bsymbolic-functions -g -fwrapv -O2 -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 build/temp.linux-x86_64-3.10/symnmf.o build/temp.linux-x86_64-3.10/symnmfmodule.o -o build/lib.linux-x86_64-3.10/symnmfmodule.cpython-310-x86_64-linux-gnu.so
+copying build/lib.linux-x86_64-3.10/symnmfmodule.cpython-310-x86_64-linux-gnu.so -> 
+[0;34mCompiling current symnmf.c...[0m
+make: 'symnmf' is up to date.
+[0;34mCompiling previous symnmf.c...[0m
+Compiling symnmf.c
+Building symnmf
+
+[0;34mRunning test case: [0;33mK=2, goal=sym, file_name=test_input_small1.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input_small1.txt[0m
+[0;31mPython test case '[0;33m2 sym test_input_small1.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input_small1.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input_small1.txt[0m
+==16554== Memcheck, a memory error detector
+==16554== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==16554== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==16554== Command: ./symnmf sym test_input_small1.txt
+==16554== 
+==16554== Use of uninitialised value of size 8
+==16554==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16554==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16554== 
+==16554== Invalid write of size 8
+==16554==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16554==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16554==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==16554== 
+==16554== 
+==16554== Process terminating with default action of signal 11 (SIGSEGV)
+==16554==  Access not within mapped region at address 0x0
+==16554==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16554==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16554==  If you believe this happened as a result of a stack
+==16554==  overflow in your program's main thread (unlikely but
+==16554==  possible), you can try to increase the size of the
+==16554==  main thread stack using the --main-stacksize= flag.
+==16554==  The main thread stack size used in this run was 8388608.
+==16554== 
+==16554== HEAP SUMMARY:
+==16554==     in use at exit: 4,568 bytes in 2 blocks
+==16554==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==16554== 
+==16554== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==16554==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16554==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==16554==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==16554==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16554==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16554== 
+==16554== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==16554==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16554==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==16554==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==16554==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==16554==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==16554==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==16554==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==16554==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16554==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16554== 
+==16554== LEAK SUMMARY:
+==16554==    definitely lost: 0 bytes in 0 blocks
+==16554==    indirectly lost: 0 bytes in 0 blocks
+==16554==      possibly lost: 0 bytes in 0 blocks
+==16554==    still reachable: 4,568 bytes in 2 blocks
+==16554==         suppressed: 0 bytes in 0 blocks
+==16554== 
+==16554== Use --track-origins=yes to see where uninitialised values come from
+==16554== For lists of detected and suppressed errors, rerun with: -s
+==16554== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input_small1.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small1.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small1.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=ddg, file_name=test_input_small2.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input_small2.txt[0m
+[0;31mPython test case '[0;33m2 ddg test_input_small2.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input_small2.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input_small2.txt[0m
+==16749== Memcheck, a memory error detector
+==16749== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==16749== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==16749== Command: ./symnmf ddg test_input_small2.txt
+==16749== 
+==16749== Use of uninitialised value of size 8
+==16749==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16749==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16749== 
+==16749== Invalid write of size 8
+==16749==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16749==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16749==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==16749== 
+==16749== 
+==16749== Process terminating with default action of signal 11 (SIGSEGV)
+==16749==  Access not within mapped region at address 0x0
+==16749==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16749==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16749==  If you believe this happened as a result of a stack
+==16749==  overflow in your program's main thread (unlikely but
+==16749==  possible), you can try to increase the size of the
+==16749==  main thread stack using the --main-stacksize= flag.
+==16749==  The main thread stack size used in this run was 8388608.
+==16749== 
+==16749== HEAP SUMMARY:
+==16749==     in use at exit: 4,568 bytes in 2 blocks
+==16749==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==16749== 
+==16749== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==16749==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16749==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==16749==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==16749==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16749==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16749== 
+==16749== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==16749==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16749==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==16749==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==16749==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==16749==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==16749==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==16749==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==16749==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16749==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16749== 
+==16749== LEAK SUMMARY:
+==16749==    definitely lost: 0 bytes in 0 blocks
+==16749==    indirectly lost: 0 bytes in 0 blocks
+==16749==      possibly lost: 0 bytes in 0 blocks
+==16749==    still reachable: 4,568 bytes in 2 blocks
+==16749==         suppressed: 0 bytes in 0 blocks
+==16749== 
+==16749== Use --track-origins=yes to see where uninitialised values come from
+==16749== For lists of detected and suppressed errors, rerun with: -s
+==16749== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input_small2.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small2.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small2.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=norm, file_name=test_input_small3.txt[0m
+
+[0;34mGenerating [0;33m7[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input_small3.txt[0m
+[0;31mPython test case '[0;33m2 norm test_input_small3.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input_small3.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input_small3.txt[0m
+==16982== Memcheck, a memory error detector
+==16982== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==16982== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==16982== Command: ./symnmf norm test_input_small3.txt
+==16982== 
+==16982== Use of uninitialised value of size 8
+==16982==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16982==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16982== 
+==16982== Invalid write of size 8
+==16982==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16982==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16982==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==16982== 
+==16982== 
+==16982== Process terminating with default action of signal 11 (SIGSEGV)
+==16982==  Access not within mapped region at address 0x0
+==16982==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16982==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16982==  If you believe this happened as a result of a stack
+==16982==  overflow in your program's main thread (unlikely but
+==16982==  possible), you can try to increase the size of the
+==16982==  main thread stack using the --main-stacksize= flag.
+==16982==  The main thread stack size used in this run was 8388608.
+==16982== 
+==16982== HEAP SUMMARY:
+==16982==     in use at exit: 4,568 bytes in 2 blocks
+==16982==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==16982== 
+==16982== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==16982==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16982==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==16982==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==16982==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16982==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16982== 
+==16982== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==16982==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==16982==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==16982==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==16982==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==16982==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==16982==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==16982==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==16982==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==16982==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==16982== 
+==16982== LEAK SUMMARY:
+==16982==    definitely lost: 0 bytes in 0 blocks
+==16982==    indirectly lost: 0 bytes in 0 blocks
+==16982==      possibly lost: 0 bytes in 0 blocks
+==16982==    still reachable: 4,568 bytes in 2 blocks
+==16982==         suppressed: 0 bytes in 0 blocks
+==16982== 
+==16982== Use --track-origins=yes to see where uninitialised values come from
+==16982== For lists of detected and suppressed errors, rerun with: -s
+==16982== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input_small3.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small3.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small3.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=symnmf, file_name=test_input_small4.txt[0m
+
+[0;34mGenerating [0;33m6[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input_small4.txt[0m
+[0;31mPython test case '[0;33m2 symnmf test_input_small4.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=2 and input file test_input_small4.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small4.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=sym, file_name=test_input_small5.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m1[0;34m dimensions in [0;33mtest_input_small5.txt[0m
+[0;31mPython test case '[0;33m2 sym test_input_small5.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input_small5.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input_small5.txt[0m
+==17304== Memcheck, a memory error detector
+==17304== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==17304== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==17304== Command: ./symnmf sym test_input_small5.txt
+==17304== 
+==17304== Use of uninitialised value of size 8
+==17304==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17304==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17304== 
+==17304== Invalid write of size 8
+==17304==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17304==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17304==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==17304== 
+==17304== 
+==17304== Process terminating with default action of signal 11 (SIGSEGV)
+==17304==  Access not within mapped region at address 0x0
+==17304==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17304==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17304==  If you believe this happened as a result of a stack
+==17304==  overflow in your program's main thread (unlikely but
+==17304==  possible), you can try to increase the size of the
+==17304==  main thread stack using the --main-stacksize= flag.
+==17304==  The main thread stack size used in this run was 8388608.
+==17304== 
+==17304== HEAP SUMMARY:
+==17304==     in use at exit: 4,568 bytes in 2 blocks
+==17304==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==17304== 
+==17304== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==17304==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17304==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==17304==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==17304==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17304==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17304== 
+==17304== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==17304==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17304==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==17304==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==17304==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==17304==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==17304==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==17304==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==17304==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17304==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17304== 
+==17304== LEAK SUMMARY:
+==17304==    definitely lost: 0 bytes in 0 blocks
+==17304==    indirectly lost: 0 bytes in 0 blocks
+==17304==      possibly lost: 0 bytes in 0 blocks
+==17304==    still reachable: 4,568 bytes in 2 blocks
+==17304==         suppressed: 0 bytes in 0 blocks
+==17304== 
+==17304== Use --track-origins=yes to see where uninitialised values come from
+==17304== For lists of detected and suppressed errors, rerun with: -s
+==17304== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input_small5.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small5.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small5.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=ddg, file_name=test_input_small6.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m1[0;34m dimensions in [0;33mtest_input_small6.txt[0m
+[0;31mPython test case '[0;33m2 ddg test_input_small6.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input_small6.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input_small6.txt[0m
+==17470== Memcheck, a memory error detector
+==17470== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==17470== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==17470== Command: ./symnmf ddg test_input_small6.txt
+==17470== 
+==17470== Use of uninitialised value of size 8
+==17470==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17470==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17470== 
+==17470== Invalid write of size 8
+==17470==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17470==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17470==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==17470== 
+==17470== 
+==17470== Process terminating with default action of signal 11 (SIGSEGV)
+==17470==  Access not within mapped region at address 0x0
+==17470==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17470==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17470==  If you believe this happened as a result of a stack
+==17470==  overflow in your program's main thread (unlikely but
+==17470==  possible), you can try to increase the size of the
+==17470==  main thread stack using the --main-stacksize= flag.
+==17470==  The main thread stack size used in this run was 8388608.
+==17470== 
+==17470== HEAP SUMMARY:
+==17470==     in use at exit: 4,568 bytes in 2 blocks
+==17470==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==17470== 
+==17470== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==17470==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17470==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==17470==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==17470==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17470==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17470== 
+==17470== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==17470==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17470==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==17470==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==17470==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==17470==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==17470==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==17470==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==17470==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17470==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17470== 
+==17470== LEAK SUMMARY:
+==17470==    definitely lost: 0 bytes in 0 blocks
+==17470==    indirectly lost: 0 bytes in 0 blocks
+==17470==      possibly lost: 0 bytes in 0 blocks
+==17470==    still reachable: 4,568 bytes in 2 blocks
+==17470==         suppressed: 0 bytes in 0 blocks
+==17470== 
+==17470== Use --track-origins=yes to see where uninitialised values come from
+==17470== For lists of detected and suppressed errors, rerun with: -s
+==17470== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input_small6.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small6.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small6.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=norm, file_name=test_input_small7.txt[0m
+
+[0;34mGenerating [0;33m7[0;34m points with [0;33m1[0;34m dimensions in [0;33mtest_input_small7.txt[0m
+[0;31mPython test case '[0;33m2 norm test_input_small7.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input_small7.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input_small7.txt[0m
+==17642== Memcheck, a memory error detector
+==17642== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==17642== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==17642== Command: ./symnmf norm test_input_small7.txt
+==17642== 
+==17642== Use of uninitialised value of size 8
+==17642==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17642==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17642== 
+==17642== Invalid write of size 8
+==17642==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17642==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17642==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==17642== 
+==17642== 
+==17642== Process terminating with default action of signal 11 (SIGSEGV)
+==17642==  Access not within mapped region at address 0x0
+==17642==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17642==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17642==  If you believe this happened as a result of a stack
+==17642==  overflow in your program's main thread (unlikely but
+==17642==  possible), you can try to increase the size of the
+==17642==  main thread stack using the --main-stacksize= flag.
+==17642==  The main thread stack size used in this run was 8388608.
+==17642== 
+==17642== HEAP SUMMARY:
+==17642==     in use at exit: 4,568 bytes in 2 blocks
+==17642==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==17642== 
+==17642== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==17642==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17642==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==17642==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==17642==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17642==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17642== 
+==17642== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==17642==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==17642==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==17642==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==17642==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==17642==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==17642==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==17642==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==17642==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==17642==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==17642== 
+==17642== LEAK SUMMARY:
+==17642==    definitely lost: 0 bytes in 0 blocks
+==17642==    indirectly lost: 0 bytes in 0 blocks
+==17642==      possibly lost: 0 bytes in 0 blocks
+==17642==    still reachable: 4,568 bytes in 2 blocks
+==17642==         suppressed: 0 bytes in 0 blocks
+==17642== 
+==17642== Use --track-origins=yes to see where uninitialised values come from
+==17642== For lists of detected and suppressed errors, rerun with: -s
+==17642== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input_small7.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input_small7.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small7.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=symnmf, file_name=test_input_small8.txt[0m
+
+[0;34mGenerating [0;33m6[0;34m points with [0;33m1[0;34m dimensions in [0;33mtest_input_small8.txt[0m
+[0;31mPython test case '[0;33m2 symnmf test_input_small8.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=2 and input file test_input_small8.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input_small8.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=symnmf, file_name=test_input1.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input1.txt[0m
+[0;31mPython test case '[0;33m2 symnmf test_input1.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=2 and input file test_input1.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input1.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=ddg, file_name=test_input2.txt[0m
+
+[0;34mGenerating [0;33m6[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input2.txt[0m
+[0;31mPython test case '[0;33m3 ddg test_input2.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input2.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input2.txt[0m
+==18174== Memcheck, a memory error detector
+==18174== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==18174== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==18174== Command: ./symnmf ddg test_input2.txt
+==18174== 
+==18174== Use of uninitialised value of size 8
+==18174==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18174==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18174== 
+==18174== Invalid write of size 8
+==18174==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18174==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18174==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==18174== 
+==18174== 
+==18174== Process terminating with default action of signal 11 (SIGSEGV)
+==18174==  Access not within mapped region at address 0x0
+==18174==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18174==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18174==  If you believe this happened as a result of a stack
+==18174==  overflow in your program's main thread (unlikely but
+==18174==  possible), you can try to increase the size of the
+==18174==  main thread stack using the --main-stacksize= flag.
+==18174==  The main thread stack size used in this run was 8388608.
+==18174== 
+==18174== HEAP SUMMARY:
+==18174==     in use at exit: 4,568 bytes in 2 blocks
+==18174==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==18174== 
+==18174== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==18174==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18174==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==18174==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==18174==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18174==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18174== 
+==18174== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==18174==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18174==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==18174==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==18174==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==18174==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==18174==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==18174==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==18174==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18174==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18174== 
+==18174== LEAK SUMMARY:
+==18174==    definitely lost: 0 bytes in 0 blocks
+==18174==    indirectly lost: 0 bytes in 0 blocks
+==18174==      possibly lost: 0 bytes in 0 blocks
+==18174==    still reachable: 4,568 bytes in 2 blocks
+==18174==         suppressed: 0 bytes in 0 blocks
+==18174== 
+==18174== Use --track-origins=yes to see where uninitialised values come from
+==18174== For lists of detected and suppressed errors, rerun with: -s
+==18174== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input2.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=3 and input file test_input2.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input2.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=norm, file_name=test_input3.txt[0m
+
+[0;34mGenerating [0;33m4[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input3.txt[0m
+[0;31mPython test case '[0;33m2 norm test_input3.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input3.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input3.txt[0m
+==18347== Memcheck, a memory error detector
+==18347== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==18347== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==18347== Command: ./symnmf norm test_input3.txt
+==18347== 
+==18347== Use of uninitialised value of size 8
+==18347==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18347==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18347== 
+==18347== Invalid write of size 8
+==18347==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18347==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18347==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==18347== 
+==18347== 
+==18347== Process terminating with default action of signal 11 (SIGSEGV)
+==18347==  Access not within mapped region at address 0x0
+==18347==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18347==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18347==  If you believe this happened as a result of a stack
+==18347==  overflow in your program's main thread (unlikely but
+==18347==  possible), you can try to increase the size of the
+==18347==  main thread stack using the --main-stacksize= flag.
+==18347==  The main thread stack size used in this run was 8388608.
+==18347== 
+==18347== HEAP SUMMARY:
+==18347==     in use at exit: 4,568 bytes in 2 blocks
+==18347==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==18347== 
+==18347== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==18347==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18347==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==18347==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==18347==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18347==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18347== 
+==18347== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==18347==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18347==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==18347==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==18347==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==18347==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==18347==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==18347==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==18347==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18347==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18347== 
+==18347== LEAK SUMMARY:
+==18347==    definitely lost: 0 bytes in 0 blocks
+==18347==    indirectly lost: 0 bytes in 0 blocks
+==18347==      possibly lost: 0 bytes in 0 blocks
+==18347==    still reachable: 4,568 bytes in 2 blocks
+==18347==         suppressed: 0 bytes in 0 blocks
+==18347== 
+==18347== Use --track-origins=yes to see where uninitialised values come from
+==18347== For lists of detected and suppressed errors, rerun with: -s
+==18347== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input3.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input3.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input3.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=symnmf, file_name=test_input4.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input4.txt[0m
+[0;31mPython test case '[0;33m2 symnmf test_input4.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=2 and input file test_input4.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input4.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=sym, file_name=test_input5.txt[0m
+
+[0;34mGenerating [0;33m10[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input5.txt[0m
+[0;31mPython test case '[0;33m4 sym test_input5.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input5.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input5.txt[0m
+==18772== Memcheck, a memory error detector
+==18772== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==18772== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==18772== Command: ./symnmf sym test_input5.txt
+==18772== 
+==18772== Use of uninitialised value of size 8
+==18772==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18772==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18772== 
+==18772== Invalid write of size 8
+==18772==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18772==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18772==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==18772== 
+==18772== 
+==18772== Process terminating with default action of signal 11 (SIGSEGV)
+==18772==  Access not within mapped region at address 0x0
+==18772==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18772==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18772==  If you believe this happened as a result of a stack
+==18772==  overflow in your program's main thread (unlikely but
+==18772==  possible), you can try to increase the size of the
+==18772==  main thread stack using the --main-stacksize= flag.
+==18772==  The main thread stack size used in this run was 8388608.
+==18772== 
+==18772== HEAP SUMMARY:
+==18772==     in use at exit: 4,568 bytes in 2 blocks
+==18772==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==18772== 
+==18772== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==18772==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18772==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==18772==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==18772==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18772==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18772== 
+==18772== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==18772==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==18772==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==18772==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==18772==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==18772==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==18772==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==18772==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==18772==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==18772==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==18772== 
+==18772== LEAK SUMMARY:
+==18772==    definitely lost: 0 bytes in 0 blocks
+==18772==    indirectly lost: 0 bytes in 0 blocks
+==18772==      possibly lost: 0 bytes in 0 blocks
+==18772==    still reachable: 4,568 bytes in 2 blocks
+==18772==         suppressed: 0 bytes in 0 blocks
+==18772== 
+==18772== Use --track-origins=yes to see where uninitialised values come from
+==18772== For lists of detected and suppressed errors, rerun with: -s
+==18772== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input5.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=4 and input file test_input5.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input5.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=ddg, file_name=test_input6.txt[0m
+
+[0;34mGenerating [0;33m12[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input6.txt[0m
+[0;31mPython test case '[0;33m5 ddg test_input6.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input6.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input6.txt[0m
+==19090== Memcheck, a memory error detector
+==19090== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==19090== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==19090== Command: ./symnmf ddg test_input6.txt
+==19090== 
+==19090== Use of uninitialised value of size 8
+==19090==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19090==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19090== 
+==19090== Invalid write of size 8
+==19090==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19090==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19090==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==19090== 
+==19090== 
+==19090== Process terminating with default action of signal 11 (SIGSEGV)
+==19090==  Access not within mapped region at address 0x0
+==19090==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19090==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19090==  If you believe this happened as a result of a stack
+==19090==  overflow in your program's main thread (unlikely but
+==19090==  possible), you can try to increase the size of the
+==19090==  main thread stack using the --main-stacksize= flag.
+==19090==  The main thread stack size used in this run was 8388608.
+==19090== 
+==19090== HEAP SUMMARY:
+==19090==     in use at exit: 4,568 bytes in 2 blocks
+==19090==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==19090== 
+==19090== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==19090==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19090==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==19090==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==19090==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19090==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19090== 
+==19090== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==19090==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19090==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==19090==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==19090==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==19090==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==19090==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==19090==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==19090==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19090==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19090== 
+==19090== LEAK SUMMARY:
+==19090==    definitely lost: 0 bytes in 0 blocks
+==19090==    indirectly lost: 0 bytes in 0 blocks
+==19090==      possibly lost: 0 bytes in 0 blocks
+==19090==    still reachable: 4,568 bytes in 2 blocks
+==19090==         suppressed: 0 bytes in 0 blocks
+==19090== 
+==19090== Use --track-origins=yes to see where uninitialised values come from
+==19090== For lists of detected and suppressed errors, rerun with: -s
+==19090== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input6.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=5 and input file test_input6.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input6.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=norm, file_name=test_input7.txt[0m
+
+[0;34mGenerating [0;33m8[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input7.txt[0m
+[0;31mPython test case '[0;33m3 norm test_input7.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input7.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input7.txt[0m
+==19339== Memcheck, a memory error detector
+==19339== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==19339== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==19339== Command: ./symnmf norm test_input7.txt
+==19339== 
+==19339== Use of uninitialised value of size 8
+==19339==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19339==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19339== 
+==19339== Invalid write of size 8
+==19339==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19339==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19339==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==19339== 
+==19339== 
+==19339== Process terminating with default action of signal 11 (SIGSEGV)
+==19339==  Access not within mapped region at address 0x0
+==19339==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19339==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19339==  If you believe this happened as a result of a stack
+==19339==  overflow in your program's main thread (unlikely but
+==19339==  possible), you can try to increase the size of the
+==19339==  main thread stack using the --main-stacksize= flag.
+==19339==  The main thread stack size used in this run was 8388608.
+==19339== 
+==19339== HEAP SUMMARY:
+==19339==     in use at exit: 4,568 bytes in 2 blocks
+==19339==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==19339== 
+==19339== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==19339==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19339==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==19339==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==19339==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19339==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19339== 
+==19339== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==19339==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19339==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==19339==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==19339==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==19339==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==19339==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==19339==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==19339==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19339==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19339== 
+==19339== LEAK SUMMARY:
+==19339==    definitely lost: 0 bytes in 0 blocks
+==19339==    indirectly lost: 0 bytes in 0 blocks
+==19339==      possibly lost: 0 bytes in 0 blocks
+==19339==    still reachable: 4,568 bytes in 2 blocks
+==19339==         suppressed: 0 bytes in 0 blocks
+==19339== 
+==19339== Use --track-origins=yes to see where uninitialised values come from
+==19339== For lists of detected and suppressed errors, rerun with: -s
+==19339== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input7.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=3 and input file test_input7.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input7.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=symnmf, file_name=test_input8.txt[0m
+
+[0;34mGenerating [0;33m7[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input8.txt[0m
+[0;31mPython test case '[0;33m3 symnmf test_input8.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=3 and input file test_input8.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input8.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=6, goal=sym, file_name=test_input9.txt[0m
+
+[0;34mGenerating [0;33m15[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input9.txt[0m
+[0;31mPython test case '[0;33m6 sym test_input9.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input9.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input9.txt[0m
+==19913== Memcheck, a memory error detector
+==19913== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==19913== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==19913== Command: ./symnmf sym test_input9.txt
+==19913== 
+==19913== Use of uninitialised value of size 8
+==19913==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19913==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19913== 
+==19913== Invalid write of size 8
+==19913==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19913==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19913==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==19913== 
+==19913== 
+==19913== Process terminating with default action of signal 11 (SIGSEGV)
+==19913==  Access not within mapped region at address 0x0
+==19913==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19913==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19913==  If you believe this happened as a result of a stack
+==19913==  overflow in your program's main thread (unlikely but
+==19913==  possible), you can try to increase the size of the
+==19913==  main thread stack using the --main-stacksize= flag.
+==19913==  The main thread stack size used in this run was 8388608.
+==19913== 
+==19913== HEAP SUMMARY:
+==19913==     in use at exit: 4,568 bytes in 2 blocks
+==19913==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==19913== 
+==19913== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==19913==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19913==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==19913==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==19913==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19913==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19913== 
+==19913== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==19913==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==19913==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==19913==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==19913==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==19913==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==19913==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==19913==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==19913==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==19913==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==19913== 
+==19913== LEAK SUMMARY:
+==19913==    definitely lost: 0 bytes in 0 blocks
+==19913==    indirectly lost: 0 bytes in 0 blocks
+==19913==      possibly lost: 0 bytes in 0 blocks
+==19913==    still reachable: 4,568 bytes in 2 blocks
+==19913==         suppressed: 0 bytes in 0 blocks
+==19913== 
+==19913== Use --track-origins=yes to see where uninitialised values come from
+==19913== For lists of detected and suppressed errors, rerun with: -s
+==19913== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input9.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=6 and input file test_input9.txt...[0m
+[0;31mAnalysis test case '[0;33m6 test_input9.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=ddg, file_name=test_input10.txt[0m
+
+[0;34mGenerating [0;33m10[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input10.txt[0m
+[0;31mPython test case '[0;33m4 ddg test_input10.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input10.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input10.txt[0m
+==20122== Memcheck, a memory error detector
+==20122== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==20122== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==20122== Command: ./symnmf ddg test_input10.txt
+==20122== 
+==20122== Use of uninitialised value of size 8
+==20122==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20122==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20122== 
+==20122== Invalid write of size 8
+==20122==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20122==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20122==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==20122== 
+==20122== 
+==20122== Process terminating with default action of signal 11 (SIGSEGV)
+==20122==  Access not within mapped region at address 0x0
+==20122==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20122==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20122==  If you believe this happened as a result of a stack
+==20122==  overflow in your program's main thread (unlikely but
+==20122==  possible), you can try to increase the size of the
+==20122==  main thread stack using the --main-stacksize= flag.
+==20122==  The main thread stack size used in this run was 8388608.
+==20122== 
+==20122== HEAP SUMMARY:
+==20122==     in use at exit: 4,568 bytes in 2 blocks
+==20122==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==20122== 
+==20122== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==20122==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20122==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==20122==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==20122==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20122==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20122== 
+==20122== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==20122==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20122==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20122==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==20122==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==20122==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==20122==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==20122==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==20122==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20122==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20122== 
+==20122== LEAK SUMMARY:
+==20122==    definitely lost: 0 bytes in 0 blocks
+==20122==    indirectly lost: 0 bytes in 0 blocks
+==20122==      possibly lost: 0 bytes in 0 blocks
+==20122==    still reachable: 4,568 bytes in 2 blocks
+==20122==         suppressed: 0 bytes in 0 blocks
+==20122== 
+==20122== Use --track-origins=yes to see where uninitialised values come from
+==20122== For lists of detected and suppressed errors, rerun with: -s
+==20122== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input10.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=4 and input file test_input10.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input10.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=norm, file_name=test_input11.txt[0m
+
+[0;34mGenerating [0;33m6[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input11.txt[0m
+[0;31mPython test case '[0;33m3 norm test_input11.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input11.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input11.txt[0m
+==20314== Memcheck, a memory error detector
+==20314== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==20314== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==20314== Command: ./symnmf norm test_input11.txt
+==20314== 
+==20314== Use of uninitialised value of size 8
+==20314==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20314==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20314== 
+==20314== Invalid write of size 8
+==20314==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20314==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20314==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==20314== 
+==20314== 
+==20314== Process terminating with default action of signal 11 (SIGSEGV)
+==20314==  Access not within mapped region at address 0x0
+==20314==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20314==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20314==  If you believe this happened as a result of a stack
+==20314==  overflow in your program's main thread (unlikely but
+==20314==  possible), you can try to increase the size of the
+==20314==  main thread stack using the --main-stacksize= flag.
+==20314==  The main thread stack size used in this run was 8388608.
+==20314== 
+==20314== HEAP SUMMARY:
+==20314==     in use at exit: 4,568 bytes in 2 blocks
+==20314==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==20314== 
+==20314== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==20314==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20314==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==20314==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==20314==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20314==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20314== 
+==20314== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==20314==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20314==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20314==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==20314==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==20314==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==20314==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==20314==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==20314==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20314==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20314== 
+==20314== LEAK SUMMARY:
+==20314==    definitely lost: 0 bytes in 0 blocks
+==20314==    indirectly lost: 0 bytes in 0 blocks
+==20314==      possibly lost: 0 bytes in 0 blocks
+==20314==    still reachable: 4,568 bytes in 2 blocks
+==20314==         suppressed: 0 bytes in 0 blocks
+==20314== 
+==20314== Use --track-origins=yes to see where uninitialised values come from
+==20314== For lists of detected and suppressed errors, rerun with: -s
+==20314== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input11.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=3 and input file test_input11.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input11.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=symnmf, file_name=test_input12.txt[0m
+
+[0;34mGenerating [0;33m4[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input12.txt[0m
+[0;31mPython test case '[0;33m2 symnmf test_input12.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=2 and input file test_input12.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input12.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=sym, file_name=test_input13.txt[0m
+
+[0;34mGenerating [0;33m11[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input13.txt[0m
+[0;31mPython test case '[0;33m5 sym test_input13.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input13.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input13.txt[0m
+==20756== Memcheck, a memory error detector
+==20756== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==20756== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==20756== Command: ./symnmf sym test_input13.txt
+==20756== 
+==20756== Use of uninitialised value of size 8
+==20756==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20756==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20756== 
+==20756== Invalid write of size 8
+==20756==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20756==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20756==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==20756== 
+==20756== 
+==20756== Process terminating with default action of signal 11 (SIGSEGV)
+==20756==  Access not within mapped region at address 0x0
+==20756==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20756==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20756==  If you believe this happened as a result of a stack
+==20756==  overflow in your program's main thread (unlikely but
+==20756==  possible), you can try to increase the size of the
+==20756==  main thread stack using the --main-stacksize= flag.
+==20756==  The main thread stack size used in this run was 8388608.
+==20756== 
+==20756== HEAP SUMMARY:
+==20756==     in use at exit: 4,568 bytes in 2 blocks
+==20756==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==20756== 
+==20756== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==20756==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20756==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==20756==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==20756==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20756==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20756== 
+==20756== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==20756==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20756==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20756==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==20756==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==20756==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==20756==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==20756==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==20756==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20756==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20756== 
+==20756== LEAK SUMMARY:
+==20756==    definitely lost: 0 bytes in 0 blocks
+==20756==    indirectly lost: 0 bytes in 0 blocks
+==20756==      possibly lost: 0 bytes in 0 blocks
+==20756==    still reachable: 4,568 bytes in 2 blocks
+==20756==         suppressed: 0 bytes in 0 blocks
+==20756== 
+==20756== Use --track-origins=yes to see where uninitialised values come from
+==20756== For lists of detected and suppressed errors, rerun with: -s
+==20756== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input13.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=5 and input file test_input13.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input13.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=ddg, file_name=test_input14.txt[0m
+
+[0;34mGenerating [0;33m7[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input14.txt[0m
+[0;31mPython test case '[0;33m3 ddg test_input14.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input14.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input14.txt[0m
+==20957== Memcheck, a memory error detector
+==20957== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==20957== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==20957== Command: ./symnmf ddg test_input14.txt
+==20957== 
+==20957== Use of uninitialised value of size 8
+==20957==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20957==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20957== 
+==20957== Invalid write of size 8
+==20957==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20957==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20957==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==20957== 
+==20957== 
+==20957== Process terminating with default action of signal 11 (SIGSEGV)
+==20957==  Access not within mapped region at address 0x0
+==20957==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20957==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20957==  If you believe this happened as a result of a stack
+==20957==  overflow in your program's main thread (unlikely but
+==20957==  possible), you can try to increase the size of the
+==20957==  main thread stack using the --main-stacksize= flag.
+==20957==  The main thread stack size used in this run was 8388608.
+==20957== 
+==20957== HEAP SUMMARY:
+==20957==     in use at exit: 4,568 bytes in 2 blocks
+==20957==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==20957== 
+==20957== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==20957==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20957==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==20957==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==20957==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20957==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20957== 
+==20957== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==20957==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==20957==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==20957==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==20957==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==20957==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==20957==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==20957==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==20957==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==20957==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==20957== 
+==20957== LEAK SUMMARY:
+==20957==    definitely lost: 0 bytes in 0 blocks
+==20957==    indirectly lost: 0 bytes in 0 blocks
+==20957==      possibly lost: 0 bytes in 0 blocks
+==20957==    still reachable: 4,568 bytes in 2 blocks
+==20957==         suppressed: 0 bytes in 0 blocks
+==20957== 
+==20957== Use --track-origins=yes to see where uninitialised values come from
+==20957== For lists of detected and suppressed errors, rerun with: -s
+==20957== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input14.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=3 and input file test_input14.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input14.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=norm, file_name=test_input15.txt[0m
+
+[0;34mGenerating [0;33m9[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input15.txt[0m
+[0;31mPython test case '[0;33m4 norm test_input15.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input15.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input15.txt[0m
+==21214== Memcheck, a memory error detector
+==21214== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==21214== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==21214== Command: ./symnmf norm test_input15.txt
+==21214== 
+==21214== Use of uninitialised value of size 8
+==21214==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21214==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21214== 
+==21214== Invalid write of size 8
+==21214==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21214==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21214==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==21214== 
+==21214== 
+==21214== Process terminating with default action of signal 11 (SIGSEGV)
+==21214==  Access not within mapped region at address 0x0
+==21214==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21214==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21214==  If you believe this happened as a result of a stack
+==21214==  overflow in your program's main thread (unlikely but
+==21214==  possible), you can try to increase the size of the
+==21214==  main thread stack using the --main-stacksize= flag.
+==21214==  The main thread stack size used in this run was 8388608.
+==21214== 
+==21214== HEAP SUMMARY:
+==21214==     in use at exit: 4,568 bytes in 2 blocks
+==21214==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==21214== 
+==21214== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==21214==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21214==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==21214==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==21214==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21214==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21214== 
+==21214== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==21214==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21214==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==21214==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==21214==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==21214==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==21214==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==21214==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==21214==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21214==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21214== 
+==21214== LEAK SUMMARY:
+==21214==    definitely lost: 0 bytes in 0 blocks
+==21214==    indirectly lost: 0 bytes in 0 blocks
+==21214==      possibly lost: 0 bytes in 0 blocks
+==21214==    still reachable: 4,568 bytes in 2 blocks
+==21214==         suppressed: 0 bytes in 0 blocks
+==21214== 
+==21214== Use --track-origins=yes to see where uninitialised values come from
+==21214== For lists of detected and suppressed errors, rerun with: -s
+==21214== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input15.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=4 and input file test_input15.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input15.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=6, goal=symnmf, file_name=test_input16.txt[0m
+
+[0;34mGenerating [0;33m14[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input16.txt[0m
+[0;31mPython test case '[0;33m6 symnmf test_input16.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=6 and input file test_input16.txt...[0m
+[0;31mAnalysis test case '[0;33m6 test_input16.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=2, goal=sym, file_name=test_input17.txt[0m
+
+[0;34mGenerating [0;33m5[0;34m points with [0;33m2[0;34m dimensions in [0;33mtest_input17.txt[0m
+[0;31mPython test case '[0;33m2 sym test_input17.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input17.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input17.txt[0m
+==21744== Memcheck, a memory error detector
+==21744== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==21744== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==21744== Command: ./symnmf sym test_input17.txt
+==21744== 
+==21744== Use of uninitialised value of size 8
+==21744==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21744==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21744== 
+==21744== Invalid write of size 8
+==21744==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21744==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21744==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==21744== 
+==21744== 
+==21744== Process terminating with default action of signal 11 (SIGSEGV)
+==21744==  Access not within mapped region at address 0x0
+==21744==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21744==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21744==  If you believe this happened as a result of a stack
+==21744==  overflow in your program's main thread (unlikely but
+==21744==  possible), you can try to increase the size of the
+==21744==  main thread stack using the --main-stacksize= flag.
+==21744==  The main thread stack size used in this run was 8388608.
+==21744== 
+==21744== HEAP SUMMARY:
+==21744==     in use at exit: 4,568 bytes in 2 blocks
+==21744==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==21744== 
+==21744== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==21744==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21744==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==21744==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==21744==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21744==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21744== 
+==21744== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==21744==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21744==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==21744==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==21744==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==21744==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==21744==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==21744==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==21744==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21744==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21744== 
+==21744== LEAK SUMMARY:
+==21744==    definitely lost: 0 bytes in 0 blocks
+==21744==    indirectly lost: 0 bytes in 0 blocks
+==21744==      possibly lost: 0 bytes in 0 blocks
+==21744==    still reachable: 4,568 bytes in 2 blocks
+==21744==         suppressed: 0 bytes in 0 blocks
+==21744== 
+==21744== Use --track-origins=yes to see where uninitialised values come from
+==21744== For lists of detected and suppressed errors, rerun with: -s
+==21744== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input17.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=2 and input file test_input17.txt...[0m
+[0;31mAnalysis test case '[0;33m2 test_input17.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=ddg, file_name=test_input18.txt[0m
+
+[0;34mGenerating [0;33m6[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input18.txt[0m
+[0;31mPython test case '[0;33m3 ddg test_input18.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input18.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input18.txt[0m
+==21932== Memcheck, a memory error detector
+==21932== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==21932== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==21932== Command: ./symnmf ddg test_input18.txt
+==21932== 
+==21932== Use of uninitialised value of size 8
+==21932==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21932==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21932== 
+==21932== Invalid write of size 8
+==21932==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21932==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21932==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==21932== 
+==21932== 
+==21932== Process terminating with default action of signal 11 (SIGSEGV)
+==21932==  Access not within mapped region at address 0x0
+==21932==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21932==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21932==  If you believe this happened as a result of a stack
+==21932==  overflow in your program's main thread (unlikely but
+==21932==  possible), you can try to increase the size of the
+==21932==  main thread stack using the --main-stacksize= flag.
+==21932==  The main thread stack size used in this run was 8388608.
+==21932== 
+==21932== HEAP SUMMARY:
+==21932==     in use at exit: 4,568 bytes in 2 blocks
+==21932==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==21932== 
+==21932== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==21932==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21932==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==21932==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==21932==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21932==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21932== 
+==21932== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==21932==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==21932==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==21932==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==21932==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==21932==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==21932==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==21932==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==21932==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==21932==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==21932== 
+==21932== LEAK SUMMARY:
+==21932==    definitely lost: 0 bytes in 0 blocks
+==21932==    indirectly lost: 0 bytes in 0 blocks
+==21932==      possibly lost: 0 bytes in 0 blocks
+==21932==    still reachable: 4,568 bytes in 2 blocks
+==21932==         suppressed: 0 bytes in 0 blocks
+==21932== 
+==21932== Use --track-origins=yes to see where uninitialised values come from
+==21932== For lists of detected and suppressed errors, rerun with: -s
+==21932== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input18.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=3 and input file test_input18.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input18.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=norm, file_name=test_input19.txt[0m
+
+[0;34mGenerating [0;33m8[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input19.txt[0m
+[0;31mPython test case '[0;33m4 norm test_input19.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input19.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input19.txt[0m
+==22181== Memcheck, a memory error detector
+==22181== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==22181== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==22181== Command: ./symnmf norm test_input19.txt
+==22181== 
+==22181== Use of uninitialised value of size 8
+==22181==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22181==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22181== 
+==22181== Invalid write of size 8
+==22181==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22181==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22181==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==22181== 
+==22181== 
+==22181== Process terminating with default action of signal 11 (SIGSEGV)
+==22181==  Access not within mapped region at address 0x0
+==22181==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22181==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22181==  If you believe this happened as a result of a stack
+==22181==  overflow in your program's main thread (unlikely but
+==22181==  possible), you can try to increase the size of the
+==22181==  main thread stack using the --main-stacksize= flag.
+==22181==  The main thread stack size used in this run was 8388608.
+==22181== 
+==22181== HEAP SUMMARY:
+==22181==     in use at exit: 4,568 bytes in 2 blocks
+==22181==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==22181== 
+==22181== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==22181==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==22181==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==22181==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==22181==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22181==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22181== 
+==22181== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==22181==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==22181==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==22181==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==22181==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==22181==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==22181==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==22181==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==22181==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22181==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22181== 
+==22181== LEAK SUMMARY:
+==22181==    definitely lost: 0 bytes in 0 blocks
+==22181==    indirectly lost: 0 bytes in 0 blocks
+==22181==      possibly lost: 0 bytes in 0 blocks
+==22181==    still reachable: 4,568 bytes in 2 blocks
+==22181==         suppressed: 0 bytes in 0 blocks
+==22181== 
+==22181== Use --track-origins=yes to see where uninitialised values come from
+==22181== For lists of detected and suppressed errors, rerun with: -s
+==22181== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input19.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=4 and input file test_input19.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input19.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=symnmf, file_name=test_input20.txt[0m
+
+[0;34mGenerating [0;33m10[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input20.txt[0m
+[0;31mPython test case '[0;33m5 symnmf test_input20.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=5 and input file test_input20.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input20.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=7, goal=sym, file_name=test_input21.txt[0m
+
+[0;34mGenerating [0;33m20[0;34m points with [0;33m6[0;34m dimensions in [0;33mtest_input21.txt[0m
+[0;31mPython test case '[0;33m7 sym test_input21.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input21.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input21.txt[0m
+==22979== Memcheck, a memory error detector
+==22979== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==22979== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==22979== Command: ./symnmf sym test_input21.txt
+==22979== 
+==22979== Use of uninitialised value of size 8
+==22979==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22979==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22979== 
+==22979== Invalid write of size 8
+==22979==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22979==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22979==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==22979== 
+==22979== 
+==22979== Process terminating with default action of signal 11 (SIGSEGV)
+==22979==  Access not within mapped region at address 0x0
+==22979==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22979==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22979==  If you believe this happened as a result of a stack
+==22979==  overflow in your program's main thread (unlikely but
+==22979==  possible), you can try to increase the size of the
+==22979==  main thread stack using the --main-stacksize= flag.
+==22979==  The main thread stack size used in this run was 8388608.
+==22979== 
+==22979== HEAP SUMMARY:
+==22979==     in use at exit: 4,568 bytes in 2 blocks
+==22979==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==22979== 
+==22979== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==22979==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==22979==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==22979==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==22979==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22979==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22979== 
+==22979== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==22979==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==22979==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==22979==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==22979==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==22979==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==22979==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==22979==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==22979==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==22979==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==22979== 
+==22979== LEAK SUMMARY:
+==22979==    definitely lost: 0 bytes in 0 blocks
+==22979==    indirectly lost: 0 bytes in 0 blocks
+==22979==      possibly lost: 0 bytes in 0 blocks
+==22979==    still reachable: 4,568 bytes in 2 blocks
+==22979==         suppressed: 0 bytes in 0 blocks
+==22979== 
+==22979== Use --track-origins=yes to see where uninitialised values come from
+==22979== For lists of detected and suppressed errors, rerun with: -s
+==22979== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input21.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=7 and input file test_input21.txt...[0m
+[0;31mAnalysis test case '[0;33m7 test_input21.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=ddg, file_name=test_input22.txt[0m
+
+[0;34mGenerating [0;33m15[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input22.txt[0m
+[0;31mPython test case '[0;33m5 ddg test_input22.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input22.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input22.txt[0m
+==23340== Memcheck, a memory error detector
+==23340== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==23340== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==23340== Command: ./symnmf ddg test_input22.txt
+==23340== 
+==23340== Use of uninitialised value of size 8
+==23340==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23340==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23340== 
+==23340== Invalid write of size 8
+==23340==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23340==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23340==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==23340== 
+==23340== 
+==23340== Process terminating with default action of signal 11 (SIGSEGV)
+==23340==  Access not within mapped region at address 0x0
+==23340==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23340==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23340==  If you believe this happened as a result of a stack
+==23340==  overflow in your program's main thread (unlikely but
+==23340==  possible), you can try to increase the size of the
+==23340==  main thread stack using the --main-stacksize= flag.
+==23340==  The main thread stack size used in this run was 8388608.
+==23340== 
+==23340== HEAP SUMMARY:
+==23340==     in use at exit: 4,568 bytes in 2 blocks
+==23340==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==23340== 
+==23340== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==23340==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==23340==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==23340==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==23340==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23340==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23340== 
+==23340== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==23340==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==23340==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==23340==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==23340==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==23340==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==23340==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==23340==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==23340==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23340==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23340== 
+==23340== LEAK SUMMARY:
+==23340==    definitely lost: 0 bytes in 0 blocks
+==23340==    indirectly lost: 0 bytes in 0 blocks
+==23340==      possibly lost: 0 bytes in 0 blocks
+==23340==    still reachable: 4,568 bytes in 2 blocks
+==23340==         suppressed: 0 bytes in 0 blocks
+==23340== 
+==23340== Use --track-origins=yes to see where uninitialised values come from
+==23340== For lists of detected and suppressed errors, rerun with: -s
+==23340== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input22.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=5 and input file test_input22.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input22.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=norm, file_name=test_input23.txt[0m
+
+[0;34mGenerating [0;33m10[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input23.txt[0m
+[0;31mPython test case '[0;33m4 norm test_input23.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input23.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input23.txt[0m
+==23610== Memcheck, a memory error detector
+==23610== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==23610== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==23610== Command: ./symnmf norm test_input23.txt
+==23610== 
+==23610== Use of uninitialised value of size 8
+==23610==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23610==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23610== 
+==23610== Invalid write of size 8
+==23610==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23610==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23610==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==23610== 
+==23610== 
+==23610== Process terminating with default action of signal 11 (SIGSEGV)
+==23610==  Access not within mapped region at address 0x0
+==23610==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23610==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23610==  If you believe this happened as a result of a stack
+==23610==  overflow in your program's main thread (unlikely but
+==23610==  possible), you can try to increase the size of the
+==23610==  main thread stack using the --main-stacksize= flag.
+==23610==  The main thread stack size used in this run was 8388608.
+==23610== 
+==23610== HEAP SUMMARY:
+==23610==     in use at exit: 4,568 bytes in 2 blocks
+==23610==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==23610== 
+==23610== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==23610==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==23610==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==23610==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==23610==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23610==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23610== 
+==23610== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==23610==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==23610==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==23610==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==23610==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==23610==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==23610==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==23610==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==23610==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==23610==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==23610== 
+==23610== LEAK SUMMARY:
+==23610==    definitely lost: 0 bytes in 0 blocks
+==23610==    indirectly lost: 0 bytes in 0 blocks
+==23610==      possibly lost: 0 bytes in 0 blocks
+==23610==    still reachable: 4,568 bytes in 2 blocks
+==23610==         suppressed: 0 bytes in 0 blocks
+==23610== 
+==23610== Use --track-origins=yes to see where uninitialised values come from
+==23610== For lists of detected and suppressed errors, rerun with: -s
+==23610== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input23.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=4 and input file test_input23.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input23.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=3, goal=symnmf, file_name=test_input24.txt[0m
+
+[0;34mGenerating [0;33m8[0;34m points with [0;33m3[0;34m dimensions in [0;33mtest_input24.txt[0m
+[0;31mPython test case '[0;33m3 symnmf test_input24.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=3 and input file test_input24.txt...[0m
+[0;31mAnalysis test case '[0;33m3 test_input24.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=8, goal=sym, file_name=test_input25.txt[0m
+
+[0;34mGenerating [0;33m25[0;34m points with [0;33m7[0;34m dimensions in [0;33mtest_input25.txt[0m
+[0;31mPython test case '[0;33m8 sym test_input25.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input25.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input25.txt[0m
+==24495== Memcheck, a memory error detector
+==24495== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==24495== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==24495== Command: ./symnmf sym test_input25.txt
+==24495== 
+==24495== Use of uninitialised value of size 8
+==24495==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24495==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24495== 
+==24495== Invalid write of size 8
+==24495==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24495==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24495==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==24495== 
+==24495== 
+==24495== Process terminating with default action of signal 11 (SIGSEGV)
+==24495==  Access not within mapped region at address 0x0
+==24495==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24495==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24495==  If you believe this happened as a result of a stack
+==24495==  overflow in your program's main thread (unlikely but
+==24495==  possible), you can try to increase the size of the
+==24495==  main thread stack using the --main-stacksize= flag.
+==24495==  The main thread stack size used in this run was 8388608.
+==24495== 
+==24495== HEAP SUMMARY:
+==24495==     in use at exit: 4,568 bytes in 2 blocks
+==24495==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==24495== 
+==24495== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==24495==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==24495==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==24495==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==24495==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24495==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24495== 
+==24495== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==24495==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==24495==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==24495==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==24495==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==24495==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==24495==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==24495==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==24495==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24495==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24495== 
+==24495== LEAK SUMMARY:
+==24495==    definitely lost: 0 bytes in 0 blocks
+==24495==    indirectly lost: 0 bytes in 0 blocks
+==24495==      possibly lost: 0 bytes in 0 blocks
+==24495==    still reachable: 4,568 bytes in 2 blocks
+==24495==         suppressed: 0 bytes in 0 blocks
+==24495== 
+==24495== Use --track-origins=yes to see where uninitialised values come from
+==24495== For lists of detected and suppressed errors, rerun with: -s
+==24495== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input25.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=8 and input file test_input25.txt...[0m
+[0;31mAnalysis test case '[0;33m8 test_input25.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=6, goal=ddg, file_name=test_input26.txt[0m
+
+[0;34mGenerating [0;33m18[0;34m points with [0;33m6[0;34m dimensions in [0;33mtest_input26.txt[0m
+[0;31mPython test case '[0;33m6 ddg test_input26.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input26.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input26.txt[0m
+==24970== Memcheck, a memory error detector
+==24970== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==24970== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==24970== Command: ./symnmf ddg test_input26.txt
+==24970== 
+==24970== Use of uninitialised value of size 8
+==24970==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24970==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24970== 
+==24970== Invalid write of size 8
+==24970==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24970==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24970==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==24970== 
+==24970== 
+==24970== Process terminating with default action of signal 11 (SIGSEGV)
+==24970==  Access not within mapped region at address 0x0
+==24970==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24970==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24970==  If you believe this happened as a result of a stack
+==24970==  overflow in your program's main thread (unlikely but
+==24970==  possible), you can try to increase the size of the
+==24970==  main thread stack using the --main-stacksize= flag.
+==24970==  The main thread stack size used in this run was 8388608.
+==24970== 
+==24970== HEAP SUMMARY:
+==24970==     in use at exit: 4,568 bytes in 2 blocks
+==24970==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==24970== 
+==24970== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==24970==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==24970==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==24970==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==24970==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24970==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24970== 
+==24970== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==24970==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==24970==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==24970==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==24970==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==24970==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==24970==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==24970==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==24970==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==24970==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==24970== 
+==24970== LEAK SUMMARY:
+==24970==    definitely lost: 0 bytes in 0 blocks
+==24970==    indirectly lost: 0 bytes in 0 blocks
+==24970==      possibly lost: 0 bytes in 0 blocks
+==24970==    still reachable: 4,568 bytes in 2 blocks
+==24970==         suppressed: 0 bytes in 0 blocks
+==24970== 
+==24970== Use --track-origins=yes to see where uninitialised values come from
+==24970== For lists of detected and suppressed errors, rerun with: -s
+==24970== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input26.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=6 and input file test_input26.txt...[0m
+[0;31mAnalysis test case '[0;33m6 test_input26.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=norm, file_name=test_input27.txt[0m
+
+[0;34mGenerating [0;33m12[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input27.txt[0m
+[0;31mPython test case '[0;33m5 norm test_input27.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input27.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input27.txt[0m
+==25295== Memcheck, a memory error detector
+==25295== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==25295== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==25295== Command: ./symnmf norm test_input27.txt
+==25295== 
+==25295== Use of uninitialised value of size 8
+==25295==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==25295==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==25295== 
+==25295== Invalid write of size 8
+==25295==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==25295==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==25295==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==25295== 
+==25295== 
+==25295== Process terminating with default action of signal 11 (SIGSEGV)
+==25295==  Access not within mapped region at address 0x0
+==25295==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==25295==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==25295==  If you believe this happened as a result of a stack
+==25295==  overflow in your program's main thread (unlikely but
+==25295==  possible), you can try to increase the size of the
+==25295==  main thread stack using the --main-stacksize= flag.
+==25295==  The main thread stack size used in this run was 8388608.
+==25295== 
+==25295== HEAP SUMMARY:
+==25295==     in use at exit: 4,568 bytes in 2 blocks
+==25295==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==25295== 
+==25295== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==25295==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==25295==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==25295==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==25295==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==25295==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==25295== 
+==25295== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==25295==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==25295==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==25295==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==25295==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==25295==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==25295==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==25295==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==25295==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==25295==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==25295== 
+==25295== LEAK SUMMARY:
+==25295==    definitely lost: 0 bytes in 0 blocks
+==25295==    indirectly lost: 0 bytes in 0 blocks
+==25295==      possibly lost: 0 bytes in 0 blocks
+==25295==    still reachable: 4,568 bytes in 2 blocks
+==25295==         suppressed: 0 bytes in 0 blocks
+==25295== 
+==25295== Use --track-origins=yes to see where uninitialised values come from
+==25295== For lists of detected and suppressed errors, rerun with: -s
+==25295== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input27.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=5 and input file test_input27.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input27.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=4, goal=symnmf, file_name=test_input28.txt[0m
+
+[0;34mGenerating [0;33m9[0;34m points with [0;33m4[0;34m dimensions in [0;33mtest_input28.txt[0m
+[0;31mPython test case '[0;33m4 symnmf test_input28.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=4 and input file test_input28.txt...[0m
+[0;31mAnalysis test case '[0;33m4 test_input28.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=9, goal=sym, file_name=test_input29.txt[0m
+
+[0;34mGenerating [0;33m30[0;34m points with [0;33m8[0;34m dimensions in [0;33mtest_input29.txt[0m
+[0;31mPython test case '[0;33m9 sym test_input29.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input29.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input29.txt[0m
+==26390== Memcheck, a memory error detector
+==26390== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==26390== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==26390== Command: ./symnmf sym test_input29.txt
+==26390== 
+==26390== Use of uninitialised value of size 8
+==26390==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26390==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26390== 
+==26390== Invalid write of size 8
+==26390==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26390==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26390==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==26390== 
+==26390== 
+==26390== Process terminating with default action of signal 11 (SIGSEGV)
+==26390==  Access not within mapped region at address 0x0
+==26390==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26390==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26390==  If you believe this happened as a result of a stack
+==26390==  overflow in your program's main thread (unlikely but
+==26390==  possible), you can try to increase the size of the
+==26390==  main thread stack using the --main-stacksize= flag.
+==26390==  The main thread stack size used in this run was 8388608.
+==26390== 
+==26390== HEAP SUMMARY:
+==26390==     in use at exit: 4,568 bytes in 2 blocks
+==26390==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==26390== 
+==26390== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==26390==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==26390==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==26390==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==26390==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26390==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26390== 
+==26390== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==26390==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==26390==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==26390==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==26390==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==26390==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==26390==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==26390==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==26390==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26390==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26390== 
+==26390== LEAK SUMMARY:
+==26390==    definitely lost: 0 bytes in 0 blocks
+==26390==    indirectly lost: 0 bytes in 0 blocks
+==26390==      possibly lost: 0 bytes in 0 blocks
+==26390==    still reachable: 4,568 bytes in 2 blocks
+==26390==         suppressed: 0 bytes in 0 blocks
+==26390== 
+==26390== Use --track-origins=yes to see where uninitialised values come from
+==26390== For lists of detected and suppressed errors, rerun with: -s
+==26390== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input29.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=9 and input file test_input29.txt...[0m
+[0;31mAnalysis test case '[0;33m9 test_input29.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=7, goal=ddg, file_name=test_input30.txt[0m
+
+[0;34mGenerating [0;33m21[0;34m points with [0;33m7[0;34m dimensions in [0;33mtest_input30.txt[0m
+[0;31mPython test case '[0;33m7 ddg test_input30.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input30.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input30.txt[0m
+==26980== Memcheck, a memory error detector
+==26980== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==26980== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==26980== Command: ./symnmf ddg test_input30.txt
+==26980== 
+==26980== Use of uninitialised value of size 8
+==26980==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26980==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26980== 
+==26980== Invalid write of size 8
+==26980==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26980==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26980==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==26980== 
+==26980== 
+==26980== Process terminating with default action of signal 11 (SIGSEGV)
+==26980==  Access not within mapped region at address 0x0
+==26980==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26980==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26980==  If you believe this happened as a result of a stack
+==26980==  overflow in your program's main thread (unlikely but
+==26980==  possible), you can try to increase the size of the
+==26980==  main thread stack using the --main-stacksize= flag.
+==26980==  The main thread stack size used in this run was 8388608.
+==26980== 
+==26980== HEAP SUMMARY:
+==26980==     in use at exit: 4,568 bytes in 2 blocks
+==26980==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==26980== 
+==26980== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==26980==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==26980==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==26980==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==26980==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26980==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26980== 
+==26980== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==26980==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==26980==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==26980==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==26980==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==26980==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==26980==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==26980==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==26980==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==26980==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==26980== 
+==26980== LEAK SUMMARY:
+==26980==    definitely lost: 0 bytes in 0 blocks
+==26980==    indirectly lost: 0 bytes in 0 blocks
+==26980==      possibly lost: 0 bytes in 0 blocks
+==26980==    still reachable: 4,568 bytes in 2 blocks
+==26980==         suppressed: 0 bytes in 0 blocks
+==26980== 
+==26980== Use --track-origins=yes to see where uninitialised values come from
+==26980== For lists of detected and suppressed errors, rerun with: -s
+==26980== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input30.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=7 and input file test_input30.txt...[0m
+[0;31mAnalysis test case '[0;33m7 test_input30.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=6, goal=norm, file_name=test_input31.txt[0m
+
+[0;34mGenerating [0;33m14[0;34m points with [0;33m6[0;34m dimensions in [0;33mtest_input31.txt[0m
+[0;31mPython test case '[0;33m6 norm test_input31.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input31.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input31.txt[0m
+==27381== Memcheck, a memory error detector
+==27381== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==27381== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==27381== Command: ./symnmf norm test_input31.txt
+==27381== 
+==27381== Use of uninitialised value of size 8
+==27381==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==27381==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==27381== 
+==27381== Invalid write of size 8
+==27381==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==27381==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==27381==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==27381== 
+==27381== 
+==27381== Process terminating with default action of signal 11 (SIGSEGV)
+==27381==  Access not within mapped region at address 0x0
+==27381==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==27381==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==27381==  If you believe this happened as a result of a stack
+==27381==  overflow in your program's main thread (unlikely but
+==27381==  possible), you can try to increase the size of the
+==27381==  main thread stack using the --main-stacksize= flag.
+==27381==  The main thread stack size used in this run was 8388608.
+==27381== 
+==27381== HEAP SUMMARY:
+==27381==     in use at exit: 4,568 bytes in 2 blocks
+==27381==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==27381== 
+==27381== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==27381==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==27381==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==27381==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==27381==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==27381==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==27381== 
+==27381== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==27381==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==27381==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==27381==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==27381==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==27381==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==27381==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==27381==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==27381==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==27381==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==27381== 
+==27381== LEAK SUMMARY:
+==27381==    definitely lost: 0 bytes in 0 blocks
+==27381==    indirectly lost: 0 bytes in 0 blocks
+==27381==      possibly lost: 0 bytes in 0 blocks
+==27381==    still reachable: 4,568 bytes in 2 blocks
+==27381==         suppressed: 0 bytes in 0 blocks
+==27381== 
+==27381== Use --track-origins=yes to see where uninitialised values come from
+==27381== For lists of detected and suppressed errors, rerun with: -s
+==27381== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input31.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=6 and input file test_input31.txt...[0m
+[0;31mAnalysis test case '[0;33m6 test_input31.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=5, goal=symnmf, file_name=test_input32.txt[0m
+
+[0;34mGenerating [0;33m11[0;34m points with [0;33m5[0;34m dimensions in [0;33mtest_input32.txt[0m
+[0;31mPython test case '[0;33m5 symnmf test_input32.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=5 and input file test_input32.txt...[0m
+[0;31mAnalysis test case '[0;33m5 test_input32.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=10, goal=sym, file_name=test_input33.txt[0m
+
+[0;34mGenerating [0;33m35[0;34m points with [0;33m9[0;34m dimensions in [0;33mtest_input33.txt[0m
+[0;31mPython test case '[0;33m10 sym test_input33.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33msym test_input33.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33msym test_input33.txt[0m
+==28781== Memcheck, a memory error detector
+==28781== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==28781== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==28781== Command: ./symnmf sym test_input33.txt
+==28781== 
+==28781== Use of uninitialised value of size 8
+==28781==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==28781==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==28781== 
+==28781== Invalid write of size 8
+==28781==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==28781==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==28781==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==28781== 
+==28781== 
+==28781== Process terminating with default action of signal 11 (SIGSEGV)
+==28781==  Access not within mapped region at address 0x0
+==28781==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==28781==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==28781==  If you believe this happened as a result of a stack
+==28781==  overflow in your program's main thread (unlikely but
+==28781==  possible), you can try to increase the size of the
+==28781==  main thread stack using the --main-stacksize= flag.
+==28781==  The main thread stack size used in this run was 8388608.
+==28781== 
+==28781== HEAP SUMMARY:
+==28781==     in use at exit: 4,568 bytes in 2 blocks
+==28781==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==28781== 
+==28781== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==28781==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==28781==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==28781==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==28781==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==28781==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==28781== 
+==28781== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==28781==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==28781==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==28781==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==28781==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==28781==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==28781==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==28781==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==28781==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==28781==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==28781== 
+==28781== LEAK SUMMARY:
+==28781==    definitely lost: 0 bytes in 0 blocks
+==28781==    indirectly lost: 0 bytes in 0 blocks
+==28781==      possibly lost: 0 bytes in 0 blocks
+==28781==    still reachable: 4,568 bytes in 2 blocks
+==28781==         suppressed: 0 bytes in 0 blocks
+==28781== 
+==28781== Use --track-origins=yes to see where uninitialised values come from
+==28781== For lists of detected and suppressed errors, rerun with: -s
+==28781== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33msym test_input33.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=10 and input file test_input33.txt...[0m
+[0;31mAnalysis test case '[0;33m10 test_input33.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=8, goal=ddg, file_name=test_input34.txt[0m
+
+[0;34mGenerating [0;33m24[0;34m points with [0;33m8[0;34m dimensions in [0;33mtest_input34.txt[0m
+[0;31mPython test case '[0;33m8 ddg test_input34.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mddg test_input34.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mddg test_input34.txt[0m
+==29502== Memcheck, a memory error detector
+==29502== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==29502== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==29502== Command: ./symnmf ddg test_input34.txt
+==29502== 
+==29502== Use of uninitialised value of size 8
+==29502==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29502==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29502== 
+==29502== Invalid write of size 8
+==29502==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29502==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29502==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==29502== 
+==29502== 
+==29502== Process terminating with default action of signal 11 (SIGSEGV)
+==29502==  Access not within mapped region at address 0x0
+==29502==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29502==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29502==  If you believe this happened as a result of a stack
+==29502==  overflow in your program's main thread (unlikely but
+==29502==  possible), you can try to increase the size of the
+==29502==  main thread stack using the --main-stacksize= flag.
+==29502==  The main thread stack size used in this run was 8388608.
+==29502== 
+==29502== HEAP SUMMARY:
+==29502==     in use at exit: 4,568 bytes in 2 blocks
+==29502==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==29502== 
+==29502== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==29502==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==29502==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==29502==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==29502==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29502==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29502== 
+==29502== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==29502==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==29502==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==29502==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==29502==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==29502==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==29502==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==29502==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==29502==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29502==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29502== 
+==29502== LEAK SUMMARY:
+==29502==    definitely lost: 0 bytes in 0 blocks
+==29502==    indirectly lost: 0 bytes in 0 blocks
+==29502==      possibly lost: 0 bytes in 0 blocks
+==29502==    still reachable: 4,568 bytes in 2 blocks
+==29502==         suppressed: 0 bytes in 0 blocks
+==29502== 
+==29502== Use --track-origins=yes to see where uninitialised values come from
+==29502== For lists of detected and suppressed errors, rerun with: -s
+==29502== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mddg test_input34.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=8 and input file test_input34.txt...[0m
+[0;31mAnalysis test case '[0;33m8 test_input34.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=7, goal=norm, file_name=test_input35.txt[0m
+
+[0;34mGenerating [0;33m16[0;34m points with [0;33m7[0;34m dimensions in [0;33mtest_input35.txt[0m
+[0;31mPython test case '[0;33m7 norm test_input35.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;32mC test case '[0;33mnorm test_input35.txt[0;32m' passed.[0m
+
+[0;34mRunning valgrind for current C test case: [0;33mnorm test_input35.txt[0m
+==29983== Memcheck, a memory error detector
+==29983== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==29983== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==29983== Command: ./symnmf norm test_input35.txt
+==29983== 
+==29983== Use of uninitialised value of size 8
+==29983==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29983==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29983== 
+==29983== Invalid write of size 8
+==29983==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29983==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29983==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==29983== 
+==29983== 
+==29983== Process terminating with default action of signal 11 (SIGSEGV)
+==29983==  Access not within mapped region at address 0x0
+==29983==    at 0x40017F2: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29983==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29983==  If you believe this happened as a result of a stack
+==29983==  overflow in your program's main thread (unlikely but
+==29983==  possible), you can try to increase the size of the
+==29983==  main thread stack using the --main-stacksize= flag.
+==29983==  The main thread stack size used in this run was 8388608.
+==29983== 
+==29983== HEAP SUMMARY:
+==29983==     in use at exit: 4,568 bytes in 2 blocks
+==29983==   total heap usage: 4 allocs, 2 frees, 4,608 bytes allocated
+==29983== 
+==29983== 472 bytes in 1 blocks are still reachable in loss record 1 of 2
+==29983==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==29983==    by 0x49CE64D: __fopen_internal (iofopen.c:65)
+==29983==    by 0x49CE64D: fopen@@GLIBC_2.2.5 (iofopen.c:86)
+==29983==    by 0x40015DD: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29983==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29983== 
+==29983== 4,096 bytes in 1 blocks are still reachable in loss record 2 of 2
+==29983==    at 0x484E80F: malloc (vg_replace_malloc.c:446)
+==29983==    by 0x49CDBA3: _IO_file_doallocate (filedoalloc.c:101)
+==29983==    by 0x49DCCDF: _IO_doallocbuf (genops.c:347)
+==29983==    by 0x49DBCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+==29983==    by 0x49DCD95: _IO_default_uflow (genops.c:362)
+==29983==    by 0x49B20CF: __vfscanf_internal (vfscanf-internal.c:628)
+==29983==    by 0x49B121C: __isoc99_fscanf (isoc99_fscanf.c:30)
+==29983==    by 0x40017C5: input_txt_to_points_lst (in /home/developer/sp_final_project_v1/symnmf)
+==29983==    by 0x4002DA4: main (in /home/developer/sp_final_project_v1/symnmf)
+==29983== 
+==29983== LEAK SUMMARY:
+==29983==    definitely lost: 0 bytes in 0 blocks
+==29983==    indirectly lost: 0 bytes in 0 blocks
+==29983==      possibly lost: 0 bytes in 0 blocks
+==29983==    still reachable: 4,568 bytes in 2 blocks
+==29983==         suppressed: 0 bytes in 0 blocks
+==29983== 
+==29983== Use --track-origins=yes to see where uninitialised values come from
+==29983== For lists of detected and suppressed errors, rerun with: -s
+==29983== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+[0;31mValgrind check failed for current C test case '[0;33mnorm test_input35.txt[0;31m'.[0m
+[0;34mRunning analysis.py for K=7 and input file test_input35.txt...[0m
+[0;31mAnalysis test case '[0;33m7 test_input35.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+
+[0;34mRunning test case: [0;33mK=6, goal=symnmf, file_name=test_input36.txt[0m
+
+[0;34mGenerating [0;33m13[0;34m points with [0;33m6[0;34m dimensions in [0;33mtest_input36.txt[0m
+[0;31mPython test case '[0;33m6 symnmf test_input36.txt[0;31m' failed.[0m
+[0;34mCurrent Python output:[0m
+An Error Has Occured
+[0;34mPrevious Python output:[0m
+
+
+[0;34mRunning analysis.py for K=6 and input file test_input36.txt...[0m
+[0;31mAnalysis test case '[0;33m6 test_input36.txt[0;31m' failed.[0m
+[0;34mCurrent analysis output:[0m
+An Error Has Occured
+[0;34mPrevious analysis output:[0m
+
+
+[0;34mTesting error handling for non-existing files...[0m
+[0;31mError handling test for non-existing file failed for ./symnmf.py.[0m
+[0;34mExpected error message was not found. Actual output:[0m
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 145, in <module>
+    main()
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 125, in main
+    k, goal, path = set_data(sys.argv)
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 45, in set_data
+    k = int(sys.argv[1])  # int, number of clusters
+ValueError: invalid literal for int() with base 10: 'sym'
+[0;32mError handling test for non-existing file passed for ./symnmf.[0m
+[0;34mRunning valgrind for current C test case: [0;33msym non_existing_file.txt[0m
+==30468== Memcheck, a memory error detector
+==30468== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==30468== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==30468== Command: ./symnmf sym non_existing_file.txt
+==30468== 
+An Error Has Occurred
+==30468== 
+==30468== HEAP SUMMARY:
+==30468==     in use at exit: 0 bytes in 0 blocks
+==30468==   total heap usage: 2 allocs, 2 frees, 4,568 bytes allocated
+==30468== 
+==30468== All heap blocks were freed -- no leaks are possible
+==30468== 
+==30468== For lists of detected and suppressed errors, rerun with: -s
+==30468== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[0;32mValgrind check passed for current C test case '[0;33msym non_existing_file.txt[0;32m'.[0m
+
+[0;31mError handling test for non-existing file failed for ./symnmf.py.[0m
+[0;34mExpected error message was not found. Actual output:[0m
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 145, in <module>
+    main()
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 125, in main
+    k, goal, path = set_data(sys.argv)
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 45, in set_data
+    k = int(sys.argv[1])  # int, number of clusters
+ValueError: invalid literal for int() with base 10: 'ddg'
+[0;32mError handling test for non-existing file passed for ./symnmf.[0m
+[0;34mRunning valgrind for current C test case: [0;33mddg non_existing_file.txt[0m
+==30495== Memcheck, a memory error detector
+==30495== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==30495== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==30495== Command: ./symnmf ddg non_existing_file.txt
+==30495== 
+An Error Has Occurred
+==30495== 
+==30495== HEAP SUMMARY:
+==30495==     in use at exit: 0 bytes in 0 blocks
+==30495==   total heap usage: 2 allocs, 2 frees, 4,568 bytes allocated
+==30495== 
+==30495== All heap blocks were freed -- no leaks are possible
+==30495== 
+==30495== For lists of detected and suppressed errors, rerun with: -s
+==30495== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[0;32mValgrind check passed for current C test case '[0;33mddg non_existing_file.txt[0;32m'.[0m
+
+[0;31mError handling test for non-existing file failed for ./symnmf.py.[0m
+[0;34mExpected error message was not found. Actual output:[0m
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 145, in <module>
+    main()
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 125, in main
+    k, goal, path = set_data(sys.argv)
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 45, in set_data
+    k = int(sys.argv[1])  # int, number of clusters
+ValueError: invalid literal for int() with base 10: 'norm'
+[0;32mError handling test for non-existing file passed for ./symnmf.[0m
+[0;34mRunning valgrind for current C test case: [0;33mnorm non_existing_file.txt[0m
+==30534== Memcheck, a memory error detector
+==30534== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==30534== Using Valgrind-3.25.1 and LibVEX; rerun with -h for copyright info
+==30534== Command: ./symnmf norm non_existing_file.txt
+==30534== 
+An Error Has Occurred
+==30534== 
+==30534== HEAP SUMMARY:
+==30534==     in use at exit: 0 bytes in 0 blocks
+==30534==   total heap usage: 2 allocs, 2 frees, 4,568 bytes allocated
+==30534== 
+==30534== All heap blocks were freed -- no leaks are possible
+==30534== 
+==30534== For lists of detected and suppressed errors, rerun with: -s
+==30534== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[0;32mValgrind check passed for current C test case '[0;33mnorm non_existing_file.txt[0;32m'.[0m
+
+[0;31mError handling test for non-existing file failed for ./symnmf.py.[0m
+[0;34mExpected error message was not found. Actual output:[0m
+Traceback (most recent call last):
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 145, in <module>
+    main()
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 125, in main
+    k, goal, path = set_data(sys.argv)
+  File "/home/developer/sp_final_project_v1/./symnmf.py", line 45, in set_data
+    k = int(sys.argv[1])  # int, number of clusters
+ValueError: invalid literal for int() with base 10: 'symnmf'
+[0;34mCleaning up build directories and .so files...[0m
+Cleaning up
