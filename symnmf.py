@@ -5,6 +5,9 @@ import numpy as np
 
 ERR_MSG = "An Error Has Occured"
 
+# set the seed as requested
+np.random.seed(1234)
+
 def general_error(msg = ERR_MSG):
     print(msg)
     exit(1)
