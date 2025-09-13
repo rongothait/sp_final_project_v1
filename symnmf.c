@@ -687,46 +687,34 @@ int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimize
         failure = frobenius_norm(h_next_minus_h_curr, n, k, &for_norm);
         CHECK_FAILURE(failure, error);
 
-        /* FOR DEBUG! - NEED TO DELETE!
-        if (i <= 1){
-            char *w_str, *h_str, *w_h_str, *htr_str, *h_htr_str, *h_htr_h_str, *h_next_str, *h_next_minus_h_curr_str;
-            mat_to_str(w, n, n, &w_str);
-            mat_to_str(h, n, k, &h_str);
-            mat_to_str(w_h, n, k, &w_h_str);
-            mat_to_str(htr, k, n, &htr_str);
-            mat_to_str(h_htr, n, n, &h_htr_str);
-            mat_to_str(h_htr_h, n, k, &h_htr_h_str);
-            mat_to_str(h_next, n, k, &h_next_str);
-            mat_to_str(h_next_minus_h_curr, n, k, &h_next_minus_h_curr_str);
-
-            printf("W matrix \n%s\n\n", w_str);
-            printf("H matrix \n%s\n\n", h_str);
-            printf("W*H matrix \n%s\n\n", w_h_str);
-            printf("H^t matrix \n%s\n\n", htr_str);
-            printf("H*H^t matrix \n%s\n\n", h_htr_str);
-            printf("H*H^t*H matrix \n%s\n\n", h_htr_h_str);
-            printf("H next matrix \n%s\n\n", h_next_str);
-            printf("H next - H matrix \n%s\n\n", h_next_minus_h_curr_str);
-            printf("forbenious norm %f\n\n", for_norm);
-        }
-            */
+        free_matrix(w_h, n);
+        free_matrix(htr, k);
+        free_matrix(h_htr, n);
+        free_matrix(h_htr_h, n);
+        free_matrix(h_next_minus_h_curr, n);
 
         if ((for_norm * for_norm) < EPSILON){
             (*optimized_h) = h_next;
+            if (h != h_init) { free_matrix(h, n); }
             return 0;  
         }
 
         /* set h_t values to be h_next */
-        failure = copy_matrix_by_value(h, h_next, n, k);
+        if (h != h_init) free_matrix(h,n);
+        h = h_next;
         CHECK_FAILURE(failure, error);
     }
 
-    (*optimized_h) = h_next;
+    (*optimized_h) = h;
     return 0;
 
 error:
+    if (w_h) free_matrix(w_h, n);
+    if (htr) free_matrix(htr, k);
+    if (h_htr) free_matrix(h_htr, n);
+    if (h_htr_h) free_matrix(h_htr_h, n);
+    if (h_next_minus_h_curr) free_matrix(h_next_minus_h_curr, n);
     return 1;
-    /* TODO - free memory */
 }
 
 int main(int argc, char *argv[]){
