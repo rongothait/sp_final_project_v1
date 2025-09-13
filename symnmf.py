@@ -142,14 +142,13 @@ def symnmf_handle(dataset, k, n):
     return res_mat
 
 
-def get_goal_matrix(goal, k, path):
+def get_goal_matrix(goal, k, dataset):
     """
     handles the call for getting the requested matrix
     @goal (string): the requested goal
     @k (int): number of clusters requested
-    @path (string): path to the dataset input file
+    @dataset (list): python list of list 
     """
-    dataset = txt_input_to_list(path)
     n = len(dataset)
 
     if k >= n:
@@ -178,7 +177,7 @@ def main():
     if (is_float(k)) and (float(k) % 1 != 0):
         general_error("problem with k {}".format(k))
     
-    mat = get_goal_matrix(goal, int(k), path)
+    mat = get_goal_matrix(goal, int(k), dataset)
 
     mat_str = matrix_to_str(mat)
     print(mat_str)

@@ -147,7 +147,7 @@ static PyObject* matrix_to_pylist(double **matrix, int row_num, int col_num){
  */
 static PyObject* request_standard(PyObject *args, char* goal){
     point *points_list = NULL;
-    int n, failure;
+    int n = -1, failure;
     PyObject *py_points_list;
     double **ret_mat;
 
@@ -212,8 +212,8 @@ static PyObject* ddg(PyObject *self, PyObject *args){
  * symnmf - Python exposed function to compute for the symnmf call
  */
 static PyObject* symnmf(PyObject *self, PyObject *args){
-    double **init_h_mat, **w_mat, **ret_mat;
-    int n, k, failure;
+    double **init_h_mat = NULL, **w_mat = NULL, **ret_mat;
+    int n = -1, k, failure;
     PyObject *py_w_mat, *py_init_h_mat;
 
     /* This parses the python arguments into its C form */

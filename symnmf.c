@@ -108,6 +108,7 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
     return 0;
 }
 
+
 /**
  * input_txt_to_points_lst - Creates a linked list of points (and cords) for the .txt dataset given as an input
  * @path: the relative path to the input file
@@ -119,7 +120,7 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     double n;
     char c;
     FILE *file;
-    point *curr_point, *prev_point;
+    point *curr_point, *prev_point = NULL;
     cord *head_cord, *curr_cord;
     int dim = 0;
     *points_count = 0;
@@ -179,7 +180,9 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     if (curr_point != NULL){
         free(curr_point);
         free(head_cord);
-        prev_point->next = NULL;
+        if (prev_point != NULL){
+            prev_point->next = NULL;
+        }
     }
 
     fclose(file);
@@ -637,27 +640,20 @@ int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimize
     double **w_h, **htr, **h, **h_next, **h_htr, **h_htr_h, **h_next_minus_h_curr;
     
     h = h_init;
-
     for (i = 0; i < MAX_ITER; i++){
         /* calculte the needed matrices */
         failure = multi_mat(n, n, k, w, h, &w_h);  /* W*H */
         CHECK_FAILURE(failure, error);
-
         failure = transpose_matrix(h, n, k, &htr);  /* H^t */
         CHECK_FAILURE(failure, error);
-
         failure = multi_mat(n, k, n, h, htr, &h_htr); /* H*H^t */
         CHECK_FAILURE(failure, error);
-
         failure = multi_mat(n, n, k, h_htr, h, &h_htr_h);  /* H*H^t*H */
         CHECK_FAILURE(failure, error);
-
         failure = calc_h_next(h, w_h, h_htr_h, n, k, &h_next);  /* H_(t+1) */
         CHECK_FAILURE(failure, error);
-
         failure = substract_matrix(h_next, h, n, k, &h_next_minus_h_curr); /* H_(t+1) - H_t */
         CHECK_FAILURE(failure, error);
-
         failure = frobenius_norm(h_next_minus_h_curr, n, k, &for_norm);
         CHECK_FAILURE(failure, error);
 
@@ -738,9 +734,9 @@ int main(int argc, char *argv[]){
     return 0;
 
 error:
-    /* TODO - free up memory
-       TODO - print (or return) error msg
-       TODO - return 1? */
+    if (mat_str) free(mat_str);
+    if (ret_mat) free_matrix(ret_mat, n);
+    if (dataset) free_pnt_lst(dataset);
     printf("%s", ERR_MSG_GENERAL);
     return 1;
 }
