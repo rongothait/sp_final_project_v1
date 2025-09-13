@@ -157,7 +157,7 @@ static PyObject* request_standard(PyObject *args, char* goal){
         failure = create_diag_mat(points_list, n, &ret_mat);
     }
     else if (strcmp(goal, "norm") == 0){
-        failure = create_normalizec_sim_mat(points_list, n, &ret_mat);
+        failure = create_normalized_sim_mat(points_list, n, &ret_mat);
     }
     CHECK_FAILURE(failure, error);
 

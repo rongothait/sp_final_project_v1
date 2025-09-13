@@ -188,6 +188,8 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
         prev_point->next = NULL;
     }
 
+    fclose(file);
+
     return 0;
 }
 
@@ -243,7 +245,7 @@ int calc_aij_sim(point *xi, point *xj, double *result){
  *  Return: 0 on success, 1 on failure
  */
 int create_sim_mat(point* points_lst, int n, double ***sim_mat){
-    int i,j;
+    int i,j,k;
     double aij_res;
 
     point* head = points_lst;
@@ -253,17 +255,31 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     *sim_mat = malloc(n * sizeof(double*));
     if (*sim_mat == NULL) {return 1;}
 
+    /* allocate rows */ 
     for (i = 0; i < n; i++){
         xj = head; 
         (*sim_mat)[i] = malloc(n * sizeof(double));  /* allocate each row */
-        if ((*sim_mat)[i] == NULL) {return 1;}
+        if ((*sim_mat)[i] == NULL) {
+            /* free previousley allocated rows */
+            for (j = 0; j < i; j++){
+                free((*sim_mat)[j]);
+            }
+            free(*sim_mat);
+            return 1;
+        }
         
+        /* populate the matrix */
         for (j = 0; j < n; j++){
             if (i == j){
                 (*sim_mat)[i][j] = 0.0;
             }
             else{
-                if (calc_aij_sim(xi, xj, &aij_res) != 0) {return 1;}
+                if (calc_aij_sim(xi, xj, &aij_res) != 0) { /* Error */
+                    /* free all allocated rows*/
+                    for (k = 0; k <= i; k++){ free((*sim_mat)[k]); }
+                    free(*sim_mat);
+                    return 1;
+                }
                 (*sim_mat)[i][j] = aij_res;
             }
             xj = xj->next;
@@ -272,6 +288,7 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     }
 
     return 0; /* OK! */
+
 }
 
 /**
@@ -301,21 +318,40 @@ int arr_sum(double* arr, int n, double* sum){
  *  Return: 0 on success, 1 on failure
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
-    int i;
+    int i,j;
     double** sim_mat;
     double res;
     if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
 
     *diag_mat = malloc(n * sizeof(double*));
-    if (*diag_mat == NULL) {return 1;}
+    if (*diag_mat == NULL) {
+        /* free allocated memory */
+        free_matrix(sim_mat, n);
+        return 1;
+    }
 
     for (i = 0; i < n; i++){
         (*diag_mat)[i] = calloc(n, sizeof(double));
-        if ((*diag_mat)[i] == NULL) {return 1;}
+        if ((*diag_mat)[i] == NULL) {
+            /* free previousley allocated memory */
+            for (j = 0; j < i; j++){ free((*diag_mat)[j]); }
+            free(*diag_mat);
+            free_matrix(sim_mat, n);
+            return 1;
+        }
 
-        if (arr_sum(sim_mat[i], n, &res) != 0) {return 1;}
+        if (arr_sum(sim_mat[i], n, &res) != 0) {
+            /* free previosley allocated rows */
+            for (j = 0; j < i; j++) { free((*diag_mat)[j]); }
+            free(*diag_mat);
+            free_matrix(sim_mat, n);
+            return 1;
+        }
+        
         (*diag_mat)[i][i] = res;
     }
+
+    free_matrix(sim_mat, n);
     return 0;  /* OK! */
 }
 
@@ -375,7 +411,7 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
  * @w_mat: outparameter. Will hold the result W matrix
  *  Return: 0 on success, 1 on failure
  */
-int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
+int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat){
     double **sim_mat, **diag_mat_minus_sqrt, **diag_mat, **DA;
 
     if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
@@ -385,6 +421,11 @@ int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat){
     if(diag_mat_mult(diag_mat_minus_sqrt, sim_mat, n, "left", &DA) != 0) {return 1;};
     if(diag_mat_mult(diag_mat_minus_sqrt, DA, n, "right", w_mat) != 0) {return 1;};
 
+    /* free memory allocations */
+    free_matrix(sim_mat, n);
+    free_matrix(diag_mat, n);
+    free_matrix(diag_mat_minus_sqrt, n);
+    free_matrix(DA, n);
     return 0;
 }
 
@@ -715,7 +756,7 @@ int main(int argc, char *argv[]){
     }
     else if (strcmp(goal, "norm") == 0)
     {
-        failure = create_normalizec_sim_mat(dataset, n, &ret_mat);
+        failure = create_normalized_sim_mat(dataset, n, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
     else{
@@ -728,6 +769,10 @@ int main(int argc, char *argv[]){
 
     printf("%s\n", mat_str);
 
+    /* free memory allocations */
+    free(mat_str); /* free the matrix str*/
+    free_matrix(ret_mat, n);  /* free the matrix */
+    free_pnt_lst(dataset);  /* free the data set points */
     return 0;
 
 error:

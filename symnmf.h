@@ -26,7 +26,7 @@ int mat_to_str(double** mat, int m, int n, char **ret_str);
 
 int create_diag_mat(point* points_lst, int n, double ***diag_mat);
 
-int create_normalizec_sim_mat(point* points_lst, int n, double ***w_mat);
+int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat);
 
 int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***optimized_h);
 
