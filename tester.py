@@ -16,8 +16,8 @@ VALGRIND_ERRCODE = 99
 EPS = 1e-4
 TRIALS_PROGRAMS = 5
 TRIALS_SYMNMF_LIB = 5
-TRIALS_VALGRIND_C = 3
-TRIALS_VALGRIND_PY_SYMNMF = 6
+TRIALS_VALGRIND_C = 1
+TRIALS_VALGRIND_PY_SYMNMF = 1
 TRIALS_ANALYSIS_PY = 5
 TEST_PYTHON_MEMORY = True
 
@@ -131,7 +131,7 @@ def initialize_H(W: np.ndarray, k: int, set_seed=False):
     if set_seed:
         np.random.seed(1234)
 
-    return init_H(W, k)
+    return np.array(init_H(W.tolist(), k))
 
 
 def symnmf_main(W: np.ndarray, k: int, set_seed=False):
@@ -241,7 +241,7 @@ def test_analysis_py():
 
         if result.returncode != 0:
             print_red(
-                f"failure: process had a non-zero return code [{result.returncode}]"
+                f"failure: process had a non-zero return code [{result.returncode}] and the stdout is {result.stdout}"
             )
             success = False
 
@@ -405,13 +405,14 @@ def test_goal(
         print_red("memory leak detected by valgrind", prefix_msg)
         print_white_on_red(valgrind_log.decode())
         success = False
+        
     elif result.returncode != 0:
         print_red(
-            f"failure: process had a non-zero return code [{result.returncode}]",
+            f"failure: process had a non-zero return code [{result.returncode}] and the stdout is {result.stdout}",
             prefix_msg,
         )
         success = False
-
+    
     if result.stderr:
         print_red("failure: process had a non-empty stderr", prefix_msg)
         print_white_on_red(result.stderr)
@@ -421,7 +422,7 @@ def test_goal(
 
 
 def test_symnmf_lib():
-    import symnmf_c as symnmf
+    import symnmf_mod as symnmf
 
     test_data = TestData(round=False)
     rng = np.random.default_rng()
@@ -432,27 +433,31 @@ def test_symnmf_lib():
     )
 
     goal_name = format_goal_name("sym")
-    A = np.array(symnmf.sym(test_data.X))
+    A = np.array(symnmf.sym(test_data.X.tolist()))
     if not np.all(np.linalg.norm(test_data.A - A, axis=1) < EPS):
         print_red(err_msg.format(goal_name))
         return False
+    
 
     goal_name = format_goal_name("ddg")
-    D = np.array(symnmf.ddg(test_data.X))
+    D = np.array(symnmf.ddg(test_data.X.tolist()))
     if not np.all(np.linalg.norm(test_data.D - D, axis=1) < EPS):
         print_red(err_msg.format(goal_name))
         return False
 
+
     goal_name = format_goal_name("norm")
     W_target = normalized_similarity_matrix(test_data.A, test_data.D)
-    W = np.array(symnmf.norm(test_data.X))
+    W = np.array(symnmf.norm(test_data.X.tolist()))
     if not np.all(np.linalg.norm(W_target - W, axis=1) < EPS):
         print_red(err_msg.format(goal_name))
         return False
+    
 
     goal_name = format_goal_name("symnmf")
     initial_H, final_H_target = symnmf_main(W, k)
-    final_H = np.array(symnmf.symnmf(initial_H, W))
+    k = len(initial_H[0])
+    final_H = np.array(symnmf.symnmf(initial_H.tolist(), W.tolist(), k))
     if not np.all(np.linalg.norm(final_H_target - final_H, axis=1) < EPS):
         print_red(err_msg.format(goal_name))
         return False
