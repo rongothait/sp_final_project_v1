@@ -9,25 +9,31 @@ ERR_MSG = "An Error Has Occured"
 np.random.seed(1234)
 
 def general_error(msg = ERR_MSG):
-    print(msg)
+    """
+    General Error Handeling
+    @msg (string, optioanl): the error message. used only for debugging
+    """
+    print(ERR_MSG)
     exit(1)
 
-"""
-is_float - Checks if a string x represents a floating number
-@x: the string
-"""
+
 def is_float(x):
+    """
+    is_float - Checks if a string x represents a floating number
+    @x: the string
+    """
     try:
         float(x)
         return True
     except:
         return False
 
-"""
-get_average_val_of_matrix - Calculates the average value of all of the cells in matrix
-@mat: the matrix
-"""
+
 def get_average_val_of_matrix(mat):
+    """
+    get_average_val_of_matrix - Calculates the average value of all of the cells in matrix
+    @mat: the matrix
+    """
     sum = 0
     for row in mat:
         for val in row:
@@ -35,11 +41,12 @@ def get_average_val_of_matrix(mat):
     cnt = len(mat) * len(mat[0])
     return sum / cnt
 
-"""
-set_data - checks cmd args valididty
-@data: an array of cmd args
-"""
+
 def set_data(data):
+    """
+    set_data - checks cmd args valididty
+    @data: an array of cmd args
+    """
     # 1. making sure the input is in correct length
     if len(data) != 4:
         general_error("length of data is incorrect!, expected length of 4 received {}".format(len(data)))
@@ -60,11 +67,12 @@ def set_data(data):
 
     return int(k), goal, path
 
-"""
-txt_input_to_list - converts the path given to a list of lists
-@path: the path of the file
-"""
+
 def txt_input_to_list(path):
+    """
+    txt_input_to_list - converts the path given to a list of lists
+    @path: the path of the file
+    """
     try:
         with open(path, 'r') as f:
             lines = [line.strip() for line in f]
@@ -74,11 +82,12 @@ def txt_input_to_list(path):
     
     return lines
 
-"""
-matrix_to_str - converts a list of lists (float) to formatted str ready for printing
-@mat: the matrix to convert
-"""
+
 def matrix_to_str(mat):
+    """
+    matrix_to_str - converts a list of lists (float) to formatted str ready for printing
+    @mat: the matrix to convert
+    """
     rows = []
     for row in mat:
         row_str = ','.join([f'{x:.4f}' for x in row])
@@ -86,10 +95,26 @@ def matrix_to_str(mat):
 
     return '\n'.join(rows)
 
+
 def create_random_matrix(rows, cols, upper_bound, lower_bound = 0):
+    """
+    Creates a matrix (list of lists) of shape (rows, cols) filled with random float values
+    sampled uniformly from the interval [lower_bound, upper_bound).
+    @rows (int): number of rows in matrix
+    @cols (int): number of cols in matrix
+    @upper_bound (float): Upper bound for the random values
+    @lower_bound (float): lower bound for the random values
+    """
     return [[np.random.uniform(low=lower_bound, high=upper_bound) for _ in range(cols)] for _ in range(rows)]
 
+
 def init_H(w_mat, k, np_arr = True):
+    """
+    Initializes the H matrix for SymnNMF using random values based on the average value of w_mat
+    w_mat (list): W matrix
+    k (int): number of clusters
+    np_arr (bool, optional) : if True, returns a NumPy array, otherwise a Python list of lists.
+    """
     w_mat_avg_val = get_average_val_of_matrix(w_mat)
     upper_val = 2 * ((w_mat_avg_val / k)**0.5)
     n = len(w_mat)
@@ -100,13 +125,14 @@ def init_H(w_mat, k, np_arr = True):
     else:
         return init_h_mat
 
-"""
-symnmf_handle - handles the code for goal = "symnmf"
-@dataset: the dataset from the cmd input file (already formatted as lists)
-@k: (int) number of clusters
-@n: (int) length of dataset 
-"""
+
 def symnmf_handle(dataset, k, n):
+    """
+    symnmf_handle - handles the code for goal = "symnmf"
+    @dataset: the dataset from the cmd input file (already formatted as lists)
+    @k: (int) number of clusters
+    @n: (int) length of dataset 
+    """
     w_mat = symnmf.norm(dataset)
     h_mat = init_H(w_mat, k, False)
 
@@ -115,7 +141,14 @@ def symnmf_handle(dataset, k, n):
 
     return res_mat
 
+
 def get_goal_matrix(goal, k, path):
+    """
+    handles the call for getting the requested matrix
+    @goal (string): the requested goal
+    @k (int): number of clusters requested
+    @path (string): path to the dataset input file
+    """
     dataset = txt_input_to_list(path)
     n = len(dataset)
 
@@ -136,10 +169,7 @@ def get_goal_matrix(goal, k, path):
 def main():
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
-    """
-    k, goal = 2, "symnmf"
-    dataset = txt_input_to_list("input_1_short.txt")
-    """
+    
     # validate goal
     if goal not in ['sym', 'ddg', 'symnmf', 'norm']:
         general_error("problem with goal: {}".format(goal))

@@ -22,12 +22,6 @@ typedef struct cord {
     struct cord *next;
 } cord;
 
-/* TODO */
-void general_error(){
-    printf("An Error Has Occured\n");
-    /* Add freeing the memory */
-    exit(1);
-}
 
 /**
  * free_cords - free cordinates memory allocation for the linked list starting at crd
@@ -231,7 +225,7 @@ int euc_distance(point *p1, point *p2, double *dist){
 int calc_aij_sim(point *xi, point *xj, double *result){
     double dist, power;
     *result = 0;
-    if(euc_distance(xi, xj, &dist) != 0) {general_error();}
+    if(euc_distance(xi, xj, &dist) != 0) { return 1;}
     power = ((pow(dist, 2)) / 2);
     *result = exp(-1*power);
     return 0;
@@ -622,26 +616,6 @@ int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double **
         for (j = 0; j < k; j++){
             if (calc_h_next_ij(i, j, wh, hh_th, h, &res) != 0) {return 1;}
             (*next_h)[i][j] = res;
-        }
-    }
-
-    return 0;
-}
-
-/**
- * copy a matrix's src values to allocated matrix dest
- * @dest: destination matrix
- * @src:  source matrix
- * @m: row dimension
- * @n: column dimension
- *  Return: 0 on success, 1 on failure
- */
-int copy_matrix_by_value(double **dest, double **src, int m, int n){
-    int row, col;
-
-    for (row = 0; row < m; row++){
-        for (col = 0; col < n; col++){
-            dest[row][col] = src[row][col];
         }
     }
 

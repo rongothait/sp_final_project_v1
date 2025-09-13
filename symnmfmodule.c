@@ -103,6 +103,12 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
     return 0;
 }
 
+/**
+ * matrix_to_pylist - converts a C 2D array (matrix) to a python list of lists
+ * @matrix: the input C 2d array (double**)
+ * @row_num: Number of rows in the matrix
+ * @col_num: number of columns in the matrix
+ */
 static PyObject* matrix_to_pylist(double **matrix, int row_num, int col_num){
     PyObject *py_matrix, *py_row;
     int i, j;
@@ -134,6 +140,11 @@ static PyObject* matrix_to_pylist(double **matrix, int row_num, int col_num){
     return py_matrix;
 }
 
+/**
+ * request_standard - Handles standard matrix goals (sym, norm, ddg) for the Python extension
+ * @args: Python tuple containing the dataset as a list of lists.
+ * @goal: string specifiying the matrix operation ("sym", "ddg", "norm")
+ */
 static PyObject* request_standard(PyObject *args, char* goal){
     point *points_list = NULL;
     int n, failure;
@@ -176,18 +187,30 @@ error:
     return Py_BuildValue("s", "An Error Has Occured");
 }
 
+/**
+ * sym - Python exposed function to compute for the sym call
+ */
 static PyObject* sym(PyObject *self, PyObject *args){
    return request_standard(args, "sym");
 }
 
+/**
+ * norm - Python exposed function to compute for the norm call
+ */
 static PyObject* norm(PyObject *self, PyObject *args){
     return request_standard(args, "norm");
 }
 
+/**
+ * ddg - Python exposed function to compute for the ddg call
+ */
 static PyObject* ddg(PyObject *self, PyObject *args){
     return request_standard(args, "ddg");
 }
 
+/**
+ * symnmf - Python exposed function to compute for the symnmf call
+ */
 static PyObject* symnmf(PyObject *self, PyObject *args){
     double **init_h_mat, **w_mat, **ret_mat;
     int n, k, failure;
