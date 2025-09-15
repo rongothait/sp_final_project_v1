@@ -194,7 +194,7 @@ error:
         free(curr_point);
         free(head_cord);
     }
-    free_pnt_lst(head_point);
+    free_pnt_lst(*head_point);
     free(head_point);
     return 1;
 }
@@ -253,12 +253,13 @@ int calc_aij_sim(point *xi, point *xj, double *result){
 int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     int i,j,k;
     double aij_res;
-    int error_num_of_rows_to_delete = 0; /* in case there is an error how much rows to delete of the matrix */
-    *sim_mat = NULL; /* safe initialization for error handling */
-
+    
     point* head = points_lst;
     point* xi = points_lst;
     point* xj = points_lst;
+
+    int error_num_of_rows_to_delete = 0; /* in case there is an error how much rows to delete of the matrix */
+    *sim_mat = NULL; /* safe initialization for error handling */
 
     *sim_mat = malloc(n * sizeof(double*));
     if (*sim_mat == NULL) { return 1; }
@@ -316,11 +317,12 @@ int arr_sum(double* arr, int n, double* sum){
  *  Return: 0 on success, 1 on failure
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
-    int i,j,k;
+    int i,k;
     double** sim_mat = NULL;
     double res;
-    *diag_mat = NULL; /* safe initialization of out parameter */
     int error_num_of_rows_to_free = 0;
+    *diag_mat = NULL; /* safe initialization of out parameter */
+    
 
     if (create_sim_mat(points_lst, n, &sim_mat) != 0) {goto error; };
 
@@ -356,9 +358,9 @@ error:
  */
 int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
     int i,k;
-    *ret_mat = NULL; /* safe initialization of out parameter */
     int error_num_of_rows_to_free = 0;
-
+    *ret_mat = NULL; /* safe initialization of out parameter */
+    
     (*ret_mat) = malloc(n * sizeof(double*));
 
     if ((*ret_mat) == NULL) { goto error; }
@@ -413,6 +415,7 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
 error:
     for (k = 0; k < error_num_of_rows_to_free; k++){ free((*res)[k]); }
     free(*res);
+    return 1;
 }
 
 /**
@@ -555,8 +558,8 @@ int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, dou
 int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
     int i,j,k;
     double sum;
-    *res_mat = NULL;
     int error_num_of_rows_to_free = 0;
+    *res_mat = NULL;
 
     /* Allocate memory for result matrix */
     *res_mat = malloc(a * sizeof(double));
@@ -635,7 +638,7 @@ error:
  * @next_h: out parameter. Will hold the result of the calculation
  */
 int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double ***next_h){
-    int i, j, k;
+    int i, j, l;
     double res;
     int error_number_of_rows_to_free = 0;
     *next_h = NULL;
@@ -662,7 +665,7 @@ int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double **
     return 0;
 
 error:
-    for (k = 0; k < error_number_of_rows_to_free; k++){ free((*next_h)[k]); }
+    for (l = 0; l < error_number_of_rows_to_free; l++){ free((*next_h)[l]); }
     free(*next_h);
     return 1;
 }
