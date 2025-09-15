@@ -124,20 +124,21 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     cord *head_cord, *curr_cord;
     int dim = 0;
     *points_count = 0;
+    *head_point = NULL;  /* safe initialization for out parameter */
 
     file = fopen(path, "r");  /* Open for reading */
-    if (file == NULL) {return 1;}
+    if (file == NULL) { goto error; }
 
     /* init head of cords*/
     head_cord = (cord*) malloc(sizeof(struct cord));
-    if (head_cord == NULL) {return 1;}
+    if (head_cord == NULL) { goto error; }
 
     curr_cord = head_cord;
     curr_cord->next = NULL;
 
     /* init head of points linked_list */
     (*head_point) = (point*) malloc(sizeof(point));
-    if (*head_point == NULL) {return 1;}
+    if (*head_point == NULL) { goto error; }
 
     curr_point = (*head_point);
     curr_point->next = NULL;
@@ -149,7 +150,7 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
             dim++;
             curr_cord->value = n;
             curr_cord->next = (cord*) calloc(1, sizeof(cord));
-            if (curr_cord->next == NULL) {return 1;}
+            if (curr_cord->next == NULL) { goto error; }
             curr_cord = curr_cord->next;
             curr_cord->next = NULL;
         }
@@ -160,14 +161,14 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
             curr_point->dim = dim + 1;
             prev_point = curr_point;
             curr_point->next = (point*) calloc(1, sizeof(point));
-            if (curr_point->next == NULL) {return 1;}
+            if (curr_point->next == NULL) { goto error; }
 
             curr_point = curr_point->next;
             curr_point->next = NULL;
             curr_point->cords = NULL;
 
             head_cord = (cord*) calloc(1, sizeof(cord));
-            if (head_cord == NULL) {return 1;}
+            if (head_cord == NULL) { goto error; }
             curr_cord = head_cord;
             curr_cord->next = NULL;
             dim = 0;
@@ -186,8 +187,16 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     }
 
     fclose(file);
-
     return 0;
+
+error:
+    if (curr_point != NULL) {
+        free(curr_point);
+        free(head_cord);
+    }
+    free_pnt_lst(head_point);
+    free(head_point);
+    return 1;
 }
 
 /**
@@ -228,7 +237,7 @@ int euc_distance(point *p1, point *p2, double *dist){
 int calc_aij_sim(point *xi, point *xj, double *result){
     double dist, power;
     *result = 0;
-    if(euc_distance(xi, xj, &dist) != 0) { return 1;}
+    if(euc_distance(xi, xj, &dist) != 0) { return 1; } /* error! */
     power = ((pow(dist, 2)) / 2);
     *result = exp(-1*power);
     return 0;
@@ -244,48 +253,41 @@ int calc_aij_sim(point *xi, point *xj, double *result){
 int create_sim_mat(point* points_lst, int n, double ***sim_mat){
     int i,j,k;
     double aij_res;
+    int error_num_of_rows_to_delete = 0; /* in case there is an error how much rows to delete of the matrix */
+    *sim_mat = NULL; /* safe initialization for error handling */
 
     point* head = points_lst;
     point* xi = points_lst;
     point* xj = points_lst;
 
     *sim_mat = malloc(n * sizeof(double*));
-    if (*sim_mat == NULL) {return 1;}
+    if (*sim_mat == NULL) { return 1; }
 
     /* allocate rows */ 
     for (i = 0; i < n; i++){
         xj = head; 
         (*sim_mat)[i] = malloc(n * sizeof(double));  /* allocate each row */
-        if ((*sim_mat)[i] == NULL) {
-            /* free previousley allocated rows */
-            for (j = 0; j < i; j++){
-                free((*sim_mat)[j]);
-            }
-            free(*sim_mat);
-            return 1;
-        }
+        if ((*sim_mat)[i] == NULL) { goto error; } 
         
         /* populate the matrix */
         for (j = 0; j < n; j++){
-            if (i == j){
-                (*sim_mat)[i][j] = 0.0;
-            }
+            if (i == j){ (*sim_mat)[i][j] = 0.0; }
             else{
-                if (calc_aij_sim(xi, xj, &aij_res) != 0) { /* Error */
-                    /* free all allocated rows*/
-                    for (k = 0; k <= i; k++){ free((*sim_mat)[k]); }
-                    free(*sim_mat);
-                    return 1;
-                }
+                if (calc_aij_sim(xi, xj, &aij_res) != 0) { goto error; }
                 (*sim_mat)[i][j] = aij_res;
             }
             xj = xj->next;
         }
         xi = xi->next;
+        error_num_of_rows_to_delete = i;
     }
-
     return 0; /* OK! */
 
+error:
+    /* free previousley allocated rows */
+    for (k = 0; k < error_num_of_rows_to_delete; k++){ free((*sim_mat)[k]); }
+    free(*sim_mat);
+    return 1;
 }
 
 /**
@@ -298,7 +300,6 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
 int arr_sum(double* arr, int n, double* sum){
     int i;
     *sum = 0;
-    
 
     for (i = 0; i < n; i++){
         *sum += arr[i];
@@ -315,41 +316,35 @@ int arr_sum(double* arr, int n, double* sum){
  *  Return: 0 on success, 1 on failure
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
-    int i,j;
-    double** sim_mat;
+    int i,j,k;
+    double** sim_mat = NULL;
     double res;
-    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
+    *diag_mat = NULL; /* safe initialization of out parameter */
+    int error_num_of_rows_to_free = 0;
+
+    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {goto error; };
 
     *diag_mat = malloc(n * sizeof(double*));
-    if (*diag_mat == NULL) {
-        /* free allocated memory */
-        free_matrix(sim_mat, n);
-        return 1;
-    }
+    if (*diag_mat == NULL) { goto error; }
 
     for (i = 0; i < n; i++){
         (*diag_mat)[i] = calloc(n, sizeof(double));
-        if ((*diag_mat)[i] == NULL) {
-            /* free previousley allocated memory */
-            for (j = 0; j < i; j++){ free((*diag_mat)[j]); }
-            free(*diag_mat);
-            free_matrix(sim_mat, n);
-            return 1;
-        }
+        if ((*diag_mat)[i] == NULL) { goto error; }
 
-        if (arr_sum(sim_mat[i], n, &res) != 0) {
-            /* free previosley allocated rows */
-            for (j = 0; j < i; j++) { free((*diag_mat)[j]); }
-            free(*diag_mat);
-            free_matrix(sim_mat, n);
-            return 1;
-        }
+        if (arr_sum(sim_mat[i], n, &res) != 0) { goto error; }
         
         (*diag_mat)[i][i] = res;
+        error_num_of_rows_to_free = i;
     }
 
     free_matrix(sim_mat, n);
     return 0;  /* OK! */
+
+error:
+    free_matrix(sim_mat, n);
+    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*diag_mat)[k]); }
+    free(*diag_mat);
+    return 1;
 }
 
 /**
@@ -360,15 +355,26 @@ int create_diag_mat(point* points_lst, int n, double ***diag_mat){
  *  Return: 0 on success, 1 on failure
  */
 int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
-    int i;
+    int i,k;
+    *ret_mat = NULL; /* safe initialization of out parameter */
+    int error_num_of_rows_to_free = 0;
+
     (*ret_mat) = malloc(n * sizeof(double*));
-    if ((*ret_mat) == NULL) {return 1;}
+
+    if ((*ret_mat) == NULL) { goto error; }
+
     for (i = 0; i < n; i++){
         (*ret_mat)[i] = calloc(n, sizeof(double));
-        if ((*ret_mat)[i] == NULL) {return 1;}
+        if ((*ret_mat)[i] == NULL) { goto error; }
         (*ret_mat)[i][i] = 1.0 / sqrt(mat[i][i]);
+        error_num_of_rows_to_free = i;
     }
     return 0;
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*ret_mat)[k]); }
+    free(*ret_mat);
+    return 1;
 }
 
 /**
@@ -381,15 +387,18 @@ int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
  *  Return: 0 on success, 1 on failure
 */
 int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res){
-    int i,j;
-    if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {return 1;}
+    int i,j,k;
+    int error_num_of_rows_to_free = 0;
+    res = NULL; /* safe initialization for error handling */
+
+    if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {goto error;}
 
     (*res) = malloc(n * sizeof(double*));
-    if (*res == NULL) {return 1;}
+    if (*res == NULL) { goto error; }
     
     for (i = 0; i < n; i++){
         (*res)[i] = malloc(n * sizeof(double));
-        if ((*res)[i] == NULL) {return 1;}
+        if ((*res)[i] == NULL) { goto error; }
 
         for (j = 0; j < n; j++){
             if (strcmp(direction, "left") == 0)
@@ -397,8 +406,13 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
             if (strcmp(direction, "right") == 0)
                 (*res)[i][j] = A[i][j] * D[j][j];
         }
+        i = error_num_of_rows_to_free;
     }
     return 0;  /* OK! */
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*res)[k]); }
+    free(*res);
 }
 
 /**
@@ -409,14 +423,14 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
  *  Return: 0 on success, 1 on failure
  */
 int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat){
-    double **sim_mat, **diag_mat_minus_sqrt, **diag_mat, **DA;
+    double **sim_mat = NULL, **diag_mat_minus_sqrt = NULL, **diag_mat = NULL, **DA = NULL;
 
-    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {return 1;};
-    if (create_diag_mat(points_lst, n, &diag_mat) != 0) {return 1;}
-    if (one_div_sqrt_diag_mat(diag_mat, n, &diag_mat_minus_sqrt) != 0) {return 1;}
+    if (create_sim_mat(points_lst, n, &sim_mat) != 0) { goto error; };
+    if (create_diag_mat(points_lst, n, &diag_mat) != 0) { goto error; }
+    if (one_div_sqrt_diag_mat(diag_mat, n, &diag_mat_minus_sqrt) != 0) { goto error; }
 
-    if(diag_mat_mult(diag_mat_minus_sqrt, sim_mat, n, "left", &DA) != 0) {return 1;};
-    if(diag_mat_mult(diag_mat_minus_sqrt, DA, n, "right", w_mat) != 0) {return 1;};
+    if(diag_mat_mult(diag_mat_minus_sqrt, sim_mat, n, "left", &DA) != 0) { goto error; }
+    if(diag_mat_mult(diag_mat_minus_sqrt, DA, n, "right", w_mat) != 0) { goto error; }
 
     /* free memory allocations */
     free_matrix(sim_mat, n);
@@ -424,6 +438,13 @@ int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat){
     free_matrix(diag_mat_minus_sqrt, n);
     free_matrix(DA, n);
     return 0;
+
+error:
+    free_matrix(sim_mat, n);
+    free_matrix(diag_mat, n);
+    free_matrix(diag_mat_minus_sqrt, n);
+    free_matrix(DA, n);
+    return 1;
 }
 
 /**
@@ -456,23 +477,20 @@ int frobenius_norm(double **mat, int m, int n, double *norm_res){
  *  Return: 0 on success, 1 on failure
  */
 int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
-    int i, j;
+    int i, j, k;
+    int error_num_of_rows_to_free = 0;
+    *res_mat = NULL;
 
     /* Allocate memory for result matrix */
     *res_mat = malloc(m * sizeof(double*));
-    if (*res_mat == NULL) return 1;
+    if (*res_mat == NULL) { goto error; }
 
     /* Allocate memory for each row */
     for (i = 0; i < m; i++){
         (*res_mat)[i] = malloc(n * sizeof(double));
-        if ((*res_mat)[i] == NULL){
-            /* clean up already allocated memory */
-            for (j = 0; j < i; j++){
-                free((*res_mat)[j]);
-            }
-            free(*res_mat);
-            return 1;
-        }
+        if ((*res_mat)[i] == NULL) { goto error; }
+
+        error_num_of_rows_to_free = i;
     }
 
     /* Preform matrix substraction */
@@ -483,6 +501,11 @@ int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
     }
 
     return 0;
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*res_mat)[k]); }
+    free(*res_mat);
+    return 1;
 }
 
 /**
@@ -532,14 +555,18 @@ int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, dou
 int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
     int i,j,k;
     double sum;
+    *res_mat = NULL;
+    int error_num_of_rows_to_free = 0;
 
     /* Allocate memory for result matrix */
     *res_mat = malloc(a * sizeof(double));
-    if (*res_mat == NULL) {return 1;}
+    if (*res_mat == NULL) { goto error; }
 
     for (i = 0; i < a; i++){
         (*res_mat)[i] = calloc(c, sizeof(double));
-        if ((*res_mat)[i] == NULL) {return 1;}
+        if ((*res_mat)[i] == NULL) { goto error; }
+
+        error_num_of_rows_to_free = i;
     }
 
     /* Perform matrix multiplication */
@@ -554,6 +581,11 @@ int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
     }
 
     return 0;
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*res_mat)[k]); }
+    free(*res_mat);
+    return 1;
 }
 
 /**
@@ -565,23 +597,18 @@ int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
  * Return: 0 on success, 1 on failure
  */
 int transpose_matrix(double **mat, int m, int n, double ***transposed){
-    int i, j;
+    int i, j, k;
+    int error_num_of_rows_to_free = 0;
+    *transposed = NULL;
 
     /* Allocate memory for transposed matrix (n rows since dimensions are swapped) */
     *transposed = (double**) malloc(n * sizeof(double*));
-    if (*transposed == NULL) return 1;
+    if (*transposed == NULL) { goto error; }
 
     /* Allocate memory for each row (m columns since dimesnions are swapped) */
     for (i = 0; i < n; i++){
         (*transposed)[i] = malloc(m * sizeof(double));
-        if ((*transposed)[i] == NULL){
-            /* clean up already allocated memory */
-            for (j = 0; j < i; j++){
-                free((*transposed)[j]);
-            }
-            free(*transposed);
-            return 1;
-        }
+        if ((*transposed)[i] == NULL){ goto error; }
     }
 
     /* preform the transpose operation */
@@ -592,6 +619,11 @@ int transpose_matrix(double **mat, int m, int n, double ***transposed){
     }
 
     return 0;
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*transposed)[k]); }
+    free(*transposed);
+    return 1;
 }
 
 /**
@@ -603,26 +635,36 @@ int transpose_matrix(double **mat, int m, int n, double ***transposed){
  * @next_h: out parameter. Will hold the result of the calculation
  */
 int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double ***next_h){
-    int i, j;
+    int i, j, k;
     double res;
+    int error_number_of_rows_to_free = 0;
+    *next_h = NULL;
+
     (*next_h) = malloc(n * sizeof(double*));
-    if (*next_h == NULL) {return 1;}
+    if (*next_h == NULL) { goto error; }
 
     /* Allocate memory for result matrix */
     for (i = 0; i < n; i++){
         (*next_h)[i] = calloc(k, sizeof(double));
-        if ((*next_h)[i] == NULL) {return 1;}
+        if ((*next_h)[i] == NULL) { goto error; }
+
+        error_number_of_rows_to_free = i;
     }
 
     /* Perform the calcuations */
     for (i = 0; i < n; i++){
         for (j = 0; j < k; j++){
-            if (calc_h_next_ij(i, j, wh, hh_th, h, &res) != 0) {return 1;}
+            if (calc_h_next_ij(i, j, wh, hh_th, h, &res) != 0) { goto error; }
             (*next_h)[i][j] = res;
         }
     }
 
     return 0;
+
+error:
+    for (k = 0; k < error_number_of_rows_to_free; k++){ free((*next_h)[k]); }
+    free(*next_h);
+    return 1;
 }
 
 /**
@@ -689,9 +731,9 @@ error:
 
 int main(int argc, char *argv[]){
     int failure, n;
-    char *goal, *file_name, *mat_str;
-    double **ret_mat;
-    point *dataset;
+    char *goal, *file_name, *mat_str = NULL;
+    double **ret_mat = NULL;
+    point *dataset = NULL;
 
     if (argc != 3){
         printf("%s", ERR_MSG_GENERAL);
@@ -738,5 +780,5 @@ error:
     if (ret_mat) free_matrix(ret_mat, n);
     if (dataset) free_pnt_lst(dataset);
     printf("%s", ERR_MSG_GENERAL);
-    return 1;
+    exit(1);
 }
