@@ -156,7 +156,7 @@ static PyObject* request_standard(PyObject *args, char* goal){
     point *points_list = NULL;
     int n = -1, failure;
     PyObject *py_points_list;
-    double **ret_mat;
+    double **ret_mat = NULL;
 
     /* This parses the python arguments into its C form */
     if (!PyArg_ParseTuple(args, "O", &py_points_list)) { goto error; }
