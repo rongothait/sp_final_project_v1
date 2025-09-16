@@ -24,6 +24,33 @@ typedef struct cord {
 
 
 /**
+ * allocate_double_matrix - allocate rows x cols matrix (double**)
+ * @rows: number of rows
+ * @cols: number of columns
+ * @ret_mat: out parameter; set to the newly allocated matrix on success
+ */
+int allocate_double_matrix(int rows, int cols, double ***ret_mat){
+    int i,k;
+    *ret_mat = NULL;
+
+    *ret_mat = (double**)malloc(rows * sizeof(double*));
+    if (*ret_mat == NULL) { return 1; }
+
+    for (i = 0; i < rows; i++){
+        (*ret_mat)[i] = (double*)calloc(cols, sizeof(double));
+        if ((*ret_mat)[i] == NULL){
+            /* free previousley allocated memory */
+            for (k = 0; k < i; k++) { free((*ret_mat)[k]); }
+            free(*ret_mat);
+            *ret_mat = NULL;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+/**
  * free_cords - free cordinates memory allocation for the linked list starting at crd
  * @crd: the starting node to free from
  *  Return: 0 on success, 1 on failure
@@ -253,25 +280,19 @@ int calc_aij_sim(point *xi, point *xj, double *result){
  *  Return: 0 on success, 1 on failure
  */
 int create_sim_mat(point* points_lst, int n, double ***sim_mat){
-    int i,j,k;
+    int i,j, failure;
     double aij_res;
     
     point* head = points_lst;
     point* xi = points_lst;
     point* xj = points_lst;
 
-    int error_num_of_rows_to_delete = 0; /* in case there is an error how much rows to delete of the matrix */
-    *sim_mat = NULL; /* safe initialization for error handling */
+    failure = allocate_double_matrix(n, n, sim_mat);
+    CHECK_FAILURE(failure, error);
 
-    *sim_mat = malloc(n * sizeof(double*));
-    if (*sim_mat == NULL) { return 1; }
-
-    /* allocate rows */ 
     for (i = 0; i < n; i++){
         xj = head; 
-        (*sim_mat)[i] = malloc(n * sizeof(double));  /* allocate each row */
-        if ((*sim_mat)[i] == NULL) { goto error; } 
-        
+
         /* populate the matrix */
         for (j = 0; j < n; j++){
             if (i == j){ (*sim_mat)[i][j] = 0.0; }
@@ -282,14 +303,10 @@ int create_sim_mat(point* points_lst, int n, double ***sim_mat){
             xj = xj->next;
         }
         xi = xi->next;
-        error_num_of_rows_to_delete = i;
     }
     return 0; /* OK! */
 
 error:
-    /* free previousley allocated rows */
-    for (k = 0; k < error_num_of_rows_to_delete; k++){ free((*sim_mat)[k]); }
-    free(*sim_mat);
     return 1;
 }
 
@@ -319,35 +336,27 @@ int arr_sum(double* arr, int n, double* sum){
  *  Return: 0 on success, 1 on failure
  */
 int create_diag_mat(point* points_lst, int n, double ***diag_mat){
-    int i,k;
-    double** sim_mat = NULL;
+    int i, failure;
     double res;
-    int error_num_of_rows_to_free = 0;
-    *diag_mat = NULL; /* safe initialization of out parameter */
-    
+    double** sim_mat = NULL;
+    *diag_mat = NULL;
 
-    if (create_sim_mat(points_lst, n, &sim_mat) != 0) {goto error; };
+    if (create_sim_mat(points_lst, n, &sim_mat) != 0) { goto error; };
 
-    *diag_mat = malloc(n * sizeof(double*));
-    if (*diag_mat == NULL) { goto error; }
+    failure = allocate_double_matrix(n,n, diag_mat);
+    CHECK_FAILURE(failure, error);
 
     for (i = 0; i < n; i++){
-        (*diag_mat)[i] = calloc(n, sizeof(double));
-        if ((*diag_mat)[i] == NULL) { goto error; }
-
         if (arr_sum(sim_mat[i], n, &res) != 0) { goto error; }
-        
         (*diag_mat)[i][i] = res;
-        error_num_of_rows_to_free = i;
     }
-
     free_matrix(sim_mat, n);
+    sim_mat = NULL;
     return 0;  /* OK! */
 
 error:
-    free_matrix(sim_mat, n);
-    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*diag_mat)[k]); }
-    free(*diag_mat);
+    if (sim_mat) { free_matrix(sim_mat, n); }
+    if (*diag_mat) { free_matrix(*diag_mat, n); }
     return 1;
 }
 
@@ -359,25 +368,18 @@ error:
  *  Return: 0 on success, 1 on failure
  */
 int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
-    int i,k;
-    int error_num_of_rows_to_free = 0;
+    int i, failure;
     *ret_mat = NULL; /* safe initialization of out parameter */
     
-    (*ret_mat) = malloc(n * sizeof(double*));
-
-    if ((*ret_mat) == NULL) { goto error; }
+    failure = allocate_double_matrix(n,n, ret_mat);
+    CHECK_FAILURE(failure, error);
 
     for (i = 0; i < n; i++){
-        (*ret_mat)[i] = calloc(n, sizeof(double));
-        if ((*ret_mat)[i] == NULL) { goto error; }
         (*ret_mat)[i][i] = 1.0 / sqrt(mat[i][i]);
-        error_num_of_rows_to_free = i;
     }
     return 0;
 
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*ret_mat)[k]); }
-    free(*ret_mat);
     return 1;
 }
 
@@ -391,32 +393,24 @@ error:
  *  Return: 0 on success, 1 on failure
 */
 int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res){
-    int i,j,k;
-    int error_num_of_rows_to_free = 0;
+    int i,j, failure;
     *res = NULL; /* safe initialization for error handling */
 
     if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {goto error;}
-
-    (*res) = malloc(n * sizeof(double*));
-    if (*res == NULL) { goto error; }
     
-    for (i = 0; i < n; i++){
-        (*res)[i] = malloc(n * sizeof(double));
-        if ((*res)[i] == NULL) { goto error; }
+    failure = allocate_double_matrix(n, n, res);
+    CHECK_FAILURE(failure, error);
 
+    for (i = 0; i < n; i++){
         for (j = 0; j < n; j++){
             if (strcmp(direction, "left") == 0)
                 (*res)[i][j] = D[i][i] * A[i][j];
             if (strcmp(direction, "right") == 0)
                 (*res)[i][j] = A[i][j] * D[j][j];
         }
-        error_num_of_rows_to_free =i;
     }
     return 0;  /* OK! */
-
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*res)[k]); }
-    free(*res);
     return 1;
 }
 
@@ -482,21 +476,11 @@ int frobenius_norm(double **mat, int m, int n, double *norm_res){
  *  Return: 0 on success, 1 on failure
  */
 int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
-    int i, j, k;
-    int error_num_of_rows_to_free = 0;
+    int i, j, failure;
     *res_mat = NULL;
 
-    /* Allocate memory for result matrix */
-    *res_mat = malloc(m * sizeof(double*));
-    if (*res_mat == NULL) { goto error; }
-
-    /* Allocate memory for each row */
-    for (i = 0; i < m; i++){
-        (*res_mat)[i] = malloc(n * sizeof(double));
-        if ((*res_mat)[i] == NULL) { goto error; }
-
-        error_num_of_rows_to_free = i;
-    }
+    failure = allocate_double_matrix(m, n, res_mat);
+    CHECK_FAILURE(failure, error);
 
     /* Preform matrix substraction */
     for (i = 0; i < m; i++){
@@ -508,8 +492,6 @@ int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
     return 0;
 
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*res_mat)[k]); }
-    free(*res_mat);
     return 1;
 }
 
@@ -558,21 +540,12 @@ int calc_h_next_ij(int i, int j, double **w_h, double **h_htr_h, double **h, dou
  *  Return: 0 on success, 1 on failure
  */
 int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
-    int i,j,k;
+    int i, j, k, failure;
     double sum;
-    int error_num_of_rows_to_free = 0;
     *res_mat = NULL;
 
-    /* Allocate memory for result matrix */
-    *res_mat = malloc(a * sizeof(double));
-    if (*res_mat == NULL) { goto error; }
-
-    for (i = 0; i < a; i++){
-        (*res_mat)[i] = calloc(c, sizeof(double));
-        if ((*res_mat)[i] == NULL) { goto error; }
-
-        error_num_of_rows_to_free = i;
-    }
+    failure = allocate_double_matrix(a, c, res_mat);
+    CHECK_FAILURE(failure, error);
 
     /* Perform matrix multiplication */
     for (i = 0; i < a; i++){
@@ -584,12 +557,9 @@ int multi_mat(int a, int b, int c, double **A, double **B, double ***res_mat){
             (*res_mat)[i][j] = sum;
         }
     }
-
     return 0;
 
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*res_mat)[k]); }
-    free(*res_mat);
     return 1;
 }
 
@@ -602,19 +572,11 @@ error:
  * Return: 0 on success, 1 on failure
  */
 int transpose_matrix(double **mat, int m, int n, double ***transposed){
-    int i, j, k;
-    int error_num_of_rows_to_free = 0;
+    int i, j, failure;
     *transposed = NULL;
 
-    /* Allocate memory for transposed matrix (n rows since dimensions are swapped) */
-    *transposed = (double**) malloc(n * sizeof(double*));
-    if (*transposed == NULL) { goto error; }
-
-    /* Allocate memory for each row (m columns since dimesnions are swapped) */
-    for (i = 0; i < n; i++){
-        (*transposed)[i] = malloc(m * sizeof(double));
-        if ((*transposed)[i] == NULL){ goto error; }
-    }
+    failure = allocate_double_matrix(n, m, transposed); /* rows and cols dimensions swap becuase of transpose */
+    CHECK_FAILURE(failure, error);
 
     /* preform the transpose operation */
     for (i = 0; i < m; i++){
@@ -622,12 +584,9 @@ int transpose_matrix(double **mat, int m, int n, double ***transposed){
             (*transposed)[j][i] = mat[i][j];
         }
     }
-
     return 0;
 
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++){ free((*transposed)[k]); }
-    free(*transposed);
     return 1;
 }
 
@@ -640,21 +599,12 @@ error:
  * @next_h: out parameter. Will hold the result of the calculation
  */
 int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double ***next_h){
-    int i, j, l;
+    int i, j, failure;
     double res;
-    int error_number_of_rows_to_free = 0;
     *next_h = NULL;
 
-    (*next_h) = malloc(n * sizeof(double*));
-    if (*next_h == NULL) { goto error; }
-
-    /* Allocate memory for result matrix */
-    for (i = 0; i < n; i++){
-        (*next_h)[i] = calloc(k, sizeof(double));
-        if ((*next_h)[i] == NULL) { goto error; }
-
-        error_number_of_rows_to_free = i;
-    }
+    failure = allocate_double_matrix(n, k, next_h);
+    CHECK_FAILURE(failure, error);
 
     /* Perform the calcuations */
     for (i = 0; i < n; i++){
@@ -663,12 +613,10 @@ int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double **
             (*next_h)[i][j] = res;
         }
     }
-
     return 0;
 
 error:
-    for (l = 0; l < error_number_of_rows_to_free; l++){ free((*next_h)[l]); }
-    free(*next_h);
+    if (*next_h) { free_matrix(*next_h, n); }
     return 1;
 }
 
