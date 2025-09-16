@@ -391,7 +391,7 @@ error:
 int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res){
     int i,j,k;
     int error_num_of_rows_to_free = 0;
-    res = NULL; /* safe initialization for error handling */
+    *res = NULL; /* safe initialization for error handling */
 
     if(strcmp(direction, "left") != 0 && strcmp(direction, "right")) {goto error;}
 
@@ -408,7 +408,7 @@ int diag_mat_mult(double** D, double** A, int n, char* direction, double*** res)
             if (strcmp(direction, "right") == 0)
                 (*res)[i][j] = A[i][j] * D[j][j];
         }
-        i = error_num_of_rows_to_free;
+        error_num_of_rows_to_free =i;
     }
     return 0;  /* OK! */
 
@@ -737,11 +737,8 @@ int main(int argc, char *argv[]){
     char *goal, *file_name, *mat_str = NULL;
     double **ret_mat = NULL;
     point *dataset = NULL;
-
-    if (argc != 3){
-        printf("%s", ERR_MSG_GENERAL);
-        return 1;
-    }
+     
+    if (argc != 3){ goto error; }
 
     goal = argv[1];
     file_name = argv[2];
@@ -762,10 +759,7 @@ int main(int argc, char *argv[]){
         failure = create_normalized_sim_mat(dataset, n, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
-    else{
-        printf("%s", ERR_MSG_GENERAL);
-        goto error;
-    }
+    else{ goto error; }
 
     failure = mat_to_str(ret_mat, n, n, &mat_str);
     CHECK_FAILURE(failure, error);
