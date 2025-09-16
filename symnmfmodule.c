@@ -17,22 +17,16 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
     int dim, i, j;
     double num;
     PyObject *item;
-
-    /* init head of points linked list */
-    *head_point = (point*) calloc(1, sizeof(point));
+    *head_point = (point*) calloc(1, sizeof(point)); /* init head of points linked list */
     if (head_point == NULL) {return 1;}
     curr_point = *head_point;
 
-    /* Iterating over the python list */
-    for (i = 0; i < n; i++){
+    for (i = 0; i < n; i++){ /* Iterating over the python list */
         PyObject *inner_list = PyList_GetItem(outer_list, i);  /* the cords for the i-th point*/
         if (!PyList_Check(inner_list)) { goto error; }
-
-        /* init head cord for the first cord of the current point */
-        head_cord = (cord*) calloc(1, sizeof(cord));
+        head_cord = (cord*) calloc(1, sizeof(cord)); /* init head cord for the first cord of the current point */
         if (head_cord == NULL) { goto error; }
         curr_cord = head_cord;
-
         dim = PyObject_Length(inner_list);
 
         for (j = 0; j < dim; j++){
@@ -48,7 +42,6 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
         }
         curr_point->cords = head_cord;
         curr_point->dim = dim;
-
         if (i < n - 1){
             curr_point->next = (point*) calloc(1, sizeof(point));
             if (curr_point->next == NULL) { goto error; }
@@ -56,7 +49,6 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
         }
     }
     return 0;  /* OK! */
-
 error:
     free_pnt_lst(*head_point);
     free(head_cord);
