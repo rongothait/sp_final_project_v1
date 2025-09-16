@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["norm", "./tests/input_1.txt"],
+            "args": ["norm", "./tests/inpu.txt"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

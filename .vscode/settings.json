@@ -2,7 +2,8 @@
     "files.associations": {
         "math.h": "c",
         "string.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "trying_something.C": "cpp"
     },
     "makefile.configureOnOpen": false
 }

@@ -108,6 +108,50 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
     return 0;
 }
 
+/**
+ * parse_file - helper method for input_txt_to_points_lst to parse the file
+ */
+int parse_file(FILE *file, point *curr_point, point *prev_point, cord *head_cord, cord *curr_cord, int *points_count){
+    int dim = 0;
+    double n;
+    char c;
+    while (fscanf(file, "%lf%c", &n, &c) == 2){ /* scan input */
+        if (c == ','){ /* still on same point */
+            dim++;
+            curr_cord->value = n;
+            curr_cord->next = (cord*) calloc(1, sizeof(cord));
+            if (curr_cord->next == NULL) { goto error; }
+            curr_cord = curr_cord->next;
+            curr_cord->next = NULL;
+        } if (c == '\n'){  /* end of this point */
+            curr_cord->value = n;
+            curr_point->cords = head_cord;
+            curr_point->dim = dim + 1;
+            prev_point = curr_point;
+            curr_point->next = (point*) calloc(1, sizeof(point));
+            if (curr_point->next == NULL) { goto error; }
+            curr_point = curr_point->next; /* Moving to next point */
+            curr_point->next = NULL;
+            head_cord = (cord*) calloc(1, sizeof(cord));
+            if (head_cord == NULL) { goto error; }
+            curr_cord = head_cord;
+            curr_cord->next = NULL;
+            dim = 0;
+            (*points_count)++;
+        }
+    }
+    if (curr_point != NULL){ /* freeing memory for last point and its cord */
+        free(curr_point);
+        free(head_cord);
+        if (prev_point != NULL){
+            prev_point->next = NULL;
+        }
+    }
+    return 0;
+
+error:
+    return 1; /* memory freeing happens in the input_txt_to_points_lst function */
+}
 
 /**
  * input_txt_to_points_lst - Creates a linked list of points (and cords) for the .txt dataset given as an input
@@ -117,12 +161,10 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
  *  Return: 0 on success, 1 on failure
  */
 int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
-    double n;
-    char c;
     FILE *file;
     point *curr_point = NULL, *prev_point = NULL;
     cord *head_cord = NULL, *curr_cord = NULL;
-    int dim = 0;
+    int failure;
     *points_count = 0;
     *head_point = NULL;  /* safe initialization for out parameter */
 
@@ -143,48 +185,8 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     curr_point = (*head_point);
     curr_point->next = NULL;
 
-
-    /* scan input */
-    while (fscanf(file, "%lf%c", &n, &c) == 2){
-        if (c == ','){ /* still on same point */
-            dim++;
-            curr_cord->value = n;
-            curr_cord->next = (cord*) calloc(1, sizeof(cord));
-            if (curr_cord->next == NULL) { goto error; }
-            curr_cord = curr_cord->next;
-            curr_cord->next = NULL;
-        }
-
-        if (c == '\n'){  /* end of this point */
-            curr_cord->value = n;
-            curr_point->cords = head_cord;
-            curr_point->dim = dim + 1;
-            prev_point = curr_point;
-            curr_point->next = (point*) calloc(1, sizeof(point));
-            if (curr_point->next == NULL) { goto error; }
-
-            curr_point = curr_point->next;
-            curr_point->next = NULL;
-            curr_point->cords = NULL;
-
-            head_cord = (cord*) calloc(1, sizeof(cord));
-            if (head_cord == NULL) { goto error; }
-            curr_cord = head_cord;
-            curr_cord->next = NULL;
-            dim = 0;
-
-            (*points_count)++;
-        }
-    }
-
-    /* freeing memory for last point and its cord */
-    if (curr_point != NULL){
-        free(curr_point);
-        free(head_cord);
-        if (prev_point != NULL){
-            prev_point->next = NULL;
-        }
-    }
+    failure = parse_file(file, curr_point, prev_point, head_cord, curr_cord, points_count);
+    CHECK_FAILURE(failure, error);
 
     fclose(file);
     return 0;
@@ -195,7 +197,7 @@ error:
         free(head_cord);
     }
     free_pnt_lst(*head_point);
-    free(head_point);
+    free(*head_point);
     return 1;
 }
 
