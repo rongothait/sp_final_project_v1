@@ -51,21 +51,12 @@ def set_data(data):
     if len(data) != 4:
         general_error("length of data is incorrect!, expected length of 4 received {}".format(len(data)))
 
-    # 2. read arguments from CMD
+    # 2. read arguments from CMD - we can assume they are valid
     k = int(sys.argv[1])  # int, number of clusters
     goal = sys.argv[2]  # 'symnf' / 'sym' / 'ddg' / 'norm'
     path = sys.argv[3]  # path to data set
 
-
-    # 3. check validity
-    if not is_float(k):
-        general_error("k is not float")
-    
-    k = float(k)
-    if k % 1 != 0: # or k <= 1
-        general_error("k is not integer, received k {}".format(k))
-
-    return int(k), goal, path
+    return k, goal, path
 
 
 def txt_input_to_list(path):
@@ -168,14 +159,6 @@ def get_goal_matrix(goal, k, dataset):
 def main():
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
-    
-    # validate goal
-    if goal not in ['sym', 'ddg', 'symnmf', 'norm']:
-        general_error("problem with goal: {}".format(goal))
-
-    # validate k
-    if (is_float(k)) and (float(k) % 1 != 0):
-        general_error("problem with k {}".format(k))
     
     mat = get_goal_matrix(goal, int(k), dataset)
 

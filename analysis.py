@@ -57,7 +57,7 @@ def main():
     """
     if len(sys.argv) != 3:
         general_error()
-    k = int(sys.argv[1])
+    k = int(sys.argv[1])  # we can assume k is a legal value
     path = sys.argv[2]
 
     # kmeans
