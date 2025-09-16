@@ -12,8 +12,8 @@
  * @head_point: out parameter. Will hold the first point in the linked list.
  */
 static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
-    point *curr_point;
-    cord *head_cord, *curr_cord;
+    point *curr_point = NULL;
+    cord *head_cord = NULL, *curr_cord = NULL;
     int dim, i, j;
     double num;
     PyObject *item;
@@ -26,11 +26,11 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
     /* Iterating over the python list */
     for (i = 0; i < n; i++){
         PyObject *inner_list = PyList_GetItem(outer_list, i);  /* the cords for the i-th point*/
-        if (!PyList_Check(inner_list)) {return 1;}
+        if (!PyList_Check(inner_list)) { goto error; }
 
         /* init head cord for the first cord of the current point */
         head_cord = (cord*) calloc(1, sizeof(cord));
-        if (head_cord == NULL) {return 1;}
+        if (head_cord == NULL) { goto error; }
         curr_cord = head_cord;
 
         dim = PyObject_Length(inner_list);
@@ -41,7 +41,7 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
             curr_cord->value = num;
             if (j < dim - 1){
                 curr_cord->next = (cord*) calloc(1, sizeof(cord));
-                if (curr_cord->next == NULL) {return 1;}
+                if (curr_cord->next == NULL) { goto error; }
                 curr_cord = curr_cord->next;
                 curr_cord->next = NULL;
             }
@@ -51,11 +51,17 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
 
         if (i < n - 1){
             curr_point->next = (point*) calloc(1, sizeof(point));
-            if (curr_point->next == NULL) {return 1;}
+            if (curr_point->next == NULL) { goto error; }
             curr_point = curr_point->next;
         }
     }
     return 0;  /* OK! */
+
+error:
+    free_pnt_lst(*head_point);
+    free(head_cord);
+    free(curr_point);
+    return 1;
 }
 
 /**
@@ -66,41 +72,42 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
  * @mat: out parameter. Will hold the C matrix result
  */
 static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
-    int i, j;
+    int i, j, k;
     PyObject *inner_list, *item;
     double num;
+    int error_num_of_rows_to_free = 0;
+    *mat = NULL;
 
     /* Allocate memory for matrix */
     *mat = (double**) calloc(m, sizeof(double*));
-    if (*mat == NULL) return 1;
+    if (*mat == NULL) { goto error; }
 
     for (i = 0; i < m; i++){
 
         (*mat)[i] = (double*)calloc(n, sizeof(double));
-        if ((*mat)[i] == NULL){
-            /* free previously allocated memory in case of error */
-            for (j = 0; j < i; j++){
-                free((*mat)[j]);
-            }
-            free(*mat);
-            return 1;
-        }
+        if ((*mat)[i] == NULL) { goto error; }
+        error_num_of_rows_to_free = i;
     }
 
     /* Iterating over the python list */
     for (i = 0; i < m; i++){
         inner_list = PyList_GetItem(outer_list, i);
-        if (!PyList_Check(inner_list)) { return 1;}  /* Error: inner element is not a list */
+        if (!PyList_Check(inner_list)) { goto error; }  /* Error: inner element is not a list */
 
         for (j = 0; j < n; j++){
             item = PyList_GetItem(inner_list, j);
             num = PyFloat_AsDouble(item);
-            if (PyErr_Occurred()) {return 1;} /* Error: element is not a float */
+            if (PyErr_Occurred()) { goto error; } /* Error: element is not a float */
 
             (*mat)[i][j] = num;
         }
     }
     return 0;
+
+error:
+    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*mat)[k]); }
+    free(*mat);
+    return 1;
 }
 
 /**
@@ -152,7 +159,7 @@ static PyObject* request_standard(PyObject *args, char* goal){
     double **ret_mat;
 
     /* This parses the python arguments into its C form */
-    if (!PyArg_ParseTuple(args, "O", &py_points_list)) {goto error;}
+    if (!PyArg_ParseTuple(args, "O", &py_points_list)) { goto error; }
 
     /* length of dataset */
     n = PyObject_Length(py_points_list);
@@ -184,7 +191,8 @@ static PyObject* request_standard(PyObject *args, char* goal){
 error:
     free_pnt_lst(points_list);
     if (ret_mat) {free_matrix(ret_mat, n);}
-    return Py_BuildValue("s", "An Error Has Occured");
+    PyErr_SetString(PyExc_RuntimeError, "An Error Has Occured");
+    return NULL;
 }
 
 /**
@@ -212,7 +220,7 @@ static PyObject* ddg(PyObject *self, PyObject *args){
  * symnmf - Python exposed function to compute for the symnmf call
  */
 static PyObject* symnmf(PyObject *self, PyObject *args){
-    double **init_h_mat = NULL, **w_mat = NULL, **ret_mat;
+    double **init_h_mat = NULL, **w_mat = NULL, **ret_mat = NULL;
     int n = -1, k, failure;
     PyObject *py_w_mat, *py_init_h_mat;
 
@@ -246,7 +254,8 @@ error:
     if (ret_mat) {free_matrix(ret_mat, n);}
     if (w_mat) {free_matrix(w_mat, n);}
     if (init_h_mat) {free_matrix(init_h_mat, n);}
-    return Py_BuildValue("s", "An Error Has Occured");
+    PyErr_SetString(PyExc_RuntimeError, "An Error Has Occured");
+    return NULL;
 }
 
 static PyMethodDef symnmf_methods[] = {

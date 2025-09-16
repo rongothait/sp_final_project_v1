@@ -120,8 +120,8 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     double n;
     char c;
     FILE *file;
-    point *curr_point, *prev_point = NULL;
-    cord *head_cord, *curr_cord;
+    point *curr_point = NULL, *prev_point = NULL;
+    cord *head_cord = NULL, *curr_cord = NULL;
     int dim = 0;
     *points_count = 0;
     *head_point = NULL;  /* safe initialization for out parameter */
