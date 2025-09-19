@@ -616,7 +616,7 @@ error:
  * @optimized_h: out parameter. Will hold the optimized H matrix
  */
 int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimized_h){
-    int i, failure;
+    int i;
     double for_norm, **w_h, **htr, **h, **h_next, **h_htr, **h_htr_h, **h_next_minus_h_curr;
     h = h_init;
     for (i = 0; i < MAX_ITER; i++){

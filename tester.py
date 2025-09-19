@@ -387,7 +387,7 @@ def test_goal(
     filename: str,
     use_valgrind: bool,
     target_matrix,
-    k=0,
+    k=2,
 ) -> bool:
     if program_type is ProgramType.PYTHON and goal == "symnmf":
         assert k > 1
