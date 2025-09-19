@@ -158,7 +158,7 @@ def get_goal_matrix(goal, k, dataset):
     """
     n = len(dataset)
 
-    if k >= n:
+    if k >= n:  # not allowed
         general_error("k is larget than n")
     
     if goal == "symnmf":

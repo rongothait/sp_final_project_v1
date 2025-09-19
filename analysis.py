@@ -72,7 +72,7 @@ def main():
     Main function to compare k-means and symmetric NMF clustering using silhouette score.
     """
     k, path = set_and_validate_data(sys.argv)
-
+    
     # kmeans
     points_lst, kmeans_lables = kmeans.run_kmeans_alg(path, k)
     kmeans_score = calc_coeff(points_lst, kmeans_lables)
@@ -81,7 +81,7 @@ def main():
     dataset = symnmf.txt_input_to_list(path)
     h_mat = symnmf.get_goal_matrix("symnmf", k, dataset)
     symnmf_lables = h_matrix_to_lables(h_mat)
-    symnmf_score = calc_coeff(points_lst, symnmf_lables)
+    symnmf_score = calc_coeff(dataset, symnmf_lables)
 
     # printing
     print(f"nmf: {symnmf_score:.4f}")
