@@ -186,7 +186,7 @@ def get_cluster_list(points_lst, k):
 def points_lst_to_regular_lst(points_lst):
     return [p.cord for p in points_lst]
 
-def run_kmeans_alg(path, k):
+def run_kmeans_alg(path, k):    
     points_lst = make_points_lst(path)
     points_lst_regular = points_lst_to_regular_lst(points_lst)
 

@@ -41,6 +41,16 @@ def get_average_val_of_matrix(mat):
     cnt = len(mat) * len(mat[0])
     return sum / cnt
 
+def validate_str_is_integer(str):
+    try:
+        k = float(str)
+    except:
+        general_error("k is not a float : {}".format(str))
+    if k % 1 != 0 or k <= 1:
+        general_error("k is not an integer number : {}".format(str))
+    k = int(k)
+    return k
+
 
 def set_data(data):
     """
@@ -51,10 +61,15 @@ def set_data(data):
     if len(data) != 4:
         general_error("length of data is incorrect!, expected length of 4 received {}".format(len(data)))
 
+    # validate k
+    k = validate_str_is_integer(data[1])
+    
     # 2. read arguments from CMD - we can assume they are valid
-    k = int(sys.argv[1])  # int, number of clusters
-    goal = sys.argv[2]  # 'symnf' / 'sym' / 'ddg' / 'norm'
-    path = sys.argv[3]  # path to data set
+    goal = data[2]  # 'symnf' / 'sym' / 'ddg' / 'norm'
+    if goal not in ["symnmf", "sym", "ddg", "norm"]:
+        general_error("goal not valid")
+
+    path = data[3]  # path to data set
 
     return k, goal, path
 
@@ -124,12 +139,13 @@ def symnmf_handle(dataset, k, n):
     @k: (int) number of clusters
     @n: (int) length of dataset 
     """
-    w_mat = symnmf.norm(dataset)
-    h_mat = init_H(w_mat, k, False)
+    w_mat_res = symnmf.norm(dataset)
+    if w_mat_res == ERR_MSG:
+        general_error()
+    h_mat = init_H(w_mat_res, k, False)
 
     # call the symnmf() function in module
-    res_mat = symnmf.symnmf(h_mat, w_mat, k)
-
+    res_mat = symnmf.symnmf(h_mat, w_mat_res, k)
     return res_mat
 
 
@@ -160,9 +176,11 @@ def main():
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
     
-    mat = get_goal_matrix(goal, int(k), dataset)
+    res = get_goal_matrix(goal, int(k), dataset)
+    if res == ERR_MSG:
+        general_error()
 
-    mat_str = matrix_to_str(mat)
+    mat_str = matrix_to_str(res)
     print(mat_str)
 
 if __name__ == "__main__":

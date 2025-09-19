@@ -183,8 +183,7 @@ static PyObject* request_standard(PyObject *args, char* goal){
 error:
     free_pnt_lst(points_list);
     if (ret_mat) {free_matrix(ret_mat, n);}
-    PyErr_SetString(PyExc_RuntimeError, "An Error Has Occured");
-    return NULL;
+    return Py_BuildValue("s", "An Error Has Occured");
 }
 
 /**
@@ -246,8 +245,7 @@ error:
     if (ret_mat) {free_matrix(ret_mat, n);}
     if (w_mat) {free_matrix(w_mat, n);}
     if (init_h_mat) {free_matrix(init_h_mat, n);}
-    PyErr_SetString(PyExc_RuntimeError, "An Error Has Occured");
-    return NULL;
+    return Py_BuildValue("s", "An Error Has Occured");
 }
 
 static PyMethodDef symnmf_methods[] = {

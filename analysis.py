@@ -4,7 +4,9 @@ import numpy as np
 from sklearn.metrics import silhouette_score
 import kmeans
 
-def general_error(msg="An Error Has Occured"):
+ERR_MSG = "An Error Has Occured"
+
+def general_error(msg=ERR_MSG):
     """
     Prints an error message and exits the program.
 
@@ -51,14 +53,25 @@ def h_matrix_to_lables(h_mat):
         lables[i] = max_idx
     return lables
 
+def set_and_validate_data(args):
+    # 1. making sure the input is in correct length
+    if len(args) != 3:
+        general_error("length of data is incorrect")
+    
+    # validate k
+    k = symnmf.validate_str_is_integer(args[1])
+
+    # set path arg
+    path = args[2]
+
+    return k, path
+
+
 def main():
     """
     Main function to compare k-means and symmetric NMF clustering using silhouette score.
     """
-    if len(sys.argv) != 3:
-        general_error()
-    k = int(sys.argv[1])  # we can assume k is a legal value
-    path = sys.argv[2]
+    k, path = set_and_validate_data(sys.argv)
 
     # kmeans
     points_lst, kmeans_lables = kmeans.run_kmeans_alg(path, k)
