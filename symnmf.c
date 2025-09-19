@@ -612,57 +612,36 @@ error:
 
 /**
  * run the optimization algorithm as defined in 1.4
- * @h_init: the initial H matrix
- * @w: W matrix
- * @n: size of dataset (= number of rows in H matrix)
- * @k: number of clusters (= number of columns in H matrix)
+ * gets an input all the required matrices for calculations
  * @optimized_h: out parameter. Will hold the optimized H matrix
- *  Return: 0 on success, 1 on failure
  */
 int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimized_h){
     int i, failure;
-    double for_norm;
-    double **w_h, **htr, **h, **h_next, **h_htr, **h_htr_h, **h_next_minus_h_curr;
-    
+    double for_norm, **w_h, **htr, **h, **h_next, **h_htr, **h_htr_h, **h_next_minus_h_curr;
     h = h_init;
     for (i = 0; i < MAX_ITER; i++){
-        /* calculte the needed matrices */
-        failure = multi_mat(n, n, k, w, h, &w_h);  /* W*H */
-        CHECK_FAILURE(failure, error);
-        failure = transpose_matrix(h, n, k, &htr);  /* H^t */
-        CHECK_FAILURE(failure, error);
-        failure = multi_mat(n, k, n, h, htr, &h_htr); /* H*H^t */
-        CHECK_FAILURE(failure, error);
-        failure = multi_mat(n, n, k, h_htr, h, &h_htr_h);  /* H*H^t*H */
-        CHECK_FAILURE(failure, error);
-        failure = calc_h_next(h, w_h, h_htr_h, n, k, &h_next);  /* H_(t+1) */
-        CHECK_FAILURE(failure, error);
-        failure = substract_matrix(h_next, h, n, k, &h_next_minus_h_curr); /* H_(t+1) - H_t */
-        CHECK_FAILURE(failure, error);
-        failure = frobenius_norm(h_next_minus_h_curr, n, k, &for_norm);
-        CHECK_FAILURE(failure, error);
-
+        CHECK_FAILURE(multi_mat(n, n, k, w, h, &w_h), error); /* W*H */
+        CHECK_FAILURE(transpose_matrix(h, n, k, &htr), error);  /* H^t */
+        CHECK_FAILURE(multi_mat(n, k, n, h, htr, &h_htr), error); /* H*H^t */
+        CHECK_FAILURE(multi_mat(n, n, k, h_htr, h, &h_htr_h), error);/* H*H^t*H */
+        CHECK_FAILURE(calc_h_next(h, w_h, h_htr_h, n, k, &h_next), error); /* H_(t+1) */
+        CHECK_FAILURE(substract_matrix(h_next, h, n, k, &h_next_minus_h_curr), error); /* H_(t+1) - H_t */
+        CHECK_FAILURE(frobenius_norm(h_next_minus_h_curr, n, k, &for_norm), error);
         free_matrix(w_h, n);
         free_matrix(htr, k);
         free_matrix(h_htr, n);
         free_matrix(h_htr_h, n);
         free_matrix(h_next_minus_h_curr, n);
-
         if ((for_norm * for_norm) < EPSILON){
             (*optimized_h) = h_next;
             if (h != h_init) { free_matrix(h, n); }
             return 0;  
         }
-
-        /* set h_t values to be h_next */
-        if (h != h_init) free_matrix(h,n);
+        if (h != h_init) free_matrix(h,n); /* set h_t values to be h_next */
         h = h_next;
-        CHECK_FAILURE(failure, error);
     }
-
     (*optimized_h) = h;
     return 0;
-
 error:
     if (w_h) free_matrix(w_h, n);
     if (htr) free_matrix(htr, k);
@@ -672,6 +651,13 @@ error:
     return 1;
 }
 
+/**
+ *  Validates command-line arguments and sets output parameters.
+ * @argc:  Number of command-line arguments.
+ * @argv:  Array of command-line argument strings.
+ * @goal:  Out parameter. Will point to argv[1] if it is a valid goal ("sym", "norm", "ddg").
+ * @path:  Out parameter. Will point to argv[2] if it is a valid existing file path.
+*/
 int validate_and_set_input(int argc, char *argv[], char **goal, char **path){
     FILE *file;
     const int EXPECTED_NUMBER_OF_ARGS = 3;
@@ -727,13 +713,10 @@ int main(int argc, char *argv[]){
     CHECK_FAILURE(failure, error);
 
     printf("%s\n", mat_str);
-
-    /* free memory allocations */
     free(mat_str); /* free the matrix str*/
     free_matrix(ret_mat, n);  /* free the matrix */
     free_pnt_lst(dataset);  /* free the data set points */
     return 0;
-
 error:
     if (mat_str) free(mat_str);
     if (ret_mat) free_matrix(ret_mat, n);
