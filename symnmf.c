@@ -170,12 +170,9 @@ int parse_file(FILE *file, point *curr_point, point *prev_point, cord *head_cord
     if (curr_point != NULL){ /* freeing memory for last point and its cord */
         free(curr_point);
         free(head_cord);
-        if (prev_point != NULL){
-            prev_point->next = NULL;
-        }
+        if (prev_point != NULL){ prev_point->next = NULL; }
     }
     return 0;
-
 error:
     return 1; /* memory freeing happens in the input_txt_to_points_lst function */
 }
@@ -197,27 +194,20 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
 
     file = fopen(path, "r");  /* Open for reading */
     if (file == NULL) { goto error; }
-
-    /* init head of cords*/
-    head_cord = (cord*) malloc(sizeof(struct cord));
+    head_cord = (cord*) malloc(sizeof(struct cord)); /* init head of cords*/
     if (head_cord == NULL) { goto error; }
-
     curr_cord = head_cord;
     curr_cord->next = NULL;
 
-    /* init head of points linked_list */
-    (*head_point) = (point*) malloc(sizeof(point));
+    (*head_point) = (point*) malloc(sizeof(point)); /* init head of points linked_list */
     if (*head_point == NULL) { goto error; }
-
     curr_point = (*head_point);
     curr_point->next = NULL;
 
     failure = parse_file(file, curr_point, prev_point, head_cord, curr_cord, points_count);
     CHECK_FAILURE(failure, error);
-
     fclose(file);
     return 0;
-
 error:
     if (curr_point != NULL) {
         free(curr_point);
@@ -682,18 +672,41 @@ error:
     return 1;
 }
 
+int validate_and_set_input(int argc, char *argv[], char **goal, char **path){
+    FILE *file;
+    const int EXPECTED_NUMBER_OF_ARGS = 3;
+    *goal = NULL;
+    *path = NULL;
+    
+    if (argc != EXPECTED_NUMBER_OF_ARGS) {goto error;}
+
+    *goal = argv[1];
+    *path = argv[2];
+
+    /* check goal validity */
+    if ((strcmp(*goal, "sym") != 0) && (strcmp(*goal, "norm") != 0) && (strcmp(*goal, "ddg") != 0)) {goto error;}
+
+    /* check file exists by opening it for reading*/
+    file = fopen(*path, "r");
+    if (file == NULL) {goto error;}
+    fclose(file);
+    return 0;
+
+error:
+    return 1;
+}
+
+
 int main(int argc, char *argv[]){
     int failure, n;
-    char *goal, *file_name, *mat_str = NULL;
+    char *goal, *path, *mat_str = NULL;
     double **ret_mat = NULL;
     point *dataset = NULL;
-     
-    if (argc != 3){ goto error; }
 
-    goal = argv[1];
-    file_name = argv[2];
+    failure = validate_and_set_input(argc, argv, &goal, &path);
+    CHECK_FAILURE(failure, error);
 
-    failure = input_txt_to_points_lst(file_name, &dataset, &n);
+    failure = input_txt_to_points_lst(path, &dataset, &n);
     CHECK_FAILURE(failure, error);
 
     if (strcmp(goal, "sym") == 0){
@@ -709,7 +722,6 @@ int main(int argc, char *argv[]){
         failure = create_normalized_sim_mat(dataset, n, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
-    else{ goto error; }
 
     failure = mat_to_str(ret_mat, n, n, &mat_str);
     CHECK_FAILURE(failure, error);
