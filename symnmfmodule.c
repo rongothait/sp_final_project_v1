@@ -5,6 +5,9 @@
 #define CHECK_FAILURE(failure, label) \
     do { if ((failure) == 1) goto label; } while (0)
 
+char *ERR_MSG_GENERAL = "An Error Has Occurred\n";
+
+
 /**
  * pyListToPointList - Given a list of lists in python, it converts it to a linked list of points (and cords) in C
  * @outer_list: the python list
@@ -183,7 +186,8 @@ static PyObject* request_standard(PyObject *args, char* goal){
 error:
     free_pnt_lst(points_list);
     if (ret_mat) {free_matrix(ret_mat, n);}
-    return Py_BuildValue("s", "An Error Has Occured");
+    PyErr_SetString(PyExc_ValueError, ERR_MSG_GENERAL);
+    return NULL;
 }
 
 /**
@@ -245,7 +249,8 @@ error:
     if (ret_mat) {free_matrix(ret_mat, n);}
     if (w_mat) {free_matrix(w_mat, n);}
     if (init_h_mat) {free_matrix(init_h_mat, n);}
-    return Py_BuildValue("s", "An Error Has Occured");
+    PyErr_SetString(PyExc_ValueError, ERR_MSG_GENERAL);
+    return NULL;
 }
 
 static PyMethodDef symnmf_methods[] = {

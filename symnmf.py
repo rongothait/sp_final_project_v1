@@ -139,13 +139,17 @@ def symnmf_handle(dataset, k, n):
     @k: (int) number of clusters
     @n: (int) length of dataset 
     """
-    w_mat_res = symnmf.norm(dataset)
-    if w_mat_res == ERR_MSG:
+    try:
+        w_mat_res = symnmf.norm(dataset)
+    except:
         general_error()
     h_mat = init_H(w_mat_res, k, False)
 
     # call the symnmf() function in module
-    res_mat = symnmf.symnmf(h_mat, w_mat_res, k)
+    try:
+        res_mat = symnmf.symnmf(h_mat, w_mat_res, k)
+    except:
+        general_error()
     return res_mat
 
 
@@ -164,11 +168,20 @@ def get_goal_matrix(goal, k, dataset):
     if goal == "symnmf":
         mat = symnmf_handle(dataset, k, n)
     elif goal == "sym":
-        mat = symnmf.sym(dataset)
+        try:
+            mat = symnmf.sym(dataset)
+        except:
+            general_error()
     elif goal == "ddg":
-        mat = symnmf.ddg(dataset)
+        try:
+            mat = symnmf.ddg(dataset)
+        except:
+            general_error()
     elif goal == "norm":
-        mat = symnmf.norm(dataset)
+        try:
+            mat = symnmf.norm(dataset)
+        except:
+            general_error()
 
     return mat
     
@@ -177,8 +190,6 @@ def main():
     dataset = txt_input_to_list(path)
     
     res = get_goal_matrix(goal, int(k), dataset)
-    if res == ERR_MSG:
-        general_error()
 
     mat_str = matrix_to_str(res)
     print(mat_str)
