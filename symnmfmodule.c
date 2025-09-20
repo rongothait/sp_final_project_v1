@@ -5,8 +5,7 @@
 #define CHECK_FAILURE(failure, label) \
     do { if ((failure) == 1) goto label; } while (0)
 
-char *ERR_MSG_GENERAL = "An Error Has Occurred\n";
-
+static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
 
 /**
  * pyListToPointList - Given a list of lists in python, it converts it to a linked list of points (and cords) in C
@@ -73,8 +72,7 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
     int error_num_of_rows_to_free = 0;
     *mat = NULL;
 
-    /* Allocate memory for matrix */
-    *mat = (double**) calloc(m, sizeof(double*));
+    *mat = (double**) calloc(m, sizeof(double*)); /* Allocate memory for matrix */
     if (*mat == NULL) { goto error; }
 
     for (i = 0; i < m; i++){
@@ -83,17 +81,14 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
         if ((*mat)[i] == NULL) { goto error; }
         error_num_of_rows_to_free = i;
     }
-
-    /* Iterating over the python list */
-    for (i = 0; i < m; i++){
+    
+    for (i = 0; i < m; i++){ /* Iterating over the python list */
         inner_list = PyList_GetItem(outer_list, i);
         if (!PyList_Check(inner_list)) { goto error; }  /* Error: inner element is not a list */
-
         for (j = 0; j < n; j++){
             item = PyList_GetItem(inner_list, j);
             num = PyFloat_AsDouble(item);
             if (PyErr_Occurred()) { goto error; } /* Error: element is not a float */
-
             (*mat)[i][j] = num;
         }
     }
@@ -153,14 +148,10 @@ static PyObject* request_standard(PyObject *args, char* goal){
     PyObject *py_points_list;
     double **ret_mat = NULL;
 
-    /* This parses the python arguments into its C form */
-    if (!PyArg_ParseTuple(args, "O", &py_points_list)) { goto error; }
+    if (!PyArg_ParseTuple(args, "O", &py_points_list)) { goto error; } /* This parses the python arguments into its C form */
 
-    /* length of dataset */
-    n = PyObject_Length(py_points_list);
-
-    /* create linked list of points */
-    failure = pyListToPointList(py_points_list, n, &points_list);
+    n = PyObject_Length(py_points_list); /* length of dataset */
+    failure = pyListToPointList(py_points_list, n, &points_list);     /* create linked list of points */
     CHECK_FAILURE(failure, error);
     
     if (strcmp(goal, "sym") == 0){
@@ -177,10 +168,8 @@ static PyObject* request_standard(PyObject *args, char* goal){
     PyObject *py_result = matrix_to_pylist(ret_mat, n, n);
     if (!py_result) goto error;
 
-    /* free memory */
-    free_pnt_lst(points_list);
+    free_pnt_lst(points_list); /* free memory */
     free_matrix(ret_mat, n);
-
     return py_result;
 
 error:

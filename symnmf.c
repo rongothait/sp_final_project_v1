@@ -6,7 +6,7 @@
 #define CHECK_FAILURE(failure, label) \
     do { if ((failure) == 1) goto label; } while (0)
 
-char *ERR_MSG_GENERAL = "An Error Has Occurred\n";
+static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
 int failure;
 double EPSILON = 0.0001;
 int MAX_ITER = 300;
@@ -33,7 +33,7 @@ int allocate_double_matrix(int rows, int cols, double ***ret_mat){
     int i,k;
     *ret_mat = NULL;
 
-    *ret_mat = (double**)malloc(rows * sizeof(double*));
+    *ret_mat = (double**)calloc(rows, sizeof(double*));
     if (*ret_mat == NULL) { return 1; }
 
     for (i = 0; i < rows; i++){
