@@ -186,6 +186,7 @@ def get_goal_matrix(goal, k, dataset):
     return mat
     
 def main():
+    
     k, goal, path = set_data(sys.argv)
     dataset = txt_input_to_list(path)
     

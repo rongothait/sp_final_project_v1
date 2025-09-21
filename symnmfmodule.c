@@ -8,6 +8,35 @@
 static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
 
 /**
+ * converts a 1D python list to linked list of cords
+ * @inner_list: python list of floats
+ * @dim: length of the python list
+ * @head_cord: out parameter. will hold the cords linked list
+ */
+static int inner_list_to_cord_lst(PyObject *inner_list, int dim, cord **head_cord){
+    int j;
+    double num;
+    PyObject *item;
+    cord *curr_cord = *head_cord;
+    for (j =0; j < dim; j++){
+        item = PyList_GetItem(inner_list, j);
+        num = PyFloat_AsDouble(item);
+        curr_cord->value = num;
+        if (j < dim - 1){
+            curr_cord -> next = (cord*) calloc(1, sizeof(cord));
+            if (curr_cord->next == NULL) {goto error;}
+            curr_cord = curr_cord->next;
+            curr_cord->next = NULL;
+        }
+    }
+    return 0;
+error:
+    free_cords(*head_cord); /* free memory*/
+    return 1;
+}
+
+
+/**
  * pyListToPointList - Given a list of lists in python, it converts it to a linked list of points (and cords) in C
  * @outer_list: the python list
  * @n: the length of the python list (outer)
@@ -15,10 +44,8 @@ static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
  */
 static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
     point *curr_point = NULL;
-    cord *head_cord = NULL, *curr_cord = NULL;
-    int dim, i, j;
-    double num;
-    PyObject *item;
+    cord *head_cord = NULL;
+    int dim, i, failure;
     *head_point = (point*) calloc(1, sizeof(point)); /* init head of points linked list */
     if (head_point == NULL) {return 1;}
     curr_point = *head_point;
@@ -28,20 +55,11 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
         if (!PyList_Check(inner_list)) { goto error; }
         head_cord = (cord*) calloc(1, sizeof(cord)); /* init head cord for the first cord of the current point */
         if (head_cord == NULL) { goto error; }
-        curr_cord = head_cord;
         dim = PyObject_Length(inner_list);
 
-        for (j = 0; j < dim; j++){
-            item = PyList_GetItem(inner_list, j);
-            num = PyFloat_AsDouble(item);
-            curr_cord->value = num;
-            if (j < dim - 1){
-                curr_cord->next = (cord*) calloc(1, sizeof(cord));
-                if (curr_cord->next == NULL) { goto error; }
-                curr_cord = curr_cord->next;
-                curr_cord->next = NULL;
-            }
-        }
+        failure = inner_list_to_cord_lst(inner_list, dim, &head_cord);
+        CHECK_FAILURE(failure, error);
+
         curr_point->cords = head_cord;
         curr_point->dim = dim;
         if (i < n - 1){
@@ -52,9 +70,8 @@ static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
     }
     return 0;  /* OK! */
 error:
-    free_pnt_lst(*head_point);
+    /* freeing of point list is happening in caller function */
     free(head_cord);
-    free(curr_point);
     return 1;
 }
 
