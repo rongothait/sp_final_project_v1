@@ -78,10 +78,9 @@ def main():
     kmeans_score = calc_coeff(points_lst, kmeans_lables)
 
     # symnmf
-    dataset = symnmf.txt_input_to_list(path)
-    h_mat = symnmf.get_goal_matrix("symnmf", k, dataset)
+    h_mat = symnmf.get_goal_matrix("symnmf", k, points_lst)
     symnmf_lables = h_matrix_to_lables(h_mat)
-    symnmf_score = calc_coeff(dataset, symnmf_lables)
+    symnmf_score = calc_coeff(points_lst, symnmf_lables)
 
     # printing
     print(f"nmf: {symnmf_score:.4f}")
