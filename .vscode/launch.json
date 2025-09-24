@@ -38,7 +38,7 @@
             "console": "integratedTerminal",
         },
 
- {
+         {
             "name": "(gdb) Attach",
             "type": "cppdbg",
             "request": "attach",
@@ -52,6 +52,48 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+
+        {
+            "name": "C Debug (wrapped, mock malloc)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/symnmf_wrap",
+            "args": ["${input:goal}", "${input:inputFile}"],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "environment": [
+                { "name": "FAIL_MALLOC_AT", "value": "${input:failAt}" }
+            ],
+            "setupCommands": [
+                { "description": "Enable pretty-printing", "text": "-enable-pretty-printing", "ignoreFailures": true },
+                { "description": "Intel asm", "text": "-gdb-set disassembly-flavor intel", "ignoreFailures": true },
+                { "description": "Pending breakpoints", "text": "-gdb-set breakpoint pending on", "ignoreFailures": true },
+                { "description": "Stop on SIGSEGV", "text": "handle SIGSEGV stop print nopass", "ignoreFailures": true }
+            ],
         }
+
+    ],
+    "inputs":[
+        {
+      "id": "failAt",
+      "type": "promptString",
+      "description": "FAIL_MALLOC_AT (1 = fail on first allocation, blank for none)",
+      "default": "1"
+    },
+    {
+      "id": "goal",
+      "type": "promptString",
+      "description": "Goal (sym | ddg | norm)",
+      "default": "norm"
+    },
+    {
+      "id": "inputFile",
+      "type": "promptString",
+      "description": "Path to input dataset",
+      "default": "./tests/input_1.txt"
+    }
     ]
 }

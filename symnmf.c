@@ -209,12 +209,11 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     fclose(file);
     return 0;
 error:
+    free_pnt_lst(*head_point);
     if (curr_point != NULL) {
         free(curr_point);
         free(head_cord);
     }
-    free_pnt_lst(*head_point);
-    free(*head_point);
     return 1;
 }
 
