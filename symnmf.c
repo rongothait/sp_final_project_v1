@@ -147,13 +147,12 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
     return 0;
 }
 
-/**
- * parse_file - helper method for input_txt_to_points_lst to parse the file
- */
+/** parse_file - helper method for input_txt_to_points_lst to parse the file */
 int parse_file(FILE *file, point *curr_point, point *prev_point, cord *head_cord, cord *curr_cord, int *points_count){
-    int dim = 0;
     double n;
     char c;
+    int dim = 0, head_attached = 0;
+    
     while (fscanf(file, "%lf%c", &n, &c) == 2){ /* scan input */
         if (c == ','){ /* still on same point */
             dim++;
@@ -166,26 +165,27 @@ int parse_file(FILE *file, point *curr_point, point *prev_point, cord *head_cord
             curr_cord->value = n;
             curr_point->cords = head_cord;
             curr_point->dim = dim + 1;
+            head_attached = 1;
             prev_point = curr_point;
-            curr_point->next = (point*) calloc(1, sizeof(point));
+            curr_point->next = (point*) calloc(1, sizeof(point)); /* allocate next point (sentinal / current) */
             if (curr_point->next == NULL) { goto error; }
             curr_point = curr_point->next; /* Moving to next point */
             curr_point->next = NULL;
-            head_cord = (cord*) calloc(1, sizeof(cord));
+            head_cord = (cord*) calloc(1, sizeof(cord)); /* start cords for the NEXT point (currently unattached) */
             if (head_cord == NULL) { goto error; }
             curr_cord = head_cord;
             curr_cord->next = NULL;
+            head_attached = 0;
             dim = 0;
             (*points_count)++;
-        }
-    }
+        } }
     if (curr_point != NULL){ /* freeing memory for last point and its cord */
         free(curr_point);
         free(head_cord);
-        if (prev_point != NULL){ prev_point->next = NULL; }
-    }
+        if (prev_point != NULL) prev_point->next = NULL; }
     return 0;
 error:
+    if (!head_attached) free_cords(&head_cord);
     return 1; /* memory freeing happens in the input_txt_to_points_lst function */
 }
 
@@ -223,7 +223,7 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     return 0;
 error:
     if (file) fclose(file);
-    if (head_cord && (!curr_point || curr_point->cords != head_cord)) free_cords(&head_cord);
+    if (*head_point == NULL && head_cord) free_cords(&head_cord);
     free_pnt_lst(head_point);
     
     return 1;
