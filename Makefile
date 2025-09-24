@@ -3,3 +3,6 @@ symnmf: symnmf.o
 
 symnmf.o: symnmf.c symnmf.h
 	gcc -ansi -Wall -Wextra -Werror -pedantic-errors -c symnmf.c
+
+clean:
+	rm -f symnmf.o symnmf
