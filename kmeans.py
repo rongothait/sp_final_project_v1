@@ -160,6 +160,14 @@ def get_lables(cluster_lst, N):
     return points_clstr_idx
 
 def get_cluster_list(points_lst, k):
+    """
+    runs the Kmeans logic and returns K clusters with the each point assigned to one cluster
+    
+    Args:
+        points_lst (list of points): The dataset point list
+        k (int): Number of desired clusters
+        EPSILON(int): used to measure convergence 
+    """
     cluster_lst = init_clusters(points_lst, k, EPSILON)
     
     for _ in range(MAX_ITER):
@@ -184,9 +192,22 @@ def get_cluster_list(points_lst, k):
     return cluster_lst
         
 def points_lst_to_regular_lst(points_lst):
+    """
+    converts a list of type 'point' to a list of python lists
+
+    Args:
+        points_lst (list of points): the dataset point list
+    """
     return [p.cord for p in points_lst]
 
-def run_kmeans_alg(path, k):    
+def run_kmeans_alg(path, k):
+    """
+    executes the full kmeans algorithm
+
+    Args:
+        path (string): the path to the file containing the data
+        k (int): desired number of clusters
+    """
     points_lst = make_points_lst(path)
     points_lst_regular = points_lst_to_regular_lst(points_lst)
 

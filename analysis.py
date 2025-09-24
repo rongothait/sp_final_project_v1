@@ -54,6 +54,12 @@ def h_matrix_to_lables(h_mat):
     return lables
 
 def set_and_validate_data(args):
+    """
+    checks the data is valid and
+    
+    Args:
+        args (list of string): the cmd arguments
+    """
     # 1. making sure the input is in correct length
     if len(args) != 3:
         general_error("length of data is incorrect")
