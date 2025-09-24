@@ -31,7 +31,7 @@ static int inner_list_to_cord_lst(PyObject *inner_list, int dim, cord **head_cor
     }
     return 0;
 error:
-    free_cords(*head_cord); /* free memory*/
+    free_cords(head_cord); /* free memory*/
     return 1;
 }
 
@@ -185,13 +185,13 @@ static PyObject* request_standard(PyObject *args, char* goal){
     PyObject *py_result = matrix_to_pylist(ret_mat, n, n);
     if (!py_result) goto error;
 
-    free_pnt_lst(points_list); /* free memory */
-    free_matrix(ret_mat, n);
+    free_pnt_lst(&points_list); /* free memory */
+    free_matrix(&ret_mat, n);
     return py_result;
 
 error:
-    free_pnt_lst(points_list);
-    if (ret_mat) {free_matrix(ret_mat, n);}
+    free_pnt_lst(&points_list);
+    if (ret_mat) {free_matrix(&ret_mat, n);}
     PyErr_SetString(PyExc_ValueError, ERR_MSG_GENERAL);
     return NULL;
 }
@@ -245,16 +245,16 @@ static PyObject* symnmf(PyObject *self, PyObject *args){
     if (!py_result) goto error;
 
     /* free memory */
-    free_matrix(ret_mat, n);
-    free_matrix(w_mat, n);
-    free_matrix(init_h_mat, n);
+    free_matrix(&ret_mat, n);
+    free_matrix(&w_mat, n);
+    free_matrix(&init_h_mat, n);
 
     return py_result;
 
 error:
-    if (ret_mat) {free_matrix(ret_mat, n);}
-    if (w_mat) {free_matrix(w_mat, n);}
-    if (init_h_mat) {free_matrix(init_h_mat, n);}
+    if (ret_mat) {free_matrix(&ret_mat, n);}
+    if (w_mat) {free_matrix(&w_mat, n);}
+    if (init_h_mat) {free_matrix(&init_h_mat, n);}
     PyErr_SetString(PyExc_ValueError, ERR_MSG_GENERAL);
     return NULL;
 }

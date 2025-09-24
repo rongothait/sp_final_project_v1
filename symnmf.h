@@ -14,11 +14,11 @@ typedef struct cord {
     struct cord *next;
 } cord;
 
-int free_cords(cord *crd);
+int free_cords(cord **pcrd);
 
-int free_pnt_lst(point *pnt);
+int free_pnt_lst(point **ppnt);
 
-int free_matrix(double **mat, int m);
+int free_matrix(double ***pmat, int m);
 
 int create_sim_mat(point* points_lst, int n, double ***sim_mat);
 

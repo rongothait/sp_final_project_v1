@@ -55,15 +55,19 @@ int allocate_double_matrix(int rows, int cols, double ***ret_mat){
  * @crd: the starting node to free from
  *  Return: 0 on success, 1 on failure
  */
-int free_cords(cord *crd){
-    cord *nxt;
+int free_cords(cord **pcrd){
+    cord *cur, *nxt;
 
-    while (crd){
-        nxt = crd->next;
-        free(crd);
-        crd = nxt;
+    if (!pcrd || !*pcrd) return 0; /* nothing to free */
+
+    cur = *pcrd;
+    while (cur){
+        nxt = cur->next;
+        free(cur);
+        cur = nxt;
     }
 
+    *pcrd = NULL; /* prevent double frees via sama variable */
     return 0;
 }
 
@@ -72,16 +76,20 @@ int free_cords(cord *crd){
  * @pnt: the head node to start from
  *  Return: 0 on success, 1 on failure
 */ 
-int free_pnt_lst(point *pnt){
-    point *nxt;
+int free_pnt_lst(point **ppnt){
+    point *cur, *nxt;
 
-    while (pnt){
-        if (free_cords(pnt->cords) != 0) {return 1;}
-        nxt = pnt->next;
-        free(pnt);
-        pnt = nxt;
+    if (!ppnt || !*ppnt) return 0; /* nothing to free */
+
+    cur = *ppnt;
+    while (cur){
+        if (free_cords(&(cur->cords)) != 0) {return 1;}
+        nxt = cur->next;
+        free(cur);
+        cur = nxt;
     }
 
+    *ppnt = NULL; /* prevent double frees via sama variable */
     return 0;
 }
 
@@ -91,18 +99,22 @@ int free_pnt_lst(point *pnt){
  * @m: number of rows
  *  Return: 0 on success, 1 on failure
  */
-int free_matrix(double **mat, int m){
+int free_matrix(double ***pmat, int m){
     int i;
+    double **mat;
 
-    if (mat == NULL) return 0;  /* nothing to free */
+    if (!pmat || !*pmat) return 0;  /* nothing to free */
+
+    mat = *pmat;
 
     /* Free each row */
     for (i = 0; i < m; i++){
-        if (mat[i] != NULL)
-            free(mat[i]);
+        free(mat[i]);
+        mat[i] = NULL;
     }
 
     free(mat);
+    *pmat = NULL; /* prevent double-free via same variable */
     return 0;
 }
 
@@ -194,12 +206,13 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
 
     file = fopen(path, "r");  /* Open for reading */
     if (file == NULL) { goto error; }
-    head_cord = (cord*) malloc(sizeof(struct cord)); /* init head of cords*/
+
+    head_cord = (cord*) calloc(sizeof(struct cord), 1); /* init head of cords*/
     if (head_cord == NULL) { goto error; }
     curr_cord = head_cord;
     curr_cord->next = NULL;
 
-    (*head_point) = (point*) malloc(sizeof(point)); /* init head of points linked_list */
+    (*head_point) = (point*) calloc(sizeof(point), 1); /* init head of points linked_list */
     if (*head_point == NULL) { goto error; }
     curr_point = (*head_point);
     curr_point->next = NULL;
@@ -209,11 +222,10 @@ int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
     fclose(file);
     return 0;
 error:
-    free_pnt_lst(*head_point);
-    if (curr_point != NULL) {
-        free(curr_point);
-        free(head_cord);
-    }
+    if (file) fclose(file);
+    if (head_cord && (!curr_point || curr_point->cords != head_cord)) free_cords(&head_cord);
+    free_pnt_lst(head_point);
+    
     return 1;
 }
 
@@ -339,13 +351,13 @@ int create_diag_mat(point* points_lst, int n, double ***diag_mat){
         if (arr_sum(sim_mat[i], n, &res) != 0) { goto error; }
         (*diag_mat)[i][i] = res;
     }
-    free_matrix(sim_mat, n);
+    free_matrix(&sim_mat, n);
     sim_mat = NULL;
     return 0;  /* OK! */
 
 error:
-    if (sim_mat) { free_matrix(sim_mat, n); }
-    if (*diag_mat) { free_matrix(*diag_mat, n); }
+    if (sim_mat) { free_matrix(&sim_mat, n); }
+    if (*diag_mat) { free_matrix(diag_mat, n); }
     return 1;
 }
 
@@ -421,17 +433,17 @@ int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat){
     if(diag_mat_mult(diag_mat_minus_sqrt, DA, n, "right", w_mat) != 0) { goto error; }
 
     /* free memory allocations */
-    free_matrix(sim_mat, n);
-    free_matrix(diag_mat, n);
-    free_matrix(diag_mat_minus_sqrt, n);
-    free_matrix(DA, n);
+    free_matrix(&sim_mat, n);
+    free_matrix(&diag_mat, n);
+    free_matrix(&diag_mat_minus_sqrt, n);
+    free_matrix(&DA, n);
     return 0;
 
 error:
-    free_matrix(sim_mat, n);
-    free_matrix(diag_mat, n);
-    free_matrix(diag_mat_minus_sqrt, n);
-    free_matrix(DA, n);
+    free_matrix(&sim_mat, n);
+    free_matrix(&diag_mat, n);
+    free_matrix(&diag_mat_minus_sqrt, n);
+    free_matrix(&DA, n);
     return 1;
 }
 
@@ -605,7 +617,7 @@ int calc_h_next(double **h, double **wh, double **hh_th, int n, int k, double **
     return 0;
 
 error:
-    if (*next_h) { free_matrix(*next_h, n); }
+    if (*next_h) { free_matrix(next_h, n); }
     return 1;
 }
 
@@ -626,27 +638,27 @@ int optimize_h_mat(double **h_init, double** w, int n, int k, double ***optimize
         CHECK_FAILURE(calc_h_next(h, w_h, h_htr_h, n, k, &h_next), error); /* H_(t+1) */
         CHECK_FAILURE(substract_matrix(h_next, h, n, k, &h_next_minus_h_curr), error); /* H_(t+1) - H_t */
         CHECK_FAILURE(frobenius_norm(h_next_minus_h_curr, n, k, &for_norm), error);
-        free_matrix(w_h, n);
-        free_matrix(htr, k);
-        free_matrix(h_htr, n);
-        free_matrix(h_htr_h, n);
-        free_matrix(h_next_minus_h_curr, n);
+        free_matrix(&w_h, n);
+        free_matrix(&htr, k);
+        free_matrix(&h_htr, n);
+        free_matrix(&h_htr_h, n);
+        free_matrix(&h_next_minus_h_curr, n);
         if ((for_norm * for_norm) < EPSILON){
             (*optimized_h) = h_next;
-            if (h != h_init) { free_matrix(h, n); }
+            if (h != h_init) { free_matrix(&h, n); }
             return 0;  
         }
-        if (h != h_init) free_matrix(h,n); /* set h_t values to be h_next */
+        if (h != h_init) free_matrix(&h,n); /* set h_t values to be h_next */
         h = h_next;
     }
     (*optimized_h) = h;
     return 0;
 error:
-    if (w_h) free_matrix(w_h, n);
-    if (htr) free_matrix(htr, k);
-    if (h_htr) free_matrix(h_htr, n);
-    if (h_htr_h) free_matrix(h_htr_h, n);
-    if (h_next_minus_h_curr) free_matrix(h_next_minus_h_curr, n);
+    if (w_h) free_matrix(&w_h, n);
+    if (htr) free_matrix(&htr, k);
+    if (h_htr) free_matrix(&h_htr, n);
+    if (h_htr_h) free_matrix(&h_htr_h, n);
+    if (h_next_minus_h_curr) free_matrix(&h_next_minus_h_curr, n);
     return 1;
 }
 
@@ -713,13 +725,13 @@ int main(int argc, char *argv[]){
 
     printf("%s\n", mat_str);
     free(mat_str); /* free the matrix str*/
-    free_matrix(ret_mat, n);  /* free the matrix */
-    free_pnt_lst(dataset);  /* free the data set points */
+    free_matrix(&ret_mat, n);  /* free the matrix */
+    free_pnt_lst(&dataset);  /* free the data set points */
     return 0;
 error:
     if (mat_str) free(mat_str);
-    if (ret_mat) free_matrix(ret_mat, n);
-    if (dataset) free_pnt_lst(dataset);
+    if (ret_mat) free_matrix(&ret_mat, n);
+    if (dataset) free_pnt_lst(&dataset);
     printf("%s", ERR_MSG_GENERAL);
     exit(1);
 }
