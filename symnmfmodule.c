@@ -31,7 +31,13 @@ error:
     return -1;
 }
 
-
+/**
+ * convert python list of lists to 2d array
+ * @outer_list: python list of lists
+ * @n: number of lists
+ * @cols_out: out_parameter. will hold the dimension of every list.
+ * @dataset_mat: out parameter. will hold the matrix with the dataset points.
+ */
 static int py_list_to_matrix(PyObject *outer_list, int n, int *cols_out, double ***dataset_mat){
     int i,j, failure;
     double num;
