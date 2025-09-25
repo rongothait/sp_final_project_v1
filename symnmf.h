@@ -30,4 +30,6 @@ int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat);
 
 int optimize_h_mat(double **init_h_mat, double** w, int n, int k, double ***optimized_h);
 
+int allocate_double_matrix(int rows, int cols, double ***ret_mat);
+
 #endif

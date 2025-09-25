@@ -83,22 +83,14 @@ error:
  * @mat: out parameter. Will hold the C matrix result
  */
 static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
-    int i, j, k;
+    int i, j, failure;
     PyObject *inner_list, *item;
     double num;
-    int error_num_of_rows_to_free = 0;
     *mat = NULL;
 
-    *mat = (double**) calloc(m, sizeof(double*)); /* Allocate memory for matrix */
-    if (*mat == NULL) { goto error; }
+    failure = allocate_double_matrix(m, n, mat);
+    CHECK_FAILURE(failure, error);
 
-    for (i = 0; i < m; i++){
-
-        (*mat)[i] = (double*)calloc(n, sizeof(double));
-        if ((*mat)[i] == NULL) { goto error; }
-        error_num_of_rows_to_free = i;
-    }
-    
     for (i = 0; i < m; i++){ /* Iterating over the python list */
         inner_list = PyList_GetItem(outer_list, i);
         if (!PyList_Check(inner_list)) { goto error; }  /* Error: inner element is not a list */
@@ -112,8 +104,7 @@ static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
     return 0;
 
 error:
-    for (k = 0; k < error_num_of_rows_to_free; k++) { free((*mat)[k]); }
-    free(*mat);
+    free_matrix(mat, m);
     return 1;
 }
 
