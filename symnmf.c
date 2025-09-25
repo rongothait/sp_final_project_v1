@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,18 +11,6 @@ static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
 int failure;
 double EPSILON = 0.0001;
 int MAX_ITER = 300;
-
-typedef struct point {
-    struct point *next;
-    struct cord *cords;
-    int dim;
-} point;
-
-typedef struct cord {
-    double value;
-    struct cord *next;
-} cord;
-
 
 /**
  * allocate_double_matrix - allocate rows x cols matrix (double**)
@@ -49,49 +38,6 @@ int allocate_double_matrix(int rows, int cols, double ***ret_mat){
     return 0;
 }
 
-
-/**
- * free_cords - free cordinates memory allocation for the linked list starting at crd
- * @crd: the starting node to free from
- *  Return: 0 on success, 1 on failure
- */
-int free_cords(cord **pcrd){
-    cord *cur, *nxt;
-
-    if (!pcrd || !*pcrd) return 0; /* nothing to free */
-
-    cur = *pcrd;
-    while (cur){
-        nxt = cur->next;
-        free(cur);
-        cur = nxt;
-    }
-
-    *pcrd = NULL; /* prevent double frees via sama variable */
-    return 0;
-}
-
-/**
- * free_pnt_lst - free memory allocation for all points in the linked list (starting from pnt)
- * @pnt: the head node to start from
- *  Return: 0 on success, 1 on failure
-*/ 
-int free_pnt_lst(point **ppnt){
-    point *cur, *nxt;
-
-    if (!ppnt || !*ppnt) return 0; /* nothing to free */
-
-    cur = *ppnt;
-    while (cur){
-        if (free_cords(&(cur->cords)) != 0) {return 1;}
-        nxt = cur->next;
-        free(cur);
-        cur = nxt;
-    }
-
-    *ppnt = NULL; /* prevent double frees via sama variable */
-    return 0;
-}
 
 /**
  * free_matrix - Frees the memory allocated for a 2d matrix mat with m rows
@@ -147,109 +93,104 @@ int mat_to_str(double** mat, int m, int n, char **ret_str){
     return 0;
 }
 
-/** parse_file - helper method for input_txt_to_points_lst to parse the file */
-int parse_file(FILE *file, point *curr_point, point *prev_point, cord *head_cord, cord *curr_cord, int *points_count){
-    double n;
-    char c;
-    int dim = 0, head_attached = 0;
+/**
+ * read file and count how many rows and how many columns
+ * @path: path to dataset file
+ * @rows_out: out parameter. will store how many rows in dataset
+ * @cols_out: out parameter. will store how many columns in dataset
+ */
+int calc_file_dimension(char *path, int *rows_out, int *cols_out){
+    FILE *file;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    int i, lines_count = 0, expected_cols = -1, curr_cols_count;
+
+    file = fopen(path, "r");
+    if (file == NULL) goto error;
+
+    while ((read = getline(&line, &len, file)) != -1){
+        if (read == 1 && line[0] == '\n') continue; /* last line is expected to be blank */
+
+        lines_count++; /* increment number of lines in file */
+        curr_cols_count = 1; /* count columns in line */
+        for (i = 0; i < read; i++){
+            if (line[i] == ',') curr_cols_count++;
+        }
+
+        if (expected_cols == -1) {  /* if first line set the expected cols */
+            expected_cols = curr_cols_count;
+        } else if (curr_cols_count != expected_cols) goto error; /* inconsistent number of columns in file - error */
+    }
+
+    *rows_out = lines_count; 
+    *cols_out = expected_cols;
     
-    while (fscanf(file, "%lf%c", &n, &c) == 2){ /* scan input */
-        if (c == ','){ /* still on same point */
-            dim++;
-            curr_cord->value = n;
-            curr_cord->next = (cord*) calloc(1, sizeof(cord));
-            if (curr_cord->next == NULL) { goto error; }
-            curr_cord = curr_cord->next;
-            curr_cord->next = NULL;
-        } if (c == '\n'){  /* end of this point */
-            curr_cord->value = n;
-            curr_point->cords = head_cord;
-            curr_point->dim = dim + 1;
-            head_attached = 1;
-            prev_point = curr_point;
-            curr_point->next = (point*) calloc(1, sizeof(point)); /* allocate next point (sentinal / current) */
-            if (curr_point->next == NULL) { goto error; }
-            curr_point = curr_point->next; /* Moving to next point */
-            curr_point->next = NULL;
-            head_cord = (cord*) calloc(1, sizeof(cord)); /* start cords for the NEXT point (currently unattached) */
-            if (head_cord == NULL) { goto error; }
-            curr_cord = head_cord;
-            curr_cord->next = NULL;
-            head_attached = 0;
-            dim = 0;
-            (*points_count)++;
-        } }
-    if (curr_point != NULL){ /* freeing memory for last point and its cord */
-        free(curr_point);
-        free(head_cord);
-        if (prev_point != NULL) prev_point->next = NULL; }
+    free(line);
+    fclose(file);
     return 0;
+
 error:
-    if (!head_attached) free_cords(&head_cord);
-    return 1; /* memory freeing happens in the input_txt_to_points_lst function */
+    if (line) free(line);
+    if (file) fclose(file);
+    return 1;
 }
 
 /**
- * input_txt_to_points_lst - Creates a linked list of points (and cords) for the .txt dataset given as an input
- * @path: the relative path to the input file
- * @head_point: out parameter. Will hold the first node (of type point) in the linked list.
- * @points_count: the number of points in the dataset = the dataset length
- *  Return: 0 on success, 1 on failure
+ * convert txt file into a 2d double array
+ * @path: the path to the file containing the dataset
+ * @rows_out: out parameter. will hold the number of rows in the dataset
+ * @cols_out: out parameter. will hold the number of columns in the dataset
+ * @dataset_mat: out parameter. will hild the 2D array with the data from the file
  */
-int input_txt_to_points_lst(char* path, point **head_point, int *points_count){
+int input_txt_to_matrix(char *path, int *rows_out, int *cols_out, double ***dataset_mat){
+    int failure, i, j;
     FILE *file;
-    point *curr_point = NULL, *prev_point = NULL;
-    cord *head_cord = NULL, *curr_cord = NULL;
-    int failure;
-    *points_count = 0;
-    *head_point = NULL;  /* safe initialization for out parameter */
+    char c;
+    double n;
+    *rows_out = -1;
+    *dataset_mat = NULL;
+    file = NULL;
 
-    file = fopen(path, "r");  /* Open for reading */
-    if (file == NULL) { goto error; }
-
-    head_cord = (cord*) calloc(sizeof(struct cord), 1); /* init head of cords*/
-    if (head_cord == NULL) { goto error; }
-    curr_cord = head_cord;
-    curr_cord->next = NULL;
-
-    (*head_point) = (point*) calloc(sizeof(point), 1); /* init head of points linked_list */
-    if (*head_point == NULL) { goto error; }
-    curr_point = (*head_point);
-    curr_point->next = NULL;
-
-    failure = parse_file(file, curr_point, prev_point, head_cord, curr_cord, points_count);
+    /* calucalte the dimension and allocate a matrix of that size*/
+    failure = calc_file_dimension(path, rows_out, cols_out);
     CHECK_FAILURE(failure, error);
+    failure = allocate_double_matrix(*rows_out, *cols_out, dataset_mat);
+    CHECK_FAILURE(failure, error);
+
+    file = fopen(path, "r");
+    if (file == NULL) goto error;
+
+    /* populate matrix with data */
+    for (i = 0; i < *rows_out; i++){
+        for (j = 0; j < *cols_out; j++){
+            if (fscanf(file, "%lf%c", &n, &c) != 2) goto error;
+            (*dataset_mat)[i][j] = n;
+        }
+    }
+    
     fclose(file);
     return 0;
 error:
     if (file) fclose(file);
-    if (*head_point == NULL && head_cord) free_cords(&head_cord);
-    free_pnt_lst(head_point);
-    
+    if (*rows_out != -1) free_matrix(dataset_mat, *rows_out);
     return 1;
 }
 
 /**
  * euc_distance - Calculates the eucledian distance between p1 and p2
- * @p1: First point
- * @p2: Second point
+ * @p1: the first point
+ * @p2: the second point
+ * @dimension: dimension of p1 and p2 (needs to be same dimension)
  * @dist: output parameter. Will hold the eucledian distance of the 2 points.
  *  Return: 0 on success, 1 on failure
  */
-int euc_distance(point *p1, point *p2, double *dist){
-    int i, dim1;
-    cord *curr1, *curr2;
+int euc_distance(double *p1, double *p2, int dimension, double *dist){
+    int i;
     *dist = 0;
-    if (p1->dim != p2->dim) {return 1;} /* ERROR! two points not of same dimension */
 
-    dim1 = p1->dim;
-    curr1 = p1->cords;
-    curr2 = p2->cords;
-
-    for (i = 0; i < dim1; i++){
-        (*dist) += pow((curr1->value - curr2->value), 2);
-        curr1 = curr1->next;
-        curr2 = curr2->next;
+    for (i = 0; i < dimension; i++){
+        (*dist) += pow((p1[i] - p2[i]), 2);
     }
 
     *dist = sqrt(*dist);
@@ -259,15 +200,16 @@ int euc_distance(point *p1, point *p2, double *dist){
 /**
  * calc_aij_sim - Calculates the value of A(ij) in the similiarity matrix as defined in 1.1
  * @pre: xi.dim == x2.dim
- * @xi: the first cordinate in the dataset X
- * @xj: the second cordiante in the dataset X 
- * @result: output parameter. Will hold the result of A(ij)
+ * @xi: point i in dataset X
+ * @xj: point j in dataset X
+ * @dimension: dimension of the points
+ * @result: out parameter. Will hold the result of A(ij)
  *  Return: 0 on success, 1 on failure
  */
-int calc_aij_sim(point *xi, point *xj, double *result){
+int calc_aij_sim(double *xi, double *xj, int dimension, double *result){
     double dist, power;
     *result = 0;
-    if(euc_distance(xi, xj, &dist) != 0) { return 1; } /* error! */
+    if(euc_distance(xi, xj, dimension, &dist) != 0) { return 1; } /* error! */
     power = ((pow(dist, 2)) / 2);
     *result = exp(-1*power);
     return 0;
@@ -275,35 +217,27 @@ int calc_aij_sim(point *xi, point *xj, double *result){
 
 /**
  * returns the similiarity matrix A as defined in 1.1
- * @points_lst: the dataset X
- * @n: points_lst length
+ * @dataset_mat: the dataset X
+ * @n: number of points in dataset
+ * @dimension: dimension of points in the dataset
  * @sim_mat: out parameter. Will hold the similiarity matrix A.
  *  Return: 0 on success, 1 on failure
  */
-int create_sim_mat(point* points_lst, int n, double ***sim_mat){
+int create_sim_mat(double **dataset_mat, int n, int dimension, double ***sim_mat){
     int i,j, failure;
     double aij_res;
-    
-    point* head = points_lst;
-    point* xi = points_lst;
-    point* xj = points_lst;
 
     failure = allocate_double_matrix(n, n, sim_mat);
     CHECK_FAILURE(failure, error);
 
     for (i = 0; i < n; i++){
-        xj = head; 
-
-        /* populate the matrix */
         for (j = 0; j < n; j++){
             if (i == j){ (*sim_mat)[i][j] = 0.0; }
             else{
-                if (calc_aij_sim(xi, xj, &aij_res) != 0) { goto error; }
+                if (calc_aij_sim(dataset_mat[i], dataset_mat[j], dimension, &aij_res) != 0) { goto error; }
                 (*sim_mat)[i][j] = aij_res;
             }
-            xj = xj->next;
         }
-        xi = xi->next;
     }
     return 0; /* OK! */
 
@@ -331,18 +265,19 @@ int arr_sum(double* arr, int n, double* sum){
 
 /**
  * create_diag_mat: Calculates the diagnoal degeree matrix as defined in 1.2
- * @points_lst: the input dataset X
+ * @dataset_mat: the input dataset X
  * @n: the length of dataset X
+ * @dimension: dimension of points in dataset X
  * @diag_mat: out parameter. Will hold the diagonal degree matrix.
  *  Return: 0 on success, 1 on failure
  */
-int create_diag_mat(point* points_lst, int n, double ***diag_mat){
+int create_diag_mat(double **dataset_mat, int n, int dimension, double ***diag_mat){
     int i, failure;
     double res;
     double** sim_mat = NULL;
     *diag_mat = NULL;
 
-    if (create_sim_mat(points_lst, n, &sim_mat) != 0) { goto error; };
+    if (create_sim_mat(dataset_mat, n, dimension, &sim_mat) != 0) { goto error; };
 
     failure = allocate_double_matrix(n,n, diag_mat);
     CHECK_FAILURE(failure, error);
@@ -351,13 +286,13 @@ int create_diag_mat(point* points_lst, int n, double ***diag_mat){
         if (arr_sum(sim_mat[i], n, &res) != 0) { goto error; }
         (*diag_mat)[i][i] = res;
     }
+
     free_matrix(&sim_mat, n);
     sim_mat = NULL;
     return 0;  /* OK! */
 
 error:
     if (sim_mat) { free_matrix(&sim_mat, n); }
-    if (*diag_mat) { free_matrix(diag_mat, n); }
     return 1;
 }
 
@@ -422,11 +357,11 @@ error:
  * @w_mat: outparameter. Will hold the result W matrix
  *  Return: 0 on success, 1 on failure
  */
-int create_normalized_sim_mat(point* points_lst, int n, double ***w_mat){
+int create_normalized_sim_mat(double **dataset_mat, int n, int dimension, double ***w_mat){
     double **sim_mat = NULL, **diag_mat_minus_sqrt = NULL, **diag_mat = NULL, **DA = NULL;
 
-    if (create_sim_mat(points_lst, n, &sim_mat) != 0) { goto error; };
-    if (create_diag_mat(points_lst, n, &diag_mat) != 0) { goto error; }
+    if (create_sim_mat(dataset_mat, n, dimension, &sim_mat) != 0) { goto error; };
+    if (create_diag_mat(dataset_mat, n, dimension, &diag_mat) != 0) { goto error; }
     if (one_div_sqrt_diag_mat(diag_mat, n, &diag_mat_minus_sqrt) != 0) { goto error; }
 
     if(diag_mat_mult(diag_mat_minus_sqrt, sim_mat, n, "left", &DA) != 0) { goto error; }
@@ -693,30 +628,29 @@ error:
     return 1;
 }
 
-
 int main(int argc, char *argv[]){
-    int failure, n;
+    int failure, n, cols;
     char *goal, *path, *mat_str = NULL;
     double **ret_mat = NULL;
-    point *dataset = NULL;
+    double **dataset_mat = NULL;
 
     failure = validate_and_set_input(argc, argv, &goal, &path);
     CHECK_FAILURE(failure, error);
 
-    failure = input_txt_to_points_lst(path, &dataset, &n);
+    failure = input_txt_to_matrix(path, &n, &cols, &dataset_mat);
     CHECK_FAILURE(failure, error);
 
     if (strcmp(goal, "sym") == 0){
-        failure = create_sim_mat(dataset, n, &ret_mat);
+        failure = create_sim_mat(dataset_mat, n, cols, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
     else if (strcmp(goal, "ddg") == 0){
-        failure = create_diag_mat(dataset, n, &ret_mat);
+        failure = create_diag_mat(dataset_mat, n, cols, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
     else if (strcmp(goal, "norm") == 0)
     {
-        failure = create_normalized_sim_mat(dataset, n, &ret_mat);
+        failure = create_normalized_sim_mat(dataset_mat, n, cols, &ret_mat);
         CHECK_FAILURE(failure, error);
     }
 
@@ -726,12 +660,12 @@ int main(int argc, char *argv[]){
     printf("%s\n", mat_str);
     free(mat_str); /* free the matrix str*/
     free_matrix(&ret_mat, n);  /* free the matrix */
-    free_pnt_lst(&dataset);  /* free the data set points */
+    free_matrix(&dataset_mat, n); /* free dataset matrix */
     return 0;
 error:
     if (mat_str) free(mat_str);
     if (ret_mat) free_matrix(&ret_mat, n);
-    if (dataset) free_pnt_lst(&dataset);
+    if (dataset_mat) free_matrix(&dataset_mat, n);
     printf("%s", ERR_MSG_GENERAL);
     exit(1);
 }

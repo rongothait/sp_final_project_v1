@@ -1,11 +1,12 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include "symnmf.c" // Or use a header if you have one
+#include <math.h>
+#include <string.h>
+#include "symnmf.h"
 
-char *path = "./input_1.txt";
-char *path_short = "./input_1_short.txt";
-
-void test_sym_goal(){
+/**
+ * void test_sym_goal(){
     point *dataset;
     int n, failure;
 
@@ -17,7 +18,7 @@ void test_sym_goal(){
     if (failure != 0) {printf("result is %d\n", failure);}
 
     char* res;
-    failure = mat_to_str(sim_mat, n, &res);
+    failure = mat_to_str(sim_mat, n, n, &res);
     if (failure != 0) {printf("result is %d\n", failure);}
 
     printf("%s\n", res);
@@ -34,7 +35,7 @@ void test_ddg_goal(){
     failure = create_diag_mat(dataset, n, &ddg_mat);
     
     char* res;
-    failure = mat_to_str(ddg_mat, n, &res);
+    failure = mat_to_str(ddg_mat, n, n, &res);
     if (failure != 0) {printf("result is %d\n", failure);}
 
     printf("%s\n", res);
@@ -56,13 +57,23 @@ void test_normalized_similiarity_matrix(){
 
     printf("%s\n", res);
 }
+ */
+
+void test_file_parsing(){
+    double **ret_mat;
+    char *path = "./tests/input_1.txt";
+    int rows, cols, failure;
+    char *mat_str;
+
+    failure = input_txt_to_matrix(path, &rows, &cols, &ret_mat);
+    if (failure != 0) {printf("result is %d\n", failure);}
+
+    failure = mat_to_str(ret_mat, rows, cols, &mat_str);
+    if (failure != 0) {printf("result is %d\n", failure);}
+
+    printf("rows = %d, cols = %d, and the matrix is:\n%s\n",rows, cols, mat_str);
+}
 
 int main() {
-    test_ddg_goal();
-    printf("%c",'\n');
-    
-    test_sym_goal();
-    printf("%c",'\n');
-
-    test_normalized_similiarity_matrix();
+    test_file_parsing();
 }

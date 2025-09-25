@@ -147,7 +147,7 @@ def symnmf_handle(dataset, k, n):
 
     # call the symnmf() function in module
     try:
-        res_mat = symnmf.symnmf(h_mat, w_mat_res, k)
+        res_mat = symnmf.symnmf(h_mat, w_mat_res)
     except:
         general_error()
     return res_mat

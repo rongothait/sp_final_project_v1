@@ -8,103 +8,53 @@
 static const char *ERR_MSG_GENERAL = "An Error Has Occurred";
 
 /**
- * converts a 1D python list to linked list of cords
- * @inner_list: python list of floats
- * @dim: length of the python list
- * @head_cord: out parameter. will hold the cords linked list
+ * calculates the length of every inner list in a 2D py list
+ * @outer_list: A 2D python lists of lists
+ * @n: number of lists in the list
+ * @dim: out parameter. will hold the length of the inner lists
  */
-static int inner_list_to_cord_lst(PyObject *inner_list, int dim, cord **head_cord){
-    int j;
-    double num;
-    PyObject *item;
-    cord *curr_cord = *head_cord;
-    for (j =0; j < dim; j++){
-        item = PyList_GetItem(inner_list, j);
-        num = PyFloat_AsDouble(item);
-        curr_cord->value = num;
-        if (j < dim - 1){
-            curr_cord -> next = (cord*) calloc(1, sizeof(cord));
-            if (curr_cord->next == NULL) {goto error;}
-            curr_cord = curr_cord->next;
-            curr_cord->next = NULL;
-        }
-    }
-    return 0;
-error:
-    free_cords(head_cord); /* free memory*/
-    return 1;
-}
+static int calc_cols(PyObject *outer_list, int n, int *dim){
+    int expected_cols, i, curr_col;
+    PyObject *inner_list;
+    expected_cols = -1;
 
-
-/**
- * pyListToPointList - Given a list of lists in python, it converts it to a linked list of points (and cords) in C
- * @outer_list: the python list
- * @n: the length of the python list (outer)
- * @head_point: out parameter. Will hold the first point in the linked list.
- */
-static int pyListToPointList(PyObject *outer_list, int n, point **head_point){
-    point *curr_point = NULL;
-    cord *head_cord = NULL;
-    int dim, i, failure;
-    *head_point = (point*) calloc(1, sizeof(point)); /* init head of points linked list */
-    if (head_point == NULL) {return 1;}
-    curr_point = *head_point;
-
-    for (i = 0; i < n; i++){ /* Iterating over the python list */
-        PyObject *inner_list = PyList_GetItem(outer_list, i);  /* the cords for the i-th point*/
+    for (i = 0; i < n; i++){
+        inner_list = PyList_GetItem(outer_list, i);
         if (!PyList_Check(inner_list)) { goto error; }
-        head_cord = (cord*) calloc(1, sizeof(cord)); /* init head cord for the first cord of the current point */
-        if (head_cord == NULL) { goto error; }
-        dim = PyObject_Length(inner_list);
-
-        failure = inner_list_to_cord_lst(inner_list, dim, &head_cord);
-        CHECK_FAILURE(failure, error);
-
-        curr_point->cords = head_cord;
-        curr_point->dim = dim;
-        if (i < n - 1){
-            curr_point->next = (point*) calloc(1, sizeof(point));
-            if (curr_point->next == NULL) { goto error; }
-            curr_point = curr_point->next;
-        }
+        curr_col = PyObject_Length(inner_list);
+        if (expected_cols == -1) expected_cols = curr_col;
+        else if (expected_cols != curr_col) goto error; /* dimension are not the same for all of the points */
     }
-    return 0;  /* OK! */
+    *dim = expected_cols;
+
 error:
-    /* freeing of point list is happening in caller function */
-    free(head_cord);
-    return 1;
+    return -1;
 }
 
-/**
- * pyListTo2dArr - creates a 2D array from the python list of lists
- * @outer_list: the python list
- * @m: number of rows in matrix
- * @n: number of columns in matrix
- * @mat: out parameter. Will hold the C matrix result
- */
-static int pyListTo2dArr(PyObject *outer_list, int m, int n, double ***mat){
-    int i, j, failure;
-    PyObject *inner_list, *item;
-    double num;
-    *mat = NULL;
 
-    failure = allocate_double_matrix(m, n, mat);
+static int py_list_to_matrix(PyObject *outer_list, int n, int *cols_out, double ***dataset_mat){
+    int i,j, failure;
+    double num;
+    PyObject *item, *inner_list;
+    
+    failure = calc_cols(outer_list, n, cols_out);
     CHECK_FAILURE(failure, error);
 
-    for (i = 0; i < m; i++){ /* Iterating over the python list */
+    failure = allocate_double_matrix(n, *cols_out, dataset_mat);
+    CHECK_FAILURE(failure, error);
+
+    for (i = 0; i < n; i++){
         inner_list = PyList_GetItem(outer_list, i);
-        if (!PyList_Check(inner_list)) { goto error; }  /* Error: inner element is not a list */
-        for (j = 0; j < n; j++){
+        if (!PyList_Check(inner_list)) goto error; 
+        for (j = 0; j < *cols_out; j++){
             item = PyList_GetItem(inner_list, j);
             num = PyFloat_AsDouble(item);
-            if (PyErr_Occurred()) { goto error; } /* Error: element is not a float */
-            (*mat)[i][j] = num;
+            (*dataset_mat)[i][j] = num;
         }
     }
     return 0;
 
 error:
-    free_matrix(mat, m);
     return 1;
 }
 
@@ -151,37 +101,37 @@ static PyObject* matrix_to_pylist(double **matrix, int row_num, int col_num){
  * @goal: string specifiying the matrix operation ("sym", "ddg", "norm")
  */
 static PyObject* request_standard(PyObject *args, char* goal){
-    point *points_list = NULL;
-    int n = -1, failure;
-    PyObject *py_points_list;
+    double **dataset_mat = NULL;
+    int n = -1, failure, dimension;
+    PyObject *py_dataset;
     double **ret_mat = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &py_points_list)) { goto error; } /* This parses the python arguments into its C form */
+    if (!PyArg_ParseTuple(args, "O", &py_dataset)) { goto error; } /* This parses the python arguments into its C form */
 
-    n = PyObject_Length(py_points_list); /* length of dataset */
-    failure = pyListToPointList(py_points_list, n, &points_list);     /* create linked list of points */
+    n = PyObject_Length(py_dataset); /* length of dataset */
+    failure = py_list_to_matrix(py_dataset, n, &dimension, &dataset_mat);  /* create matrix of dataset points */
     CHECK_FAILURE(failure, error);
     
     if (strcmp(goal, "sym") == 0){
-        failure = create_sim_mat(points_list, n, &ret_mat);
+        failure = create_sim_mat(dataset_mat, n, dimension, &ret_mat);
     }
     else if (strcmp(goal, "ddg") == 0){
-        failure = create_diag_mat(points_list, n, &ret_mat);
+        failure = create_diag_mat(dataset_mat, n, dimension, &ret_mat);
     }
     else if (strcmp(goal, "norm") == 0){
-        failure = create_normalized_sim_mat(points_list, n, &ret_mat);
+        failure = create_normalized_sim_mat(dataset_mat, n, dimension, &ret_mat);
     }
     CHECK_FAILURE(failure, error);
 
     PyObject *py_result = matrix_to_pylist(ret_mat, n, n);
     if (!py_result) goto error;
 
-    free_pnt_lst(&points_list); /* free memory */
+    free_matrix(&dataset_mat, n); /* free memory */
     free_matrix(&ret_mat, n);
     return py_result;
 
 error:
-    free_pnt_lst(&points_list);
+    if (dataset_mat) free_matrix(&dataset_mat, n);
     if (ret_mat) {free_matrix(&ret_mat, n);}
     PyErr_SetString(PyExc_ValueError, ERR_MSG_GENERAL);
     return NULL;
@@ -213,18 +163,18 @@ static PyObject* ddg(PyObject *self, PyObject *args){
  */
 static PyObject* symnmf(PyObject *self, PyObject *args){
     double **init_h_mat = NULL, **w_mat = NULL, **ret_mat = NULL;
-    int n = -1, k, failure;
+    int n = -1, k, failure, w_cols;
     PyObject *py_w_mat, *py_init_h_mat;
 
     /* This parses the python arguments into its C form */
-    if (!PyArg_ParseTuple(args, "OOi", &py_init_h_mat, &py_w_mat, &k)) goto error;
+    if (!PyArg_ParseTuple(args, "OO", &py_init_h_mat, &py_w_mat)) goto error;
 
     n = PyObject_Length(py_w_mat);
 
-    failure = pyListTo2dArr(py_w_mat, n, n, &w_mat);
+    failure = py_list_to_matrix(py_w_mat, n, &w_cols, &w_mat);
     CHECK_FAILURE(failure, error);
 
-    failure = pyListTo2dArr(py_init_h_mat, n, k, &init_h_mat);
+    failure = py_list_to_matrix(py_init_h_mat, n, &k, &init_h_mat);
     CHECK_FAILURE(failure, error);
         
     /* run the potimization algoritm of H */
@@ -298,7 +248,6 @@ static PyMethodDef symnmf_methods[] = {
             "parameters:\n"
             "   h_mat: the initial H matrix\n"
             "   w_mat: the W matrix\n"
-            "   k: number of clusters\n"
             "returns:\n"
             "   list: the resulting matrix as a list of list"
         )

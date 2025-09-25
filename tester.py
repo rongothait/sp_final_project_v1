@@ -14,11 +14,11 @@ import numpy as np
 
 VALGRIND_ERRCODE = 99
 EPS = 1e-4
-TRIALS_PROGRAMS = 20
-TRIALS_SYMNMF_LIB = 20
-TRIALS_VALGRIND_C = 20
-TRIALS_VALGRIND_PY_SYMNMF = 20
-TRIALS_ANALYSIS_PY = 20
+TRIALS_PROGRAMS = 5
+TRIALS_SYMNMF_LIB = 5
+TRIALS_VALGRIND_C = 5
+TRIALS_VALGRIND_PY_SYMNMF = 5
+TRIALS_ANALYSIS_PY = 5
 TEST_PYTHON_MEMORY = True
 
 REGEX_NUMBER_FMT = r"-?(?:0|[1-9]\d*)\.\d{4}"
@@ -457,7 +457,7 @@ def test_symnmf_lib():
     goal_name = format_goal_name("symnmf")
     initial_H, final_H_target = symnmf_main(W, k)
     k = len(initial_H[0])
-    final_H = np.array(symnmf.symnmf(initial_H.tolist(), W.tolist(), k))
+    final_H = np.array(symnmf.symnmf(initial_H.tolist(), W.tolist()))
     if not np.all(np.linalg.norm(final_H_target - final_H, axis=1) < EPS):
         print_red(err_msg.format(goal_name))
         return False

@@ -3,7 +3,8 @@
         "math.h": "c",
         "string.h": "c",
         "stdio.h": "c",
-        "trying_something.C": "cpp"
+        "trying_something.C": "cpp",
+        "test_matrix_change": "c"
     },
     "makefile.configureOnOpen": false
 }
