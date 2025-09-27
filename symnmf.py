@@ -132,7 +132,7 @@ def init_H(w_mat, k, np_arr = True):
         return init_h_mat
 
 
-def symnmf_handle(dataset, k, n):
+def symnmf_handle(dataset, k):
     """
     symnmf_handle - handles the code for goal = "symnmf"
     @dataset: the dataset from the cmd input file (already formatted as lists)
@@ -166,7 +166,7 @@ def get_goal_matrix(goal, k, dataset):
         general_error("k is larget than n")
     
     if goal == "symnmf":
-        mat = symnmf_handle(dataset, k, n)
+        mat = symnmf_handle(dataset, k)
     elif goal == "sym":
         try:
             mat = symnmf.sym(dataset)

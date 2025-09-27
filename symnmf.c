@@ -1,3 +1,8 @@
+/**
+ * Symnmf clustering algorithm
+ * All functions return int: 0 = success, 1 = failure.
+ */
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,7 +48,6 @@ int allocate_double_matrix(int rows, int cols, double ***ret_mat){
  * free_matrix - Frees the memory allocated for a 2d matrix mat with m rows
  * @mat: the matrix (a 2d array)
  * @m: number of rows
- *  Return: 0 on success, 1 on failure
  */
 int free_matrix(double ***pmat, int m){
     int i;
@@ -117,7 +121,6 @@ int calc_file_dimension(char *path, int *rows_out, int *cols_out){
         for (i = 0; i < read; i++){
             if (line[i] == ',') curr_cols_count++;
         }
-
         if (expected_cols == -1) {  /* if first line set the expected cols */
             expected_cols = curr_cols_count;
         } else if (curr_cols_count != expected_cols) goto error; /* inconsistent number of columns in file - error */
@@ -429,27 +432,6 @@ int substract_matrix(double **A, double **B, int m, int n, double ***res_mat){
 
 error:
     return 1;
-}
-
-/**
- * avg_mat_val - Calculates a matrice's avg value of all cells
- * @mat: n*m matrix (cells are of type double)
- * @n: columns dimension
- * @m: rows dimension
- * @avg_val: out parameter. Will hold the average value of mat's cells.
- *  Return: 0 on success, 1 on failure
- */
-int avg_mat_val(double **mat, int n, int m, double *avg_val){
-    int i, j;
-    *avg_val = 0;
-
-    for (i = 0; i < m; i++){
-        for (j = 0; j < n; j++){
-            (*avg_val) += mat[i][j];
-        }
-    }
-
-    return 0;  /* OK! */
 }
 
 /**
