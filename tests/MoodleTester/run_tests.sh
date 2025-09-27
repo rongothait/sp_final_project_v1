@@ -16,6 +16,8 @@ RESET="\033[0m"
 failures=0
 total_tests=0
 
+echo "Using Python: $(which python3)"
+
 function assertByFile() {
 	command=$1
 	expectedFilePath=$2
@@ -85,7 +87,7 @@ function testSymnmfGaolsWithK() {
 function testSymnmfAllGoals() {
 	inputFileName=$1
 	expectedFileName=$2
-	k=${3:-0}
+	k=${3:-2}
 
 	if [[ "${SPEED}" != *"quick"* ]]; then
 		testSymnmfSingleGoal sym ${k} ${inputFileName} ${expectedFileName}_sym "c python" sym
