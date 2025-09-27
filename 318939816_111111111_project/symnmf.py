@@ -8,10 +8,9 @@ ERR_MSG = "An Error Has Occured"
 # set the seed as requested
 np.random.seed(1234)
 
-def general_error(msg = ERR_MSG):
+def general_error():
     """
-    General Error Handeling
-    @msg (string, optioanl): the error message. used only for debugging
+    General Error Handeling logic
     """
     print(ERR_MSG)
     exit(1)
@@ -45,9 +44,9 @@ def validate_str_is_integer(str):
     try:
         k = float(str)
     except:
-        general_error("k is not a float : {}".format(str))
+        general_error()
     if k % 1 != 0 or k <= 1:
-        general_error("k is not an integer number : {}".format(str))
+        general_error()
     k = int(k)
     return k
 
@@ -59,7 +58,7 @@ def set_data(data):
     """
     # 1. making sure the input is in correct length
     if len(data) != 4:
-        general_error("length of data is incorrect!, expected length of 4 received {}".format(len(data)))
+        general_error()
 
     # validate k
     k = validate_str_is_integer(data[1])
@@ -67,7 +66,7 @@ def set_data(data):
     # 2. read arguments from CMD - we can assume they are valid
     goal = data[2]  # 'symnf' / 'sym' / 'ddg' / 'norm'
     if goal not in ["symnmf", "sym", "ddg", "norm"]:
-        general_error("goal not valid")
+        general_error()
 
     path = data[3]  # path to data set
 
@@ -84,7 +83,7 @@ def txt_input_to_list(path):
             lines = [line.strip() for line in f]
             lines = [[float(x) for x in line.split(',')] for line in lines]
     except:
-        general_error("problem with opening the file")
+        general_error()
     
     return lines
 
@@ -162,8 +161,11 @@ def get_goal_matrix(goal, k, dataset):
     """
     n = len(dataset)
 
+    if n <= 2: # not allowd - forum question https://moodle.tau.ac.il/2024/mod/forum/discuss.php?d=118571
+        general_error()
+
     if k >= n:  # not allowed
-        general_error("k is larget than n")
+        general_error()
     
     if goal == "symnmf":
         mat = symnmf_handle(dataset, k)

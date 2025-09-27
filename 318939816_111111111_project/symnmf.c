@@ -314,7 +314,8 @@ int one_div_sqrt_diag_mat(double** mat, int n, double ***ret_mat){
     CHECK_FAILURE(failure, error);
 
     for (i = 0; i < n; i++){
-        (*ret_mat)[i][i] = 1.0 / sqrt(mat[i][i]);
+        if (mat[i][i] == 0) (*ret_mat[i][i] = 1.0 / 1e-6); /* to avoid division by zero */
+        else (*ret_mat)[i][i] = 1.0 / sqrt(mat[i][i]);
     }
     return 0;
 
@@ -621,6 +622,8 @@ int main(int argc, char *argv[]){
 
     failure = input_txt_to_matrix(path, &n, &cols, &dataset_mat);
     CHECK_FAILURE(failure, error);
+
+    if (n < 2) goto error; /* not valid - forum question https://moodle.tau.ac.il/2024/mod/forum/discuss.php?d=118571*/
 
     if (strcmp(goal, "sym") == 0){
         failure = create_sim_mat(dataset_mat, n, cols, &ret_mat);

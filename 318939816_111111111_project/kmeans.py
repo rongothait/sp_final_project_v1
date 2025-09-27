@@ -76,7 +76,7 @@ class Cluster:
         Returns:
             bool: True if centroid changed more than epsilon, False otherwise.
         """
-        if not self.pointsLst:
+        if not self.pointsLst: # keep previous centroid
             return False
 
         centPoint = Point([0] * self.centroid.dim)
@@ -114,6 +114,15 @@ def add_point_to_closest_cluster(clstr_lst, p):
     min_cluster.add_point(p)
 
 def make_points_lst(path):
+    """
+    creates a python list of type points
+
+    Args:
+        path: the path of the dataset
+
+    Returns:
+        list of points of the dataset input file
+    """
     try:
         with open(path, 'r') as f:
             points_lst = [Point([float(x) for x in line.strip().split(',')], i) for i, line in enumerate(f)]
@@ -210,6 +219,9 @@ def run_kmeans_alg(path, k):
     """
     points_lst = make_points_lst(path)
     points_lst_regular = points_lst_to_regular_lst(points_lst)
+
+    if len(points_lst) <= 2: # not valid - based on forum question https://moodle.tau.ac.il/2024/mod/forum/discuss.php?d=118571
+        general_error()
 
     # validate k
     if k >= len(points_lst):
